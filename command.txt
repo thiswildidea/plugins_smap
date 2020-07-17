@@ -1,0 +1,24 @@
+4x 带权限版本
+npm run build:release
+
+发布到NPM
+npm publish
+
+从NPM删除指定版本，必须在发布后24小时内操作
+npm unpublish smap-plugins-shsmi@0.0.1
+
+从NPM中废弃
+npm deprecate yuyy-test-pkg@1.1.0 'test deprecate'
+
+
+
+tokenType  
+0： 前端
+1： 后端
+2： 自由服务
+
+layer
+type     0是组，1是图层
+
+modeType 图层组模式0是3d组，1是2d组
+
