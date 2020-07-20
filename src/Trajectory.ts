@@ -4,16 +4,18 @@ import EventEmitter from './mod';
 import {
     load
 } from './modules';
+import Guid from './utils/Guid';
 export default class Trajectory extends EventEmitter {
     private map: any = null;
     private routepalybackinternal: any = null;
+    private routelayerid: any = "";
     private track: any = null;
     constructor(map: any) {
         super();
         this.init(map);
     }
 
-    public playback(playbackoption: ITrajectoryOptions= {}) {
+    public play(playbackoption: ITrajectoryOptions= {}) {
         load(['geolocate', "esri/widgets/Track", 'esri/geometry/support/webMercatorUtils'])
             // tslint:disable-next-line:no-shadowed-variable
             .then(([geolocate, track, webMercatorUtils]) => {
@@ -80,7 +82,7 @@ export default class Trajectory extends EventEmitter {
         if (typeof (this.routepalybackinternal) !== undefined) {
             clearInterval(this.routepalybackinternal);
             this.track.destroy();
-            const animateRouteLayer = this.map.map.findLayerById('history_route');
+            const animateRouteLayer = this.map.map.findLayerById(this.routelayerid);
             if (animateRouteLayer) {
                 this.map.map.remove(animateRouteLayer);
             }
@@ -118,11 +120,11 @@ export default class Trajectory extends EventEmitter {
                     geometry: animateLine,
                     symbol: polylineSymbol
                 });
-                let animateRouteLayer = this.map.map.findLayerById('history_route');
+                let animateRouteLayer = this.map.map.findLayerById(this.routelayerid);
                 if (typeof (animateRouteLayer) === 'undefined') {
                     animateRouteLayer = new GraphicsLayer({
                         title: '路径轨迹播放',
-                        id: 'history_route',
+                        id: this.routelayerid,
                         listMode: 'hide'
                     });
                     this.map.map.add(animateRouteLayer);
@@ -131,6 +133,7 @@ export default class Trajectory extends EventEmitter {
         });
     }
     private async init(map: any) {
+        this.routelayerid = new Guid().uuid;
         this.map = map;
     }
 }

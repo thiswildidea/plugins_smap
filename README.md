@@ -10,12 +10,18 @@
       - [三维轨迹播放](#三维轨迹播放)
       - [二维轨迹播放](#二维轨迹播放)
       - [清除轨迹播放](#清除轨迹播放)
-   - [轨迹播放参数说明](#参数说明)
+   - [轨迹播放参数说明](#轨迹播放参参数说明)
+- [轨迹播放Plus](#漫游)
+   - [轨迹播放Plus调用示例](#轨迹播放Plus调用示例)
+      - [三维轨迹播放Plus](#三维轨迹播放Plus)
+      - [二维轨迹播放Plus](#二维轨迹播放Plus)
+      - [清除轨迹播放Plus](#清除轨迹播放Plus)
+   - [轨迹播放Plus参数说明](#轨迹播放Plus参数说明)
 - [迁徙图](#迁徙图)
    - [迁徙图调用示例](#迁徙图调用示例)
      - [添加迁徙图](#添加迁徙图)
      - [移除迁徙图](#移除迁徙图)
-   - [迁徙图参数说明](#参数说明)
+   - [迁徙图参数说明](#迁徙图参数说明)
 
 ## 轨迹播放
 ### 轨迹播放调用示例
@@ -93,7 +99,7 @@ import Plugins from 'smap-plugins-shsmi' // 引用Plugins
         }
       ]
       const trajectory = new Plugins.Trajectory(map.map)
-      trajectory.playback({
+      trajectory.play({
         coords: routedata,
         showtrail: true,
         trailsymbol: {
@@ -202,7 +208,7 @@ import Plugins from 'smap-plugins-shsmi' // 引用Plugins
         }
       ]
       const trajectory = new Plugins.Trajectory(map.map)
-      trajectory.playback({
+      trajectory.play({
         coords: routedata,
         showtrail: true,
         trailsymbol: {
@@ -228,12 +234,254 @@ trajectory.remove()
 ```
 ### 轨迹播放参数说明
 ```js
-coords：轨迹坐标（上海坐标系统）
+coords：轨迹坐标（上海坐标系统） //二三维都不支持Z（高程）值
 showtrail: 是否显示轨迹
 trailsymbol： 轨迹符号   //二三维模式下自行定义 参考以上示例
 mobilesymbol：移动符号 //二三维模式下自行定义  参考以上示例
 ```
-
+## 轨迹播放Plus
+### 轨迹播放Plus调用示例
+#### 三维轨迹播放Plus
+```js
+import SMap from 'smap-shsmi' // 引用SMAP
+import Plugins from 'smap-plugins-shsmi' // 引用Plugins
+ const map = new SMap.Map('container', {
+        viewMode: '3D',
+        center: [0, 0],
+        zoom: 4,
+        zooms: [0, 12],
+        pitch: 60,
+        mapStyle: 'smap://styles/dark',
+        showBuildingBlock: true
+      })
+```
+```js
+  const routedata = [
+        {
+          x: 358.5185,
+          y: -77.2235,
+          z: 1000   //z 值有效
+        },
+        {
+          x: 267.4522,
+          y: 99.1188,
+          z: 900
+        },
+        {
+          x: 234.90484,
+          y: 212.834811,
+          z: 800
+        },
+        {
+          x: 181.7233,
+          y: 381.1000,
+          z: 700
+        },
+        {
+          x: 138.1169,
+          y: 527.79151,
+          z: 600
+        },
+        {
+          x: 88.0071,
+          y: 647.4898,
+          z: 500
+        },
+        {
+          x: 63.1774,
+          y: 692.2989,
+          z: 400
+        },
+        {
+          x: 94.5310,
+          y: 706.0872,
+          z: 300
+        },
+        {
+          x: 143.59157,
+          y: 595.3354,
+          z: 200
+        },
+        {
+          x: 182.1127,
+          y: 481.7369,
+          z: 100
+        },
+        {
+          x: 223.4553,
+          y: 323.6532,
+          z: 0
+        },
+        {
+          x: 248.4933,
+          y: 203.5321,
+          z: 100
+        },
+        {
+          x: 325.065,
+          y: 31.37497,
+          z: 200
+        },
+        {
+          x: 546.1844,
+          y: -355.09700,
+          z: 300
+        }
+      ]
+      const trajectoryplus = new Plugins.TrajectoryPlus(map.map)
+      trajectoryplus.play({
+        duration: 3000,
+        speedFactor: 1,
+        coords: routedata,
+        showtrail: true,
+        trailsymbol: {
+          type: 'simple-line',
+          color: [255, 255, 255, 0.5],
+          width: '10px',
+          style: 'solid'
+        },
+        mobilesymbol: {
+          type: 'point-3d',
+          symbolLayers: [{
+            type: 'icon',
+            size: '50px',
+            resource: {
+              href: require('@/assets/car.png')
+            }
+          }],
+          verticalOffset: {
+            screenLength: 50,
+            maxWorldLength: 2000,
+            minWorldLength: 20
+          },
+          callout: {
+            type: 'line',
+            color: [0, 0, 0],
+            size: 2,
+            border: {
+              color: [255, 255, 255]
+            }
+          }
+          }
+        })
+```
+![三维轨迹播放](https://gitee.com/thiswildidea/images/raw/master/smiapi/ts/4x/3d/%E8%BD%A8%E8%BF%B9%E6%92%AD%E6%94%BE/trajectoryPlus.png)
+![三维轨迹播放](https://gitee.com/thiswildidea/images/raw/master/smiapi/ts/4x/3d/%E8%BD%A8%E8%BF%B9%E6%92%AD%E6%94%BE/trajectoryPlus.gif)
+#### 二维轨迹播放Plus
+```js
+import SMap from 'smap-shsmi' // 引用SMAP
+import Plugins from 'smap-plugins-shsmi' // 引用Plugins
+ const map = new SMap.Map('container', {
+        viewMode: '2D',
+        center: [0, 0],
+        zoom: 4,
+        zooms: [0, 11]
+        mapStyle: 'smap://styles/dark'
+      })
+```
+```js
+  const routedata = [
+        {
+          x: 358.5185,
+          y: -77.2235,
+          z: 1000  //2D中z值不生效
+        },
+        {
+          x: 267.4522,
+          y: 99.1188,
+          z: 900
+        },
+        {
+          x: 234.90484,
+          y: 212.834811,
+          z: 800
+        },
+        {
+          x: 181.7233,
+          y: 381.1000,
+          z: 700
+        },
+        {
+          x: 138.1169,
+          y: 527.79151,
+          z: 600
+        },
+        {
+          x: 88.0071,
+          y: 647.4898,
+          z: 500
+        },
+        {
+          x: 63.1774,
+          y: 692.2989,
+          z: 400
+        },
+        {
+          x: 94.5310,
+          y: 706.0872,
+          z: 300
+        },
+        {
+          x: 143.59157,
+          y: 595.3354,
+          z: 200
+        },
+        {
+          x: 182.1127,
+          y: 481.7369,
+          z: 100
+        },
+        {
+          x: 223.4553,
+          y: 323.6532,
+          z: 0
+        },
+        {
+          x: 248.4933,
+          y: 203.5321,
+          z: 100
+        },
+        {
+          x: 325.065,
+          y: 31.37497,
+          z: 200
+        },
+        {
+          x: 546.1844,
+          y: -355.09700,
+          z: 300
+        }
+      ]
+      const trajectoryplus = new Plugins.TrajectoryPlus(map.map)
+      trajectoryplus.play({
+        duration: 3000,
+        speedFactor: 1,
+        coords: routedata,
+        showtrail: true,
+        trailsymbol: {
+          type: 'simple-line',
+          color: [255, 255, 255, 0.5],
+          width: '10px',
+          style: 'solid'
+        },
+        mobilesymbol: {
+           type: 'picture-marker',
+           url: require('@/assets/car.png'),
+           width: '64px',
+           height: '64px'
+          }
+        })
+```
+![三维轨迹播放](https://gitee.com/thiswildidea/images/raw/master/smiapi/ts/4x/2d/%E8%BD%A8%E8%BF%B9%E6%92%AD%E6%94%BE/trajectoryplus.gif)
+### 轨迹播放Plus参数说明
+```js
+duration: 3000  //移动持续时间
+speedFactor: 1  //移动速度
+coords：轨迹坐标（上海坐标系统） //三维支持Z值
+showtrail: 是否显示轨迹
+trailsymbol： 轨迹符号   //二三维模式下自行定义 参考以上示例
+mobilesymbol：移动符号 //二三维模式下自行定义  参考以上示例
+```
 ## 迁徙图
 ### 迁徙图调用示例
 #### 添加迁徙图
