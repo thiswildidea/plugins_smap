@@ -22,3 +22,13 @@ type     0是组，1是图层
 
 modeType 图层组模式0是3d组，1是2d组
 
+
+, {
+                  location: Mapcofig.jsapi + '/extensions/echarts',
+                  name: 'echarts',
+                  main: "echarts"
+                }, {
+                  location: Mapcofig.jsapi + '/extensions/echarts',
+                  name: 'echartsgl',
+                  main: "echarts-gl"
+                }
