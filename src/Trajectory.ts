@@ -76,7 +76,7 @@ export default class Trajectory extends EventEmitter {
                 console.error(err);
             });
     }
-    public hideHistoryRoute() {
+    public remove() {
         if (typeof (this.routepalybackinternal) !== undefined) {
             clearInterval(this.routepalybackinternal);
             this.track.destroy();
