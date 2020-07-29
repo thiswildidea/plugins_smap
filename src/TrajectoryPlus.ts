@@ -6,13 +6,13 @@ import {
 } from './modules';
 import Guid from './utils/Guid';
 export default class TrajectoryPlus extends EventEmitter {
-    private map: any = null;
+    private view: any = null;
     private mapRoamplayinternal: any = null;
     private routelayerid: any = "";
     private mobilelayerid: any = "";
-    constructor(map: any) {
+    constructor(view: any) {
         super();
-        this.init(map);
+        this.init(view);
     }
 
     public play(playbackoption: ITrajectoryPlusOptions= {}) {
@@ -22,7 +22,7 @@ export default class TrajectoryPlus extends EventEmitter {
                 if (playbackoption.coords === undefined) {  return;  }
                 let trajectorycount = 0;
                 let currentCoordIndex = 0;
-                let prevLocation = this.map.center;
+                let prevLocation = this.view.center;
                 if (typeof (this.mapRoamplayinternal) !== 'undefined') {
                     clearInterval(this.mapRoamplayinternal);
                 }
@@ -41,18 +41,16 @@ export default class TrajectoryPlus extends EventEmitter {
                         x: xyz.x,
                         y: xyz.y,
                         z: xyz.z,
-                        spatialReference: {
-                        wkid: 102100
-                    }
+                        spatialReference: this.view.spatialReference
                     });
-                    let mobileLayer = this.map.map.findLayerById(this.mobilelayerid);
+                    let mobileLayer = this.view.map.findLayerById(this.mobilelayerid);
                     if (typeof (mobileLayer) === 'undefined') {
                         mobileLayer = new graphicsLayer({
                             title: '漫游路径' + this.mobilelayerid,
                             id: this.mobilelayerid,
                             listMode: 'hide'
                         });
-                        this.map.map.add(mobileLayer);
+                        this.view.map.add(mobileLayer);
                     }
                     mobileLayer.removeAll();
                     const animateGraphic = new graphic({
@@ -65,7 +63,7 @@ export default class TrajectoryPlus extends EventEmitter {
                             this.createAnimateRoute(location, prevLocation, playbackoption.trailsymbol);
                         }
                     }
-                    this.map.goTo({
+                    this.view.goTo({
                         center: location,
                         tilt: 70,
                         scale: 2500,
@@ -95,13 +93,13 @@ export default class TrajectoryPlus extends EventEmitter {
     public remove() {
         if (typeof (this.mapRoamplayinternal) !== undefined) {
             clearInterval(this.mapRoamplayinternal);
-            const animateRouteLayer = this.map.map.findLayerById(this.routelayerid);
+            const animateRouteLayer = this.view.map.findLayerById(this.routelayerid);
             if (animateRouteLayer) {
-                this.map.map.remove(animateRouteLayer);
+                this.view.map.remove(animateRouteLayer);
             }
-            const mobilelayer = this.map.map.findLayerById(this.mobilelayerid);
+            const mobilelayer = this.view.map.findLayerById(this.mobilelayerid);
             if (mobilelayer) {
-                this.map.map.remove(mobilelayer);
+                this.view.map.remove(mobilelayer);
             }
         }
     }
@@ -122,9 +120,7 @@ export default class TrajectoryPlus extends EventEmitter {
                         [oldPoint.x, oldPoint.y, oldPoint.z],
                         [point.x, point.y, point.z]
                     ],
-                    spatialReference: {
-                        wkid: 102100
-                    }
+                    spatialReference: this.view.spatialReference
                 };
                 let polylineSymbol;
                 if (trailsymbol !== undefined) {
@@ -140,21 +136,21 @@ export default class TrajectoryPlus extends EventEmitter {
                     geometry: animateLine,
                     symbol: polylineSymbol
                 });
-                let animateRouteLayer = this.map.map.findLayerById(this.routelayerid);
+                let animateRouteLayer = this.view.map.findLayerById(this.routelayerid);
                 if (typeof (animateRouteLayer) === 'undefined') {
                     animateRouteLayer = new GraphicsLayer({
                         title: '漫游路径' + this.routelayerid,
                         id: this.routelayerid,
                         listMode: 'hide'
                     });
-                    this.map.map.add(animateRouteLayer);
+                    this.view.map.add(animateRouteLayer);
                 }
                 animateRouteLayer.add(animateGraphic);
         });
     }
-    private async init(map: any) {
+    private async init(view: any) {
         this.routelayerid = new Guid().uuid;
         this.mobilelayerid = new Guid().uuid;
-        this.map = map;
+        this.view = view;
     }
 }

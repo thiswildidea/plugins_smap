@@ -98,7 +98,7 @@ import Plugins from 'smap-plugins-shsmi' // 引用Plugins
           y: -355.09700
         }
       ]
-      const trajectory = new Plugins.Trajectory(map.map)
+      const trajectory = new Plugins.Trajectory(map.view)
       trajectory.play({
         coords: routedata,
         showtrail: true,
@@ -207,7 +207,7 @@ import Plugins from 'smap-plugins-shsmi' // 引用Plugins
           y: -355.09700
         }
       ]
-      const trajectory = new Plugins.Trajectory(map.map)
+      const trajectory = new Plugins.Trajectory(map.view)
       trajectory.play({
         coords: routedata,
         showtrail: true,
@@ -328,7 +328,7 @@ import Plugins from 'smap-plugins-shsmi' // 引用Plugins
           z: 300
         }
       ]
-      const trajectoryplus = new Plugins.TrajectoryPlus(map.map)
+      const trajectoryplus = new Plugins.TrajectoryPlus(map.view)
       trajectoryplus.play({
         duration: 3000,
         speedFactor: 1,
@@ -452,7 +452,7 @@ import Plugins from 'smap-plugins-shsmi' // 引用Plugins
           z: 300
         }
       ]
-      const trajectoryplus = new Plugins.TrajectoryPlus(map.map)
+      const trajectoryplus = new Plugins.TrajectoryPlus(map.view)
       trajectoryplus.play({
         duration: 3000,
         speedFactor: 1,
@@ -472,7 +472,7 @@ import Plugins from 'smap-plugins-shsmi' // 引用Plugins
           }
         })
 ```
-![三维轨迹播放](https://gitee.com/thiswildidea/images/raw/master/smiapi/ts/4x/2d/%E8%BD%A8%E8%BF%B9%E6%92%AD%E6%94%BE/trajectoryplus.gif)
+![二维轨迹播放](https://gitee.com/thiswildidea/images/raw/master/smiapi/ts/4x/2d/%E8%BD%A8%E8%BF%B9%E6%92%AD%E6%94%BE/trajectoryplus.gif)
 ### 轨迹播放Plus参数说明
 ```js
 duration: 3000  //移动持续时间
@@ -499,7 +499,7 @@ import Plugins from 'smap-plugins-shsmi' // 引用Plugins
       })
 ```
 ```js
- const migrationMap = new Plugins.MigrationMap(this.map.map)
+ const migrationMap = new Plugins.MigrationMap(map.view)
  const geoCoordMap = {
         '浦东区': [21704.88, -10564.32],
         '奉贤区': [6530.67, -36110.78],

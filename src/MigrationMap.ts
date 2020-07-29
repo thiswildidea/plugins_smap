@@ -6,10 +6,10 @@ import {
 } from './modules';
 import utils from './utils/index';
 export default class MigrationMap extends EventEmitter {
-    private map: any = null;
-    constructor(map: any) {
+    private view: any = null;
+    constructor(view: any) {
         super();
-        this.init(map);
+        this.init(view);
     }
     public add(mgrationMapOptions: IMigrationMapOptions= {}) {
         load(['esri/layers/echartsLayer'])
@@ -98,7 +98,7 @@ export default class MigrationMap extends EventEmitter {
                              })
                          });
                      });
-                     const chart = new echartsLayer(this.map, "", mgrationMapOptions.id);
+                     const chart = new echartsLayer(this.view, "", mgrationMapOptions.id);
                      const option = {
                          title: {
                              text: '',
@@ -191,7 +191,7 @@ export default class MigrationMap extends EventEmitter {
     script.addEventListener('error', onScriptError, false);
     return onScriptError;
     }
-    private async init(map: any) {
-        this.map = map;
+    private async init(view: any) {
+        this.view = view;
     }
 }

@@ -6,13 +6,13 @@ import {
 } from './modules';
 import Guid from './utils/Guid';
 export default class Trajectory extends EventEmitter {
-    private map: any = null;
+    private view: any = null;
     private routepalybackinternal: any = null;
     private routelayerid: any = "";
     private track: any = null;
-    constructor(map: any) {
+    constructor(view: any) {
         super();
-        this.init(map);
+        this.init(view);
     }
 
     public play(playbackoption: ITrajectoryOptions= {}) {
@@ -22,7 +22,7 @@ export default class Trajectory extends EventEmitter {
                 if (playbackoption.coords === undefined) {  return;  }
                 let trajectorycount = 0;
                 this.track = new track({
-                    view: this.map,
+                    view: this.view,
                     goToLocationEnabled: false
                 });
                 // this.map.ui.add(this.track , "bottom-left");
@@ -45,8 +45,8 @@ export default class Trajectory extends EventEmitter {
                         clearInterval(this.routepalybackinternal);
                     }
                 }, 2500);
-                this.map.when(() => {
-                let prevLocation = this.map.center;
+                this.view.when(() => {
+                let prevLocation = this.view.center;
                 this.track.on("track", () => {
                     if (playbackoption.mobilesymbol) {
                         this.track.graphic.symbol = playbackoption.mobilesymbol;
@@ -57,7 +57,7 @@ export default class Trajectory extends EventEmitter {
                         this.createAnimateRoute(location, prevLocation, playbackoption.trailsymbol);
                         }
                     }
-                    this.map.goTo({
+                    this.view.goTo({
                             center: location,
                             tilt: 70,
                             scale: 2500,
@@ -82,9 +82,9 @@ export default class Trajectory extends EventEmitter {
         if (typeof (this.routepalybackinternal) !== undefined) {
             clearInterval(this.routepalybackinternal);
             this.track.destroy();
-            const animateRouteLayer = this.map.map.findLayerById(this.routelayerid);
+            const animateRouteLayer = this.view.map.findLayerById(this.routelayerid);
             if (animateRouteLayer) {
-                this.map.map.remove(animateRouteLayer);
+                this.view.map.remove(animateRouteLayer);
             }
         }
     }
@@ -120,20 +120,20 @@ export default class Trajectory extends EventEmitter {
                     geometry: animateLine,
                     symbol: polylineSymbol
                 });
-                let animateRouteLayer = this.map.map.findLayerById(this.routelayerid);
+                let animateRouteLayer = this.view.map.findLayerById(this.routelayerid);
                 if (typeof (animateRouteLayer) === 'undefined') {
                     animateRouteLayer = new GraphicsLayer({
                         title: '路径轨迹播放',
                         id: this.routelayerid,
                         listMode: 'hide'
                     });
-                    this.map.map.add(animateRouteLayer);
+                    this.view.map.add(animateRouteLayer);
                 }
                 animateRouteLayer.add(animateGraphic);
         });
     }
-    private async init(map: any) {
+    private async init(view: any) {
         this.routelayerid = new Guid().uuid;
-        this.map = map;
+        this.view = view;
     }
 }
