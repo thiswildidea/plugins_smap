@@ -22,6 +22,18 @@
      - [添加迁徙图](#添加迁徙图)
      - [移除迁徙图](#移除迁徙图)
    - [迁徙图参数说明](#迁徙图参数说明)
+- [区县街道居委会边界设置](#区县街道居委会边界设置)
+   - [区县街道居委会边界设置示例](#区县街道居委会边界设置示例)
+      - [区县边界设置](#区县边界设置)
+      - [街道边界设置](#街道边界设置)
+      - [居委会边界设置](#居委会边界设置)
+      - [边界移除](#边界移除)
+      - [添加边界隐藏](#添加边界隐藏)
+      - [添加边界显示](#添加边界显示) 
+   - [边界参数说明](#边界参数说明)
+   - [区县街道居委会边界设置注意事项](#区县街道居委会边界设置注意事项)
+   
+
 
 ## 轨迹播放
 ### 轨迹播放调用示例
@@ -741,4 +753,128 @@ const XHData = [
   planePath: //飞行样式,
   color:  //多类别颜色,
   datas:  //类别数据
+```
+## 区县街道居委会边界设置
+### 区县街道居委会边界设置示例
+#### 区县边界设置
+```js
+import SMap from 'smap-shsmi' // 引用SMAP
+import Plugins from 'smap-plugins-shsmi' // 引用Plugins
+ const map = new SMap.Map('container', {
+        viewMode: '3D', //2D
+        center: [0, 0],
+        zoom: 6,
+        tokenconfigname: 'smiapi_new',
+        zooms: [0, 11],
+        pitch: 60,
+        mapStyle: 'smap://styles/dark', // 'smap://styles/light' 'smap://styles/dark'
+        showBuildingBlock: false
+      })
+```
+```js
+      const par = {
+        boundaryType: 'qx_boundary', //区县边界类型
+        boundaryDefinition: "name like '%黄浦%'", // "qxcode like '%01%"
+        symbol: {
+          type: 'simple-fill',
+          color: [255, 255, 255, 0],
+          outline: {
+            color: [255, 255, 255, 1],
+            width: '5px'
+          }
+        }
+      }
+      const Boundary = new Plugins.Boundary(map.view)
+      const Boundary.add(par)
+```
+#### 街道边界设置
+```js
+import SMap from 'smap-shsmi' // 引用SMAP
+import Plugins from 'smap-plugins-shsmi' // 引用Plugins
+ const map = new SMap.Map('container', {
+        viewMode: '3D', //2D
+        center: [0, 0],
+        zoom: 6,
+        tokenconfigname: 'smiapi_new',
+        zooms: [0, 11],
+        pitch: 60,
+        mapStyle: 'smap://styles/dark', // 'smap://styles/light' 'smap://styles/dark'
+        showBuildingBlock: false
+      })
+```
+```js
+      const par = {
+        boundaryType: 'jd_boundary', //街道边界类型
+        boundaryDefinition: "name like '%上钢新村街道%'", // "jd_code  like '%3509%"
+        symbol: {
+          type: 'simple-fill',
+          color: [255, 255, 255, 0],
+          outline: {
+            color: [255, 255, 255, 1],
+            width: '5px'
+          }
+        }
+      }
+      const Boundary = new Plugins.Boundary(map.view)
+      const Boundary.add(par)
+```
+#### 居委会边界设置
+```js
+import SMap from 'smap-shsmi' // 引用SMAP
+import Plugins from 'smap-plugins-shsmi' // 引用Plugins
+ const map = new SMap.Map('container', {
+        viewMode: '3D', //2D
+        center: [0, 0],
+        zoom: 6,
+        tokenconfigname: 'smiapi_new',
+        zooms: [0, 11],
+        pitch: 60,
+        mapStyle: 'smap://styles/dark', // 'smap://styles/light' 'smap://styles/dark'
+        showBuildingBlock: false
+      })
+```
+```js
+      const par = {
+        boundaryType: 'jwh_boundary', //居委会边界类型
+        boundaryDefinition: "name like '%曹杨新苑%'", // "jwhcode like '%072128%'"
+        symbol: {
+          type: 'simple-fill',
+          color: [255, 255, 255, 0],
+          outline: {
+            color: [255, 255, 255, 1],
+            width: '5px'
+          }
+        }
+      }
+      const Boundary = new Plugins.Boundary(map.view)
+      const Boundary.add(par)
+```
+#### 边界移除
+```js
+Boundary.remove()
+```
+#### 添加边界隐藏
+```js
+Boundary.hide()
+```
+#### 添加边界显示
+```js
+Boundary.show()
+```
+### 边界参数说明
+```js
+boundarytype: 'qx_boundary',  //边界类型 目前支持区县、街道和居委会
+boundaryDefinition: "name like '%黄浦%'", // qxcode like '%01%     查询条件
+symbol: {
+  type: 'simple-fill',
+  color: [255, 255, 255, 0],
+  outline: {
+    color: [255, 255, 255, 1],
+    width: '5px'
+  }
+}            //边界符号样式
+```
+### 区县街道居委会边界设置注意事项
+```js
+Plugins.Boundary 类可多次实例化对象， 移除、隐藏、显示要分别对应相应实例化对象
 ```
