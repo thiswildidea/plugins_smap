@@ -8,7 +8,7 @@ import Guid from './utils/Guid';
 export default class Trajectory extends EventEmitter {
     private view: any = null;
     private routepalybackinternal: any = null;
-    private routelayerid: any = "";
+    private displayedLayerid: any = "";
     private track: any = null;
     constructor(view: any) {
         super();
@@ -82,7 +82,7 @@ export default class Trajectory extends EventEmitter {
         if (typeof (this.routepalybackinternal) !== undefined) {
             clearInterval(this.routepalybackinternal);
             this.track.destroy();
-            const animateRouteLayer = this.view.map.findLayerById(this.routelayerid);
+            const animateRouteLayer = this.view.map.findLayerById(this.displayedLayerid);
             if (animateRouteLayer) {
                 this.view.map.remove(animateRouteLayer);
             }
@@ -120,11 +120,11 @@ export default class Trajectory extends EventEmitter {
                     geometry: animateLine,
                     symbol: polylineSymbol
                 });
-                let animateRouteLayer = this.view.map.findLayerById(this.routelayerid);
+                let animateRouteLayer = this.view.map.findLayerById(this.displayedLayerid);
                 if (typeof (animateRouteLayer) === 'undefined') {
                     animateRouteLayer = new GraphicsLayer({
                         title: '路径轨迹播放',
-                        id: this.routelayerid,
+                        id: this.displayedLayerid,
                         listMode: 'hide'
                     });
                     this.view.map.add(animateRouteLayer);
@@ -133,7 +133,7 @@ export default class Trajectory extends EventEmitter {
         });
     }
     private async init(view: any) {
-        this.routelayerid = new Guid().uuid;
+        this.displayedLayerid = new Guid().uuid;
         this.view = view;
     }
 }

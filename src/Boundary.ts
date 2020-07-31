@@ -7,7 +7,7 @@ import {
 import Guid from './utils/Guid';
 export default class Boundary extends EventEmitter {
     private view: any = null;
-    private boundarylayerid: any = "";
+    private displayedLayerid: any = "";
     constructor(view: any) {
         super();
         this.init(view);
@@ -25,14 +25,14 @@ export default class Boundary extends EventEmitter {
                 boundaryqueryParams.where = boundaryOptions.boundaryDefinition;
                 layer.queryFeatures(boundaryqueryParams).then((response) => {
                     if (response.features.length > 0) {
-                        let boundaryLayer = this.view.map.findLayerById(this.boundarylayerid);
-                        if (typeof (boundaryLayer) === 'undefined') {
-                            boundaryLayer = new GraphicsLayer({
-                                title: this.boundarylayerid,
-                                id: this.boundarylayerid,
+                        let boundaryResultLayer = this.view.map.findLayerById(this.displayedLayerid);
+                        if (typeof (boundaryResultLayer) === 'undefined') {
+                            boundaryResultLayer = new GraphicsLayer({
+                                title: this.displayedLayerid + '边界',
+                                id: this.displayedLayerid,
                                 listMode: 'hide'
                             });
-                            this.view.map.add(boundaryLayer);
+                            this.view.map.add(boundaryResultLayer);
                         }
                         let polygonSymbol;
                         if (boundaryOptions.symbol !== undefined) {
@@ -52,7 +52,7 @@ export default class Boundary extends EventEmitter {
                                 geometry: feature.geometry,
                                 symbol: polygonSymbol
                             });
-                            boundaryLayer.add(animateGraphic);
+                            boundaryResultLayer.add(animateGraphic);
                         });
                     }
                 });
@@ -62,25 +62,25 @@ export default class Boundary extends EventEmitter {
             });
     }
     public remove() {
-        const boundaryLayer = this.view.map.findLayerById(this.boundarylayerid);
-        if (boundaryLayer) {
-            this.view.map.remove(boundaryLayer);
+        const boundaryResultLayer = this.view.map.findLayerById(this.displayedLayerid);
+        if (boundaryResultLayer) {
+            this.view.map.remove(boundaryResultLayer);
         }
     }
     public show() {
-        const boundaryLayer = this.view.map.findLayerById(this.boundarylayerid);
-        if (boundaryLayer) {
-            boundaryLayer.visible = true;
+        const boundaryResultLayer = this.view.map.findLayerById(this.displayedLayerid);
+        if (boundaryResultLayer) {
+            boundaryResultLayer.visible = true;
         }
     }
     public hide() {
-        const boundaryLayer = this.view.map.findLayerById(this.boundarylayerid);
-        if (boundaryLayer) {
-            boundaryLayer.visible = false;
+        const boundaryResultLayer = this.view.map.findLayerById(this.displayedLayerid);
+        if (boundaryResultLayer) {
+            boundaryResultLayer.visible = false;
         }
     }
     private async init(view: any) {
-        this.boundarylayerid = new Guid().uuid;
+        this.displayedLayerid = new Guid().uuid;
         this.view = view;
     }
 }

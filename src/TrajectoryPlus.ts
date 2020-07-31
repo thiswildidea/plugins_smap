@@ -8,7 +8,7 @@ import Guid from './utils/Guid';
 export default class TrajectoryPlus extends EventEmitter {
     private view: any = null;
     private mapRoamplayinternal: any = null;
-    private routelayerid: any = "";
+    private displayedLayerid: any = "";
     private mobilelayerid: any = "";
     constructor(view: any) {
         super();
@@ -93,7 +93,7 @@ export default class TrajectoryPlus extends EventEmitter {
     public remove() {
         if (typeof (this.mapRoamplayinternal) !== undefined) {
             clearInterval(this.mapRoamplayinternal);
-            const animateRouteLayer = this.view.map.findLayerById(this.routelayerid);
+            const animateRouteLayer = this.view.map.findLayerById(this.displayedLayerid);
             if (animateRouteLayer) {
                 this.view.map.remove(animateRouteLayer);
             }
@@ -136,11 +136,11 @@ export default class TrajectoryPlus extends EventEmitter {
                     geometry: animateLine,
                     symbol: polylineSymbol
                 });
-                let animateRouteLayer = this.view.map.findLayerById(this.routelayerid);
+                let animateRouteLayer = this.view.map.findLayerById(this.displayedLayerid);
                 if (typeof (animateRouteLayer) === 'undefined') {
                     animateRouteLayer = new GraphicsLayer({
-                        title: '漫游路径' + this.routelayerid,
-                        id: this.routelayerid,
+                        title: '漫游路径' + this.displayedLayerid,
+                        id: this.displayedLayerid,
                         listMode: 'hide'
                     });
                     this.view.map.add(animateRouteLayer);
@@ -149,7 +149,7 @@ export default class TrajectoryPlus extends EventEmitter {
         });
     }
     private async init(view: any) {
-        this.routelayerid = new Guid().uuid;
+        this.displayedLayerid = new Guid().uuid;
         this.mobilelayerid = new Guid().uuid;
         this.view = view;
     }
