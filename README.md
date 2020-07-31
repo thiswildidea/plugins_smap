@@ -787,6 +787,7 @@ import Plugins from 'smap-plugins-shsmi' // 引用Plugins
       const Boundary = new Plugins.Boundary(map.view)
       const Boundary.add(par)
 ```
+![区县边界](https://gitee.com/thiswildidea/images/raw/master/smiapi/ts/4x/3d/boundary/qx.png)
 #### 街道边界设置
 ```js
 import SMap from 'smap-shsmi' // 引用SMAP
@@ -818,6 +819,7 @@ import Plugins from 'smap-plugins-shsmi' // 引用Plugins
       const Boundary = new Plugins.Boundary(map.view)
       const Boundary.add(par)
 ```
+![街道边界](https://gitee.com/thiswildidea/images/raw/master/smiapi/ts/4x/3d/boundary/jd.png)
 #### 居委会边界设置
 ```js
 import SMap from 'smap-shsmi' // 引用SMAP
@@ -849,6 +851,7 @@ import Plugins from 'smap-plugins-shsmi' // 引用Plugins
       const Boundary = new Plugins.Boundary(map.view)
       const Boundary.add(par)
 ```
+![居委会](https://gitee.com/thiswildidea/images/raw/master/smiapi/ts/4x/3d/boundary/jwh.png)
 #### 边界移除
 ```js
 Boundary.remove()
