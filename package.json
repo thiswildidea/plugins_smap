@@ -1,6 +1,6 @@
 {
   "name": "smap-plugins-shsmi",
-  "version": "0.0.14",
+  "version": "0.0.15",
   "description": "上海市测绘院地图API加载库,通过该API库实现上海测绘院地图数据加载显示(仅限上海市政务网可用)",
   "files": [
     "dist"
