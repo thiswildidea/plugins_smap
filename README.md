@@ -877,6 +877,9 @@ symbol: {
   }
 }            //边界符号样式
 ```
+[![区县数据](https://gitee.com/thiswildidea/images/raw/master/others/Datatable.png "区县数据")](https://gitee.com/thiswildidea/images/blob/master/resouces/boundary/qx_boundary.xlsx)
+[![街道数据](https://gitee.com/thiswildidea/images/raw/master/others/Datatable.png "街道数据")](https://gitee.com/thiswildidea/images/blob/master/resouces/boundary/jwh_boundary.xlsx)
+[![居委会数据](https://gitee.com/thiswildidea/images/raw/master/others/Datatable.png "居委会数据")](https://gitee.com/thiswildidea/images/blob/master/resouces/boundary/qx_boundary.xlsx)
 ### 区县街道居委会边界设置注意事项
 ```js
 Plugins.Boundary 类可多次实例化对象， 移除、隐藏、显示要分别对应相应实例化对象
