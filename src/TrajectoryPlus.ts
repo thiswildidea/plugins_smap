@@ -6,9 +6,9 @@ import {
 } from './modules';
 import Guid from './utils/Guid';
 export default class TrajectoryPlus extends EventEmitter {
+    public displayedLayerid: any = "";
     private view: any = null;
     private mapRoamplayinternal: any = null;
-    private displayedLayerid: any = "";
     private mobilelayerid: any = "";
     constructor(view: any) {
         super();

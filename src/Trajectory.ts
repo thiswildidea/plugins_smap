@@ -6,9 +6,9 @@ import {
 } from './modules';
 import Guid from './utils/Guid';
 export default class Trajectory extends EventEmitter {
+    public displayedLayerid: any = "";
     private view: any = null;
     private routepalybackinternal: any = null;
-    private displayedLayerid: any = "";
     private track: any = null;
     constructor(view: any) {
         super();

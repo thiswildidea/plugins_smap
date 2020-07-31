@@ -6,8 +6,8 @@ import {
 } from './modules';
 import Guid from './utils/Guid';
 export default class Boundary extends EventEmitter {
+    public displayedLayerid: any = "";
     private view: any = null;
-    private displayedLayerid: any = "";
     constructor(view: any) {
         super();
         this.init(view);
