@@ -48,7 +48,14 @@
    - [光圈和遮盖层隐藏](#光圈和遮盖层隐藏)
    - [光圈和遮盖层显示](#光圈和遮盖层显示)
    - [光圈和遮盖层移除](#光圈和遮盖层移除)
-
+- [热力图](#热力图)
+   - [热力图调用示例](#热力图调用示例)
+     - [添加热力图](#添加热力图)
+     - [更新热力图](#更新热力图)
+     - [隐藏热力图](#隐藏热力图)
+     - [显示热力图](#显示热力图)
+     - [显示热力图](#移除热力图)
+   - [热力图参数说明](#热力图参数说明)
 
 
 ## 轨迹播放
@@ -900,7 +907,6 @@ symbol: {
 ```js
 Plugins.Boundary 类可多次实例化对象， 移除、隐藏、显示要分别对应相应实例化对象
 ```
-
 ## 区县街道居委会边界遮罩设置
 ### 调用参数说明
 ```js
@@ -1123,3 +1129,85 @@ import SMap from 'smap-shsmi'
  const  custommaskBoundary = new Plugins.MaskBoundary(map.view)
  custommaskBoundary.remove()
  ```
+## 热力图
+### 热力图调用示例
+#### 添加热力图
+```js
+import h337 from 'heatmapjs'  //heatmapjs
+import SMap from 'smap-shsmi' // 引用SMAP
+import Plugins from 'smap-plugins-shsmi' // 引用Plugins
+ const map = new SMap.Map('container', {
+        viewMode: '3D',
+        center: [0, 0],
+        zoom: 4,
+        zooms: [0, 12],
+        pitch: 60,
+        mapStyle: 'smap://styles/dark',
+        showBuildingBlock: true
+      })
+```
+```js
+const param = {
+        id: 'heatmap',
+        h337: h337,
+        container: 'container',
+        radius: 30,
+        maxOpacity: 0.8,
+        minOpacity: 0,
+        blur: 0.7,
+        gradient: {
+          0: 'rgb(0,0,0)',
+          0.3: 'rgb(0,0,255)',
+          0.8: 'rgb(0,255,0)',
+          0.98: 'rgb(255,255,0)',
+          1: 'rgb(255,0,0)'
+        },
+        datas: [
+          [-3020, -5200],
+          [-3020, -5200],
+          [-3120, -5200],
+          [-3120, -5100],
+          [-3220, -5200],
+          [-3220, -5200],
+          [-3220, -5200],
+          [-3120, -5200],
+          [-3220, -5200]
+        ]
+      }
+      const HeatMap = new Plugins.HeatMap(map.view)
+      HeatMap.add(param)
+```
+#### 更新热力图
+```js
+ const updatedatas = [
+        [-3020, -6200, 500],
+        [-3120, -6200, 500],
+        [-3120, -6100, 500],
+        [-3220, -6200, 1000]
+      ]
+    HeatMap.refreshdata(updatedatas)
+```
+#### 隐藏热力图
+```js
+ HeatMap.hide()
+```
+#### 显示热力图
+```js
+HeatMap.show()
+```
+#### 移除热力图
+```js
+HeatMap.remove('heatmap')    
+```
+###  热力图参数说明
+```js
+    id            // 热力图对应id  
+    h337         // heatmapjs 中
+    container    //map div id 
+    radius      //半径
+    maxOpacity  //最大透明度
+    minOpacity  //最小透明度
+    blur       //模糊大小
+    gradient   // 渐变值
+    datas     //数据
+```

@@ -5,7 +5,7 @@ import {
     load
 } from './modules';
 import Guid from './utils/Guid';
-export default class Boundary extends EventEmitter {
+export default class MaskBoundary extends EventEmitter {
     public displayedLayerid: any = "";
     private view: any = null;
     constructor(view: any) {
