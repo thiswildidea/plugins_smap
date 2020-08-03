@@ -15,9 +15,9 @@ export default class HeatMap extends EventEmitter {
     }
 
     public add(heatmapOptions: IHeatmapOptions) {
-        load(['smiapi/utils/HeatMapLayer', 'heatmap'])
+        load(['smiapi/utils/HeatMapLayer'])
             // tslint:disable-next-line:variable-name
-            .then(([HeatMapLayer, heatmap]) => {
+            .then(([HeatMapLayer]) => {
                 const config = {
                     container: document.getElementById(heatmapOptions.container),
                     radius: heatmapOptions.radius || 30,
