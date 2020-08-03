@@ -1177,6 +1177,8 @@ const param = {
       const HeatMap = new Plugins.HeatMap(map.view)
       HeatMap.add(param)
 ```
+![热力图三维](https://gitee.com/thiswildidea/images/raw/master/smiapi/ts/4x/3d/heatmap/heatmap.png)
+![热力图二维](https://gitee.com/thiswildidea/images/raw/master/smiapi/ts/4x/2d/heatmap/heatmap.png)
 #### 更新热力图
 ```js
  const updatedatas = [
