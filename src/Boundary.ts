@@ -50,7 +50,8 @@ export default class Boundary extends EventEmitter {
                         response.features.map((feature) => {
                             const animateGraphic = new Graphic({
                                 geometry: feature.geometry,
-                                symbol: polygonSymbol
+                                symbol: polygonSymbol,
+                                attributes: feature.attributes
                             });
                             boundaryResultLayer.add(animateGraphic);
                         });
@@ -82,5 +83,15 @@ export default class Boundary extends EventEmitter {
     private async init(view: any) {
         this.displayedLayerid = new Guid().uuid;
         this.view = view;
+        this.view.on("click",  (event) => {
+            this.view.hitTest(event).then(async  (response) => {
+                if (response.results.length > 0) {
+                    const layerid = response.results[0].graphic.layer.id;
+                    if (layerid === this.displayedLayerid) {
+                        this.emit('click', response.results[0].graphic, event.mapPoint);
+                    }
+                }
+            });
+     });
     }
 }
