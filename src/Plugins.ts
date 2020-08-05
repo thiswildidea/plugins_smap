@@ -1,4 +1,5 @@
 import Boundary from './Boundary';
+import FlashPoint3DLayer from './FlashPoint3DLayer';
 import HeatMap from './HeatMap';
 import Layers from './interface/Layers';
 import MaskBoundary from './MaskBoundary';
@@ -10,6 +11,7 @@ export default {
   load,
   Layers,
   Boundary,
+  FlashPoint3DLayer,
   HeatMap,
   MaskBoundary,
   TrajectoryPlus,
