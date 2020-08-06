@@ -14,12 +14,25 @@ export default class Boundary extends EventEmitter {
     }
 
     public add(boundaryOptions: IBoundaryOptions= {}) {
-        load(["esri/layers/GraphicsLayer", "esri/Graphic"])
+        load(["esri/layers/GraphicsLayer", "esri/Graphic", "esri/layers/FeatureLayer"])
             // tslint:disable-next-line:variable-name
-            .then(([GraphicsLayer, Graphic]) => {
-                if (!boundaryOptions.boundaryType) {return; }
+            .then(([GraphicsLayer, Graphic, FeatureLayer]) => {
                 if (!this.view) { return; }
-                const layer = this.view.map.findLayerById(boundaryOptions.boundaryType);
+                let layer = null;
+                if (boundaryOptions.boundaryType) {
+                      layer = this.view.map.findLayerById(boundaryOptions.boundaryType);
+                }
+                if (!layer) {
+                    if (boundaryOptions.url) {
+                        layer = new FeatureLayer({
+                            url: boundaryOptions.url,
+                            id: boundaryOptions.boundaryType,
+                            title: boundaryOptions.boundaryType,
+                            visible: false
+                        });
+                        this.view.map.add(layer);
+                    }
+                }
                 if (!layer) { return; }
                 const boundaryqueryParams = layer.createQuery();
                 boundaryqueryParams.where = boundaryOptions.boundaryDefinition;

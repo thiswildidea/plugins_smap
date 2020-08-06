@@ -20,11 +20,11 @@ export default class MaskBoundary extends EventEmitter {
             .then(([Graphic, GraphicsLayer, ArcPolygon, geometryEngineAsync, SpatialReference, Color]) => {
                 let boundaryLayer = null;
                 if (maskOptions.boundaryType === "qx_boundary") {
-                    boundaryLayer = this.view.map.findLayerById('qx_boundary');
+                    boundaryLayer = this.view.map.findLayerById(maskOptions.boundaryType);
                 } else if (maskOptions.boundaryType === "jd_boundary") {
-                    boundaryLayer = this.view.map.findLayerById('jd_boundary');
+                    boundaryLayer = this.view.map.findLayerById(maskOptions.boundaryType);
                 } else if (maskOptions.boundaryType === "jwh_boundary") {
-                    boundaryLayer = this.view.map.findLayerById('jwh_boundary');
+                    boundaryLayer = this.view.map.findLayerById(maskOptions.boundaryType);
                 }
                 let maskgraphiclayer = this.view.map.findLayerById(this.displayedLayerid);
                 if (maskgraphiclayer == null) {
@@ -156,6 +156,7 @@ export default class MaskBoundary extends EventEmitter {
                             });
                         });
                 } else {
+                    console.log(boundaryLayer);
                     if (boundaryLayer === null) { return; }
                     const queryParams = boundaryLayer.createQuery();
                     queryParams.where = maskOptions.boundaryDefinition;
