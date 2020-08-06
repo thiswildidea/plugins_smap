@@ -3,7 +3,17 @@
 
 ## 注意事项
 由于smap-plugins-shsmi 属于smap-shsmi或者smap-shsmi-aa扩展模块,再使用过程中需要先引用smap-shsmi或者smap-shsmi-aa。
-
+## 引用方式
+npm
+```js
+import SMap from 'smap-shsmi' // 引用SMAP
+import Plugins from 'smap-plugins-shsmi' // 引用Plugins
+```
+普通js
+```js
+ <script src="http://10.108.3.16/smiapi/smap/SMap.min.js"></script>
+ <script src="http://10.108.3.16/smiapi/smap/Plugins.min.js"></script>
+```
 ## 目录
 - [轨迹播放](#轨迹播放)
    - [轨迹播放调用示例](#轨迹播放调用示例)
