@@ -801,6 +801,7 @@ import Plugins from 'smap-plugins-shsmi' // 引用Plugins
 ```js
       const par = {
         boundaryType: 'qx_boundary', //区县边界类型
+        url: 'http://10.108.3.16/arcgis/rest/services/boundary/sh_qx_boundary/FeatureServer',  //若boundaryType 类型图层没有加载到地图,可以使用 url 传入对应边界类型服务
         boundaryDefinition: "name like '%黄浦%'", // "qxcode like '%01%"
         symbol: {
           type: 'simple-fill',
@@ -836,6 +837,7 @@ import Plugins from 'smap-plugins-shsmi' // 引用Plugins
 ```js
       const par = {
         boundaryType: 'jd_boundary', //街道边界类型
+        url: 'http://10.108.3.16/arcgis/rest/services/boundary/sh_jd_boundary/FeatureServer',  //若boundaryType 类型图层没有加载到地图,可以使用 url 传入对应边界类型服务
         boundaryDefinition: "name like '%上钢新村街道%'", // "jd_code  like '%3509%"
         symbol: {
           type: 'simple-fill',
@@ -871,6 +873,7 @@ import Plugins from 'smap-plugins-shsmi' // 引用Plugins
 ```js
       const par = {
         boundaryType: 'jwh_boundary', //居委会边界类型
+        url: 'http://10.108.3.16/arcgis/rest/services/boundary/sh_jwh_boundary/FeatureServer',  //若boundaryType 类型图层没有加载到地图,可以使用 url 传入对应边界类型服务 
         boundaryDefinition: "name like '%曹杨新苑%'", // "jwhcode like '%072128%'"
         symbol: {
           type: 'simple-fill',
@@ -903,6 +906,7 @@ Boundary.show()
 ### 边界参数说明
 ```js
 boundarytype: 'qx_boundary',  //边界类型 目前支持区县、街道和居委会
+url:  'http://10.108.3.16/arcgis/rest/services/boundary/sh_qx_boundary/FeatureServer',  //若boundaryType 类型图层没有加载到地图,可以使用 url 传入对应边界类型服务 
 boundaryDefinition: "name like '%黄浦%'", // qxcode like '%01%     查询条件
 symbol: {
   type: 'simple-fill',

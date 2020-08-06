@@ -1,6 +1,5 @@
 export default interface IMaskOptions {
     boundaryType: string;
-    url?: any;
     boundaryDefinition: string;
     boundarydistance: number;
     bounarycount: number;
