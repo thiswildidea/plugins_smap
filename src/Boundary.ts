@@ -5,6 +5,7 @@ import {
     load
 } from './modules';
 import Guid from './utils/Guid';
+import MapEvent from './utils/MapEvent';
 export default class Boundary extends EventEmitter {
     public displayedLayerid: any = "";
     private view: any = null;
@@ -96,15 +97,26 @@ export default class Boundary extends EventEmitter {
     private async init(view: any) {
         this.displayedLayerid = new Guid().uuid;
         this.view = view;
-        this.view.on("click",  (event) => {
+        this.view.on(MapEvent.click,  (event) => {
             this.view.hitTest(event).then(async  (response) => {
                 if (response.results.length > 0) {
                     const layerid = response.results[0].graphic.layer.id;
                     if (layerid === this.displayedLayerid) {
-                        this.emit('click', response.results[0].graphic, event.mapPoint);
+                        this.emit(MapEvent.click, response.results[0].graphic, event.mapPoint);
                     }
                 }
             });
      });
+
+        this.view.on(MapEvent.pointermove, (event) => {
+            this.view.hitTest(event).then(async (response) => {
+                if (response.results.length > 0) {
+                    const layerid = response.results[0].graphic.layer.id;
+                    if (layerid === this.displayedLayerid) {
+                        this.emit(MapEvent.pointermove, response.results[0].graphic, event.mapPoint);
+                    }
+                }
+            });
+        });
     }
 }

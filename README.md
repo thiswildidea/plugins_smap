@@ -69,6 +69,7 @@ import Plugins from 'smap-plugins-shsmi' // 引用Plugins
 - [FlashPoint3DLayer](#FlashPoint3DLayer)
     - [FlashPoint3DLayer调用示例](#FlashPoint3DLayer调用示例)
     - [FlashPoint3DLayer-click事件](#FlashPoint3DLayer-click事件)
+    - [FlashPoint3DLayer-pointermove事件](#FlashPoint3DLayer-pointermove事件)
     - [FlashPoint3DLayer参数说明](#FlashPoint3DLayer参数说明)
 
 
@@ -822,9 +823,13 @@ import Plugins from 'smap-plugins-shsmi' // 引用Plugins
           }
         }
       }
-      const Boundary = new Plugins.Boundary(map.view)
+     const Boundary = new Plugins.Boundary(map.view)
       const Boundary.add(par)
-      Boundary.on('click', function(result, geometry) {
+      Boundary.on(SMap.MapEvent.click, function(result, geometry) {
+       console.log(result,geometry)
+     })
+
+      Boundary.on(SMap.MapEvent.pointermove, function(result, geometry) {
        console.log(result,geometry)
      })
 ```
@@ -858,9 +863,13 @@ import Plugins from 'smap-plugins-shsmi' // 引用Plugins
           }
         }
       }
-      const Boundary = new Plugins.Boundary(map.view)
+     const Boundary = new Plugins.Boundary(map.view)
       const Boundary.add(par)
-      Boundary.on('click', function(result, geometry) {
+      Boundary.on(SMap.MapEvent.click, function(result, geometry) {
+       console.log(result,geometry)
+     })
+
+      Boundary.on(SMap.MapEvent.pointermove, function(result, geometry) {
        console.log(result,geometry)
      })
 ```
@@ -896,7 +905,11 @@ import Plugins from 'smap-plugins-shsmi' // 引用Plugins
       }
       const Boundary = new Plugins.Boundary(map.view)
       const Boundary.add(par)
-      Boundary.on('click', function(result, geometry) {
+      Boundary.on(SMap.MapEvent.click, function(result, geometry) {
+       console.log(result,geometry)
+     })
+
+      Boundary.on(SMap.MapEvent.pointermove, function(result, geometry) {
        console.log(result,geometry)
      })
 ```
@@ -1329,9 +1342,18 @@ import Plugins from 'smap-plugins-shsmi' // 引用Plugins
 ### FlashPoint3DLayer-click事件
 ```js
  const fashPoint3DLayer = new Plugins.FlashPoint3DLayer(this.map.view)
-  fashPoint3DLayer.on('click', function(result, geometry) {
-     // result 返回的属性
+  fashPoint3DLayer.on(SMap.MapEvent.click, function(result, geometry) {
+     // result 返回结果
      //geometry 返回的点击位置
+  })
+```
+
+### FlashPoint3DLayer-pointermove事件
+```js
+ const fashPoint3DLayer = new Plugins.FlashPoint3DLayer(this.map.view)
+  fashPoint3DLayer.on(SMap.MapEvent.pointermove, function(result, geometry) {
+     // result 返回结果
+     //geometry 返回移动位置
   })
 ```
 ### FlashPoint3DLayer参数说明

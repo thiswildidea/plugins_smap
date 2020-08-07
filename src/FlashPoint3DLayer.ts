@@ -5,6 +5,7 @@ import {
     load
 } from './modules';
 import Guid from './utils/Guid';
+import MapEvent from './utils/MapEvent';
 export default class FlashPoint3DLayer extends EventEmitter {
     private view: any = null;
     private falshpoint3DRenderer: any = null;
@@ -34,7 +35,19 @@ export default class FlashPoint3DLayer extends EventEmitter {
                             }
                         });
                     }
-                    this.emit('click', result, geometryPoint);
+                    this.emit(MapEvent.click, result, geometryPoint);
+                }, (result) => {
+                    let geometryPoint = null;
+                    if (result != null) {
+                        geometryPoint = new Point({
+                            x: result.x,
+                            y: result.y,
+                            spatialReference: {
+                                wkid: 102100
+                            }
+                        });
+                    }
+                    this.emit(MapEvent.pointermove, result, geometryPoint);
                 });
                 externalRenderers.add(this.view, this.falshpoint3DRenderer);
             });
