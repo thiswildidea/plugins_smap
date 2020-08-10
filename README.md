@@ -71,7 +71,12 @@ import Plugins from 'smap-plugins-shsmi' // 引用Plugins
     - [FlashPoint3DLayer-click事件](#FlashPoint3DLayer-click事件)
     - [FlashPoint3DLayer-pointermove事件](#FlashPoint3DLayer-pointermove事件)
     - [FlashPoint3DLayer参数说明](#FlashPoint3DLayer参数说明)
-
+ - [EchartFlashPointLayer](#EchartFlashPointLayer)
+    - [EchartFlashPointLayer调用示例](#EchartFlashPointLayer调用示例)
+    - [EchartFlashPointLayer更新](#EchartFlashPointLayer更新)
+    - [EchartFlashPointLayer删除](#EchartFlashPointLayer删除)
+    - [EchartFlashPointLayer事件](EchartFlashPointLayer事件)
+    - [EchartFlashPointLayer参数说明](#EchartFlashPointLayer参数说明)
 
 ## 轨迹播放
 ### 轨迹播放调用示例
@@ -1363,4 +1368,264 @@ import Plugins from 'smap-plugins-shsmi' // 引用Plugins
     spead //闪烁速度
     view //地图试图
     point //数据 由坐标和属性构成
+```
+##  EchartFlashPointLayer
+### EchartFlashPointLayer调用示例
+```js
+import SMap from 'smap-shsmi' // 引用SMAP
+import Plugins from 'smap-plugins-shsmi' // 引用Plugins
+ const map = new SMap.Map('container', {
+        viewMode: '3D',
+        center: [0, 0],
+        zoom: 4,
+        zooms: [0, 12],
+        pitch: 60,
+        mapStyle: 'smap://styles/dark',
+        showBuildingBlock: true
+      })
+```
+```js
+ function createContentpopup(data) {
+         let htmlstring = '';
+         htmlstring += "<table>"
+             for (let key in data) {
+             htmlstring += "<tr>";
+                 htmlstring += '<td class="tdlabel">';
+                     htmlstring += "<span>";
+                         htmlstring += key;
+                         htmlstring += " :";
+                         htmlstring += "</span>";
+                     htmlstring += "</td>";
+                 htmlstring += '<td class="tdvalue">';
+                     htmlstring += "<span>";
+                         htmlstring += data[key] != null ? data[key] : "";
+                         htmlstring += "</span>";
+                     htmlstring += "</td>";
+                 htmlstring += "</tr>";
+             }
+             htmlstring += "</table>"
+         return htmlstring;
+         }
+      let echartfalshpoint = new Plugins.EchartFlashPointLayer(smap.view)
+          const paramter ={
+                  datas: [{
+                            name: '徐汇区',
+                            value: 200,
+                            x:-2719.02,
+                            y:-6646.5,
+                            attributes:{
+                             name: '徐汇区',
+                             code: '1'
+                            },
+                            color: '#00FA9A',
+                            symbol: 'diamond'
+                        }, {
+                            name: '杨浦区',
+                            value: 100,
+                            x:5488.4,
+                            y:7804.6,
+                            attributes:{
+                             name: '杨浦区',
+                             code: '2'
+                            },
+                            color: '#FFFF00',
+                            symbol: 'diamond'
+                        }, {
+                            name: '崇明区',
+                            value: 100,
+                            x:4225.73,
+                            y:46675.1,
+                             attributes:{
+                             name: '崇明区',
+                             code: '3'
+                             },
+                            color: '#00BFFF',
+                            symbol: 'diamond'
+                        }, {
+                            name: '虹口区',
+                            value: 100,
+                            x:1913.39,
+                            y:4128.88,
+                            attributes:{
+                               name: '虹口区',
+                               code: '4'
+                               },
+                            color: '#00FF00',
+                            symbol: 'diamond'
+                        }, {
+                            name: '长宁区',
+                            value: 100,
+                            x:-8459.18,
+                            y:-3172.19,
+                            attributes:{
+                               name: '长宁区',
+                               code: '5'
+                              },
+                            color: '#00FFFF',
+                            symbol: 'diamond'
+                        }, {
+                            name: '普陀区',
+                            value: 100,
+                            x:-6344.38,
+                            y:2719.02,
+                            attributes:{
+                            name: '普陀区',
+                            code: '6'
+                            },
+                            color: '#D2691E',
+                            symbol:'path://M30.9,53.2C16.8,53.2,5.3,41.7,5.3,27.6S16.8,2,30.9,2C45,2,56.4,13.5,56.4,27.6S45,53.2,30.9,53.2zM30.9,3.5C17.6,3.5,6.8,14.4,6.8,27.6c0,13.3,10.8,24.1,24.101,24.1C44.2,51.7,55,40.9,55,27.6C54.9,14.4,44.1,3.5,30.9,3.5zM36.9,35.8c0,0.601-0.4,1-0.9,1h-1.3c-0.5,0-0.9-0.399-0.9-1V19.5c0-0.6,0.4-1,0.9-1H36c0.5,0,0.9,0.4,0.9,1V35.8zM27.8,35.8c0,0.601-0.4,1-0.9,1h-1.3c-0.5,0-0.9-0.399-0.9-1V19.5c0-0.6,0.4-1,0.9-1H27c0.5,0,0.9,0.4,0.9,1L27.8,35.8L27.8,35.8z',
+                        }, {
+                             name: '青浦区',
+                             value: 100,
+                             x:-34189.99,
+                             y:-7491.07,
+                             attributes:{
+                              name: '青浦区',
+                              code: '7'
+                              },
+                            color: '#a6c84c',
+                            symbol: 'diamond'
+                        }]
+             }
+              // symbol:'image://http://31.0.37.225:8080/images/pin_blue.png',
+             //  symbol: 'diamond', //'circle', 'rect', 'roundRect', 'triangle', 'diamond', 'pin', 'arrow',
+            //  symbol:'image://data:image/gif;base64,R0lGODlhEAAQAMQAAORHHOVSKudfOulrSOp3WOyDZu6QdvCchPGolfO0o/XBs/fNwfjZ0frl3/zy7////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAkAABAALAAAAAAQABAAAAVVICSOZGlCQAosJ6mu7fiyZeKqNKToQGDsM8hBADgUXoGAiqhSvp5QAnQKGIgUhwFUYLCVDFCrKUE1lBavAViFIDlTImbKC5Gm2hB0SlBCBMQiB0UjIQA7'
+            //   symbol:'path://M30.9,53.2C16.8,53.2,5.3,41.7,5.3,27.6S16.8,2,30.9,2C45,2,56.4,13.5,56.4,27.6S45,53.2,30.9,53.2zM30.9,3.5C17.6,3.5,6.8,14.4,6.8,27.6c0,13.3,10.8,24.1,24.101,24.1C44.2,51.7,55,40.9,55,27.6C54.9,14.4,44.1,3.5,30.9,3.5zM36.9,35.8c0,0.601-0.4,1-0.9,1h-1.3c-0.5,0-0.9-0.399-0.9-1V19.5c0-0.6,0.4-1,0.9-1H36c0.5,0,0.9,0.4,0.9,1V35.8zM27.8,35.8c0,0.601-0.4,1-0.9,1h-1.3c-0.5,0-0.9-0.399-0.9-1V19.5c0-0.6,0.4-1,0.9-1H27c0.5,0,0.9,0.4,0.9,1L27.8,35.8L27.8,35.8z',
+            //  labelposition: 'right' // 'top' 'left' 'right' 'bottom' 'inside' 'insideLeft' 'insideRight' insideTop'insideBottom' 'insideTopLeft' 'insideBottomLeft' 'insideTopRight' 'insideBottomRight'
+            echartfalshpoint.add(paramter)
+```
+![echartflashpoints](https://gitee.com/thiswildidea/images/raw/master/smiapi/ts/4x/3d/echartflashpoints/echartflashpoints.gif)
+![echartflashpoints](https://gitee.com/thiswildidea/images/raw/master/smiapi/ts/4x/2d/echartflashpoints/echartfalshpoints.gif)
+
+### EchartFlashPointLayer更新
+```js
+             const paramter ={
+                 datas: [{
+                            name: '徐汇区',
+                            value: 200,
+                            x:-2719.02,
+                            y:-6646.5,
+                             attributes:{
+                             name: '徐汇区',
+                             code: '111'
+                             },
+                            color: '#00FA9A',
+                            symbol: 'roundRect'
+                        }, {
+                            name: '杨浦区',
+                            value: 100,
+                            x:5488.4,
+                            y:7804.6,
+                              attributes:{
+                              name: '杨浦区',
+                              code: '222'
+                              },
+                            color: '#FFFF00',
+                            symbol: 'diamond'
+                        }, {
+                            name: '崇明区',
+                            value: 100,
+                            x:4225.73,
+                            y:46675.1,
+                             attributes:{
+                             name: '崇明区',
+                             code: '333'
+                             },
+                            color: '#00BFFF',
+                            symbol: 'diamond'
+                        }, {
+                            name: '虹口区',
+                            value: 100,
+                            x:1913.39,
+                            y:4128.88,
+                             attributes:{
+                             name: '虹口区',
+                             code: '444'
+                             },
+                            color: '#00FF00',
+                            symbol: 'triangle'
+                        }, {
+                            name: '长宁区',
+                            value: 100,
+                            x:-8459.18,
+                            y:-3172.19,
+                             attributes:{
+                             name: '长宁区',
+                             code: '555'
+                             },
+                            color: '#00FFFF',
+                            symbol: 'circle'
+                        }, {
+                            name: '普陀区',
+                            value: 100,
+                            x:-6344.38,
+                            y:2719.02,
+                             attributes:{
+                             name: '普陀区',
+                             code: '666'
+                             },
+                            color: '#D2691E',
+                            symbol: 'arrow'
+                        }, {
+                            name: '青浦区',
+                            value: 100,
+                             x:-34189.99,
+                             y:-7491.07,
+                               attributes:{
+                               name: '青浦区',
+                               code: '777'
+                               },
+                            color: '#a6c84c',
+                            symbol: 'pin'
+                        }]
+             }
+              //   symbol:'image://http://31.0.37.225:8080/images/pin_blue.png',
+             //   symbol: 'diamond', //'circle', 'rect', 'roundRect', 'triangle', 'diamond', 'pin', 'arrow',
+            //    symbol:'image://data:image/gif;base64,R0lGODlhEAAQAMQAAORHHOVSKudfOulrSOp3WOyDZu6QdvCchPGolfO0o/XBs/fNwfjZ0frl3/zy7////wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACH5BAkAABAALAAAAAAQABAAAAVVICSOZGlCQAosJ6mu7fiyZeKqNKToQGDsM8hBADgUXoGAiqhSvp5QAnQKGIgUhwFUYLCVDFCrKUE1lBavAViFIDlTImbKC5Gm2hB0SlBCBMQiB0UjIQA7'
+            //   symbol:'path://M30.9,53.2C16.8,53.2,5.3,41.7,5.3,27.6S16.8,2,30.9,2C45,2,56.4,13.5,56.4,27.6S45,53.2,30.9,53.2zM30.9,3.5C17.6,3.5,6.8,14.4,6.8,27.6c0,13.3,10.8,24.1,24.101,24.1C44.2,51.7,55,40.9,55,27.6C54.9,14.4,44.1,3.5,30.9,3.5zM36.9,35.8c0,0.601-0.4,1-0.9,1h-1.3c-0.5,0-0.9-0.399-0.9-1V19.5c0-0.6,0.4-1,0.9-1H36c0.5,0,0.9,0.4,0.9,1V35.8zM27.8,35.8c0,0.601-0.4,1-0.9,1h-1.3c-0.5,0-0.9-0.399-0.9-1V19.5c0-0.6,0.4-1,0.9-1H27c0.5,0,0.9,0.4,0.9,1L27.8,35.8L27.8,35.8z',
+            //  labelposition: 'right' // 'top' 'left' 'right' 'bottom' 'inside' 'insideLeft' 'insideRight' insideTop'insideBottom' 'insideTopLeft' 'insideBottomLeft' 'insideTopRight' 'insideBottomRight'
+            
+            echartfalshpoint.update(paramter)
+
+```
+### EchartFlashPointLayer删除
+```js
+ echartfalshpoint.delete()
+```
+### EchartFlashPointLayer事件
+```js
+  echartfalshpoint.on(SMap.MapEvent.click, function(result, geometry) {
+     if (geometry) {
+          smap.view.popup.defaultPopupTemplateEnabled = true
+          smap.view.popup.autoOpenEnabled = false
+          smap.view.popup.open({
+          location: geometry,
+          title: result.attributes.name,
+          content: createContentpopup(result.attributes),
+       })
+     }
+    })
+    echartfalshpoint.on(SMap.MapEvent.pointermove, function(result, geometry) {
+    
+  })
+    echartfalshpoint.on(SMap.MapEvent.doubleclick, function(result, geometry) {
+    
+  })
+```
+
+### EchartFlashPointLayer参数说明
+```js
+ datas：[{
+      name:       //标注名称
+      value: 100, //symbol 大小
+      x:-8459.18, //x 位置
+      y:-3172.19,  //y 位置
+       attributes:{    //属性信息
+       name: '长宁区',
+       code: '555'
+       },
+      color: '#00FFFF',  //符号颜色
+      symbol: 'circle'   //符号样式，参考示例中
+
+ }]
 ```
