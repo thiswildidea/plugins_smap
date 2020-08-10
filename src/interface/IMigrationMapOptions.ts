@@ -1,4 +1,4 @@
-export default interface ITrajectoryOptions {
+export default interface IMigrationMapOptions {
     id?: any;
     geoCoordMap?: any;
     planePath?: any;

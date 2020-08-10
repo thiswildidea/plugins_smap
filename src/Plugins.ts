@@ -1,4 +1,5 @@
 import Boundary from './Boundary';
+import EchartFlashPointLayer from './EchartFlashPointLayer';
 import FeaureOverlays from './FeaureOverlays';
 import FlashPoint3DLayer from './FlashPoint3DLayer';
 import GraphicOverlays from './GraphicOverlays';
@@ -15,6 +16,7 @@ export default {
   Boundary,
   GraphicOverlays,
   FeaureOverlays,
+  EchartFlashPointLayer,
   FlashPoint3DLayer,
   HeatMap,
   MaskBoundary,

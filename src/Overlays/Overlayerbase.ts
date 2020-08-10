@@ -12,7 +12,7 @@ export default class Overlayerbase {
     public elevationInfo: any;
     constructor(overlayeroption: IOverlayerOptions) {
         this.uuid = new Guid().uuid;
-        this.label = overlayeroption.label;
+        this.label = overlayeroption.label !== undefined ? overlayeroption.label : new Label({ visible: false});
         this.attributes = overlayeroption.attributes === undefined ? {} : overlayeroption.attributes;
         this.renderer = overlayeroption.renderer;
         this.type = "element";

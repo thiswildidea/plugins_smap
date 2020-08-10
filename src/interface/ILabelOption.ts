@@ -1,7 +1,7 @@
 export default interface ILabelOption {
     type?: string;
-    visible?: boolean;
-    text: string;
+    visible: boolean;
+    text?: string;
     size?: number;
     weight?: string;
     color?: string;
@@ -23,5 +23,5 @@ export default interface ILabelOption {
     placement?: string;
     maxScale?: number;
     minScale?: number;
-    labelingInfo: any ;
+    labelingInfo?: any ;
 }

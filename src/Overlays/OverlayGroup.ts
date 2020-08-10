@@ -22,7 +22,8 @@ export default class OverlayGroup {
         this.overlaytype = overLayerGroupOption.overlaytype === undefined ? 'marker' : overLayerGroupOption.overlaytype;
         this.datafiled = overLayerGroupOption.datafiled === undefined ? [] : overLayerGroupOption.datafiled;
         this.style = overLayerGroupOption.style === undefined ? [] : overLayerGroupOption.style;
-        this.label = overLayerGroupOption.label === undefined ? null : overLayerGroupOption.label;
+        this.label = overLayerGroupOption.label === undefined ?
+        new Label({visible: false}) : overLayerGroupOption.label;
         this.frreduction = overLayerGroupOption.frreduction === undefined ? null : overLayerGroupOption.frreduction;
         this.renderer = overLayerGroupOption.renderer === undefined ? null : overLayerGroupOption.frreduction;
         this.elevationInfo = overLayerGroupOption.elevationInfo;
