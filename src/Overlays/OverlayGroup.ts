@@ -25,7 +25,7 @@ export default class OverlayGroup {
         this.label = overLayerGroupOption.label === undefined ?
         new Label({visible: false}) : overLayerGroupOption.label;
         this.frreduction = overLayerGroupOption.frreduction === undefined ? null : overLayerGroupOption.frreduction;
-        this.renderer = overLayerGroupOption.renderer === undefined ? null : overLayerGroupOption.frreduction;
+        this.renderer = overLayerGroupOption.renderer === undefined ? null : overLayerGroupOption.renderer;
         this.elevationInfo = overLayerGroupOption.elevationInfo;
     }
 }

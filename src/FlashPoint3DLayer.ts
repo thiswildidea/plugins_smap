@@ -21,6 +21,7 @@ export default class FlashPoint3DLayer extends EventEmitter {
                 this.falshpoint3DRenderer = new flashPoint3DLayer({
                     nring: flashPointOptions.nring,
                     spead: flashPointOptions.spead,
+                    size: flashPointOptions.size,
                     color: flashPointOptions.color,
                     view: flashPointOptions.view,
                     points: flashPointOptions.points
