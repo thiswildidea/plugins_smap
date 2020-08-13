@@ -6,10 +6,11 @@ import {
 } from './modules';
 import Guid from './utils/Guid';
 import MapEvent from './utils/MapEvent';
-export default class Draw extends EventEmitter {
+export default class Measurement extends EventEmitter {
     public marksymbol = null;
     public polylinesymbol = null;
     public polygonsymbol = null;
+    public textsymbol = null;
     public displayedLayerid: any = "";
     private view: any = null;
     private drawtool: any = null;
@@ -18,11 +19,10 @@ export default class Draw extends EventEmitter {
         super();
         this.init(view);
     }
-    public drawcircle() {
+    public circle() {
         load(['esri/views/draw/Draw', 'esri/Graphic', 'esri/layers/GraphicsLayer', 'esri/geometry/Point', 'esri/geometry/geometryEngine'])
             // tslint:disable-next-line:variable-name
             .then(([draw, Graphic, GraphicsLayer, Point, geometryEngine]) => {
-                this.emit('drawbegin', 'circle');
                 this.drawtool = new draw({
                     view: this.view
                 });
@@ -64,13 +64,42 @@ export default class Draw extends EventEmitter {
                             spatialReference: this.view.spatialReference
                         });
 
-                        const distance = geometryEngine.distance(point1, point2, 'meters');
+                        const radiusgraphic = new Graphic({
+                            geometry: {
+                                type: "polyline",
+                                paths: [[event.vertices[0], event.vertices[1]]],
+                                spatialReference: this.view.spatialReference
+                            },
+                            symbol: this.polylinesymbol
+                        });
+                        const distance = geometryEngine.geodesicLength(radiusgraphic.geometry, 'meters');
                         const geommetry = geometryEngine.buffer(point1, distance, 'meters');
-                        const graphic = new Graphic({
+                        const area = geometryEngine.geodesicArea(geommetry, 'square-meters');
+                        const circlegraphic = new Graphic({
                             geometry: geommetry,
                             symbol: this.polygonsymbol
                         });
-                        drawcircleresultlayer.add(graphic);
+                        const radiusdistancelabelsymbol = this.textsymbol;
+                        const radiusdistancelabelstring = distance > 1000 ? "半径:" + (distance / 1000).toFixed(3) + "千米"
+                            : "半径:" + parseFloat(distance).toFixed(3) + "米";
+                        radiusdistancelabelsymbol.text = radiusdistancelabelstring;
+                        const radiusdistancelabelgraphic = new Graphic({
+                            geometry: point2,
+                            symbol: radiusdistancelabelsymbol
+                        });
+                        const arealabelsymbol = this.textsymbol;
+                        const arealabelstring = area > 100000 ? "面积:" + (area / 1000000).toFixed(3) + "平千方米"
+                            : "面积:" + parseFloat(area).toFixed(3) + "平方米";
+                        arealabelsymbol.text = arealabelstring;
+                        const arealabelgraphic = new Graphic({
+                            geometry: point1,
+                            symbol: arealabelsymbol
+                        });
+
+                        drawcircleresultlayer.add(circlegraphic);
+                        drawcircleresultlayer.add(radiusgraphic);
+                        drawcircleresultlayer.add(radiusdistancelabelgraphic);
+                        drawcircleresultlayer.add(arealabelgraphic);
                     }
                 }
                 );
@@ -88,14 +117,43 @@ export default class Draw extends EventEmitter {
                             y: event.vertices[1][1],
                             spatialReference: this.view.spatialReference
                         });
-                        const distance = geometryEngine.distance(point1, point2, 'meters');
-                        const geommetry = geometryEngine.buffer(point1, distance, 'meters');
+                        const radiusgraphic = new Graphic({
+                            geometry: {
+                                type: "polyline",
+                                paths: [[event.vertices[0], event.vertices[1]]],
+                                spatialReference: this.view.spatialReference
+                            },
+                            symbol: this.polylinesymbol
+                        });
 
-                        const graphic = new Graphic({
+                        const distance = geometryEngine.geodesicLength(radiusgraphic.geometry, 'meters');
+                        const geommetry = geometryEngine.buffer(point1, distance, 'meters');
+                        const area = geometryEngine.geodesicArea(geommetry, 'square-meters');
+                        const circlegraphic = new Graphic({
                             geometry: geommetry,
                             symbol: this.polygonsymbol
                         });
-                        drawcircleresultlayer.add(graphic);
+
+                        const radiusdistancelabelsymbol = this.textsymbol;
+                        const radiusdistancelabelstring = distance > 1000 ? "半径:" + (distance / 1000).toFixed(3) + "千米"
+                            : "半径:" + parseFloat(distance).toFixed(3) + "米";
+                        radiusdistancelabelsymbol.text = radiusdistancelabelstring;
+                        const radiusdistancelabelgraphic = new Graphic({
+                            geometry: point2,
+                            symbol: radiusdistancelabelsymbol
+                        });
+                        const arealabelsymbol = this.textsymbol;
+                        const arealabelstring = area > 100000 ? "面积:" + (area / 1000000).toFixed(3) + "平千方米"
+                            : "面积:" + parseFloat(area).toFixed(3) + "平方米";
+                        arealabelsymbol.text = arealabelstring;
+                        const arealabelgraphic = new Graphic({
+                            geometry: point1,
+                            symbol: arealabelsymbol
+                        });
+                        drawcircleresultlayer.add(circlegraphic);
+                        drawcircleresultlayer.add(radiusgraphic);
+                        drawcircleresultlayer.add(radiusdistancelabelgraphic);
+                        drawcircleresultlayer.add(arealabelgraphic);
                     }
                 }
                 );
@@ -114,27 +172,60 @@ export default class Draw extends EventEmitter {
                             spatialReference: this.view.spatialReference
                         });
 
-                        const distance = geometryEngine.distance(point1, point2, 'meters');
+                        const radiusgraphic = new Graphic({
+                            geometry: {
+                                type: "polyline",
+                                paths: [[event.vertices[0], event.vertices[1]]],
+                                spatialReference: this.view.spatialReference
+                            },
+                            symbol: this.polylinesymbol
+                        });
+
+                        const distance = geometryEngine.geodesicLength(radiusgraphic.geometry, 'meters');
                         const geommetry = geometryEngine.buffer(point1, distance, 'meters');
-                        const graphic = new Graphic({
+                        const area = geometryEngine.geodesicArea(geommetry, 'square-meters');
+                        const circlegraphic = new Graphic({
                             geometry: geommetry,
                             symbol: this.polygonsymbol
                         });
+
+                        const radiusdistancelabelsymbol = this.textsymbol;
+                        const radiusdistancelabelstring = distance > 1000 ? "半径:" + (distance / 1000).toFixed(3) + "千米"
+                            : "半径:" + parseFloat(distance).toFixed(3) + "米";
+                        radiusdistancelabelsymbol.text = radiusdistancelabelstring;
+                        const radiusdistancelabelgraphic = new Graphic({
+                            geometry: point2,
+                            symbol: radiusdistancelabelsymbol
+                        });
+                        const arealabelsymbol = this.textsymbol;
+                        const arealabelstring = area > 100000 ? "面积:" + (area / 1000000).toFixed(3) + "平千方米"
+                        : "面积:" + parseFloat(area).toFixed(3) + "平方米";
+                        arealabelsymbol.text = arealabelstring;
+                        const arealabelgraphic = new Graphic({
+                            geometry: point1,
+                            symbol: arealabelsymbol
+                        });
+
                         this.view.map.remove(drawcircleresultlayer);
-                        drawresultlayer.add(graphic);
-                        // this.drawtool.complete();
-                        this.emit('drawcomplete', graphic, 'circle');
+                        drawresultlayer.add(circlegraphic);
+                        drawresultlayer.add(radiusgraphic);
+                        drawresultlayer.add(radiusdistancelabelgraphic);
+                        drawresultlayer.add(arealabelgraphic);
+                        const result = {
+                         radiusdistance: distance,
+                         circlearea: area
+                        };
+                        this.emit('measurementcomplete', circlegraphic, result, 'circle');
                     }
                   }
                 );
         });
     }
 
-    public drawrectangle() {
-        load(['esri/views/draw/Draw', 'esri/Graphic', 'esri/layers/GraphicsLayer', "esri/geometry/Polygon"])
+    public rectangle() {
+        load(['esri/views/draw/Draw', 'esri/Graphic', 'esri/layers/GraphicsLayer', 'esri/geometry/Point', "esri/geometry/Polygon", 'esri/geometry/geometryEngine'])
             // tslint:disable-next-line:variable-name
-            .then(([draw, Graphic, GraphicsLayer, Polygon]) => {
-                this.emit('drawbegin', 'rectangle');
+            .then(([draw, Graphic, GraphicsLayer, Point, Polygon, geometryEngine]) => {
                 this.drawtool = new draw({
                     view: this.view
                 });
@@ -184,6 +275,75 @@ export default class Draw extends EventEmitter {
                             geometry: pgon,
                             symbol: this.polygonsymbol
                         });
+
+                        const rlengthGeometry = new Point({
+                            x: xmin + (xmax - xmin) / 2,
+                            y: ymin ,
+                            spatialReference: this.view.spatialReference
+                        });
+                        const rlengthbegin = new Point({
+                            x: xmin,
+                            y: ymin,
+                            spatialReference: this.view.spatialReference
+                        });
+                        const rlengthend = new Point({
+                            x: xmax,
+                            y: xmin,
+                            spatialReference: this.view.spatialReference
+                        });
+                        const length = geometryEngine.distance(rlengthbegin, rlengthend, 'meters');
+                        const rlengthlabelsymbol = this.textsymbol;
+                        const rlengthlabelstring = length > 1000 ? "长度:" + (length / 1000).toFixed(3) + "千米"
+                            : "长度:" + length.toFixed(3) + "米";
+                        rlengthlabelsymbol.text = rlengthlabelstring;
+                        const rlengthlabelgraphic = new Graphic({
+                            geometry: rlengthGeometry,
+                            symbol: rlengthlabelsymbol
+                        });
+
+                        const rwidthGeometry = new Point({
+                            x: xmax ,
+                            y: ymin + (ymax - ymin) / 2,
+                            spatialReference: this.view.spatialReference
+                        });
+                        const rwidthbegin = new Point({
+                            x: xmax,
+                            y: ymin,
+                            spatialReference: this.view.spatialReference
+                        });
+                        const rwidthend = new Point({
+                            x: xmax,
+                            y: ymax,
+                            spatialReference: this.view.spatialReference
+                        });
+                        const width = geometryEngine.distance(rwidthbegin, rwidthend, 'meters');
+                        const rwidthlabelsymbol = this.textsymbol;
+                        const rwidthlabelstring = width > 1000 ? "宽度:" + (width / 1000).toFixed(3) + "千米"
+                            : "宽度:" + width.toFixed(3) + "米";
+                        rwidthlabelsymbol.text = rwidthlabelstring;
+                        const rlwidthlabelgraphic = new Graphic({
+                            geometry: rwidthGeometry,
+                            symbol: rwidthlabelsymbol
+                        });
+
+                        const centergeometry = new Point({
+                            x: xmin + (xmax - xmin) / 2,
+                            y: ymin + (ymax - ymin) / 2,
+                            spatialReference: this.view.spatialReference
+                        });
+                        const arealabelsymbol = this.textsymbol;
+                        const area = length * width;
+                        const arealabelstring = area > 100000 ? "面积:" + (area / 1000000).toFixed(3) + "平方千米"
+                            : "面积:" + area.toFixed(3) + "平方米";
+                        arealabelsymbol.text = arealabelstring;
+                        const arealabelgraphic = new Graphic({
+                            geometry: centergeometry,
+                            symbol: arealabelsymbol
+                        });
+
+                        drawrectangleresultlayer.add(rlengthlabelgraphic);
+                        drawrectangleresultlayer.add(rlwidthlabelgraphic);
+                        drawrectangleresultlayer.add(arealabelgraphic);
                         drawrectangleresultlayer.add(graphic);
                     }
                 }
@@ -211,6 +371,74 @@ export default class Draw extends EventEmitter {
                             geometry: pgon,
                             symbol: this.polygonsymbol
                         });
+                        const rlengthGeometry = new Point({
+                            x: xmin + (xmax - xmin) / 2,
+                            y: ymin,
+                            spatialReference: this.view.spatialReference
+                        });
+                        const rlengthbegin = new Point({
+                            x: xmin,
+                            y: ymin,
+                            spatialReference: this.view.spatialReference
+                        });
+                        const rlengthend = new Point({
+                            x: xmax,
+                            y: ymin,
+                            spatialReference: this.view.spatialReference
+                        });
+                        const length = geometryEngine.distance(rlengthbegin, rlengthend, 'meters');
+                        const rlengthlabelsymbol = this.textsymbol;
+                        const rlengthlabelstring = length > 1000 ? "长度:" + (length / 1000).toFixed(3) + "千米"
+                            : "长度:" + length.toFixed(3) + "米";
+                        rlengthlabelsymbol.text = rlengthlabelstring;
+                        const rlengthlabelgraphic = new Graphic({
+                            geometry: rlengthGeometry,
+                            symbol: rlengthlabelsymbol
+                        });
+
+                        const rwidthGeometry = new Point({
+                            x: xmax,
+                            y: ymin + (ymax - ymin) / 2,
+                            spatialReference: this.view.spatialReference
+                        });
+                        const rwidthbegin = new Point({
+                            x: xmax,
+                            y: ymin,
+                            spatialReference: this.view.spatialReference
+                        });
+                        const rwidthend = new Point({
+                            x: xmax,
+                            y: ymax,
+                            spatialReference: this.view.spatialReference
+                        });
+                        const width = geometryEngine.distance(rwidthbegin, rwidthend, 'meters');
+                        const rwidthlabelsymbol = this.textsymbol;
+                        const rwidthlabelstring = width > 1000 ? "宽度:" + (width / 1000).toFixed(3) + "千米"
+                            : "宽度:" + width.toFixed(3) + "米";
+                        rwidthlabelsymbol.text = rwidthlabelstring;
+                        const rlwidthlabelgraphic = new Graphic({
+                            geometry: rwidthGeometry,
+                            symbol: rwidthlabelsymbol
+                        });
+
+                        const centergeometry = new Point({
+                            x: xmin + (xmax - xmin) / 2,
+                            y: ymin + (ymax - ymin) / 2,
+                            spatialReference: this.view.spatialReference
+                        });
+                        const arealabelsymbol = this.textsymbol;
+                        const area = length * width;
+                        const arealabelstring = area > 100000 ? "面积:" + (area / 1000000).toFixed(3) + "平方千米"
+                            : "面积:" + area.toFixed(3) + "平方米";
+                        arealabelsymbol.text = arealabelstring;
+                        const arealabelgraphic = new Graphic({
+                            geometry: centergeometry,
+                            symbol: arealabelsymbol
+                        });
+
+                        drawrectangleresultlayer.add(rlengthlabelgraphic);
+                        drawrectangleresultlayer.add(rlwidthlabelgraphic);
+                        drawrectangleresultlayer.add(arealabelgraphic);
                         drawrectangleresultlayer.add(graphic);
                     }
                 }
@@ -238,21 +466,91 @@ export default class Draw extends EventEmitter {
                             geometry: pgon,
                             symbol: this.polygonsymbol
                         });
+
+                        const rlengthGeometry = new Point({
+                            x: xmin + (xmax - xmin) / 2,
+                            y: ymin,
+                            spatialReference: this.view.spatialReference
+                        });
+                        const rlengthbegin = new Point({
+                            x: xmin,
+                            y: ymin,
+                            spatialReference: this.view.spatialReference
+                        });
+                        const rlengthend = new Point({
+                            x: xmax,
+                            y: ymin,
+                            spatialReference: this.view.spatialReference
+                        });
+                        const rlength = geometryEngine.distance(rlengthbegin, rlengthend, 'meters');
+                        const rlengthlabelsymbol = this.textsymbol;
+                        const rlengthlabelstring = rlength > 1000 ? "长度:" + (rlength / 1000).toFixed(3) + "千米"
+                            : "长度:" + rlength.toFixed(3) + "米";
+                        rlengthlabelsymbol.text = rlengthlabelstring;
+                        const rlengthlabelgraphic = new Graphic({
+                            geometry: rlengthGeometry,
+                            symbol: rlengthlabelsymbol
+                        });
+
+                        const rwidthGeometry = new Point({
+                            x: xmax,
+                            y: ymin + (ymax - ymin) / 2,
+                            spatialReference: this.view.spatialReference
+                        });
+                        const rwidthbegin = new Point({
+                            x: xmax,
+                            y: ymin,
+                            spatialReference: this.view.spatialReference
+                        });
+                        const rwidthend = new Point({
+                            x: xmax,
+                            y: ymax,
+                            spatialReference: this.view.spatialReference
+                        });
+                        const rwidth = geometryEngine.distance(rwidthbegin, rwidthend, 'meters');
+                        const rwidthlabelsymbol = this.textsymbol;
+                        const rwidthlabelstring = rwidth > 1000 ? "宽度:" + (rwidth / 1000).toFixed(3) + "千米"
+                            : "宽度:" + rwidth.toFixed(3) + "米";
+                        rwidthlabelsymbol.text = rwidthlabelstring;
+                        const rlwidthlabelgraphic = new Graphic({
+                            geometry: rwidthGeometry,
+                            symbol: rwidthlabelsymbol
+                        });
+
+                        const centergeometry = new Point({
+                            x: xmin + (xmax - xmin) / 2,
+                            y: ymin + (ymax - ymin) / 2,
+                            spatialReference: this.view.spatialReference
+                        });
+                        const arealabelsymbol = this.textsymbol;
+                        const rarea = rlength * rwidth;
+                        const arealabelstring = rarea > 100000 ? "面积:" + (rarea / 1000000).toFixed(3) + "平方千米"
+                            : "面积:" + rarea.toFixed(3) + "平方米";
+                        arealabelsymbol.text = arealabelstring;
+                        const arealabelgraphic = new Graphic({
+                            geometry: centergeometry,
+                            symbol: arealabelsymbol
+                        });
                         this.view.map.remove(drawrectangleresultlayer);
+                        drawresultlayer.add(rlengthlabelgraphic);
+                        drawresultlayer.add(rlwidthlabelgraphic);
+                        drawresultlayer.add(arealabelgraphic);
                         drawresultlayer.add(graphic);
-                        // this.drawtool.complete();
-                        this.emit('drawcomplete', graphic, 'rectangle');
+                        this.emit('measurementcomplete', graphic, {
+                           length: rlength,
+                           width: rwidth,
+                           area: rwidth * rlength
+                        }, 'rectangle');
                     }
                 }
               );
             });
     }
 
-    public drawPoint() {
+    public Point() {
         load(['esri/views/draw/Draw', 'esri/Graphic', 'esri/layers/GraphicsLayer'])
             // tslint:disable-next-line:variable-name
             .then(([draw, Graphic, GraphicsLayer]) => {
-                this.emit('drawbegin', 'point');
                 this.drawtool = new draw({
                     view: this.view
                 });
@@ -295,6 +593,14 @@ export default class Draw extends EventEmitter {
                        symbol: this.marksymbol
                    });
                     drawPointresultlayer.add(graphic);
+                    const labelsymbol = this.textsymbol;
+                    labelsymbol.text = "(" + parseFloat(event.coordinates[0]).toFixed(3)
+                        + "," + parseFloat(event.coordinates[0]).toFixed(3) + ")";
+                    const labelgraphic = new Graphic({
+                        geometry: point,
+                        symbol: labelsymbol
+                    });
+                    drawPointresultlayer.add(labelgraphic);
                 }
                 );
                 action.on("redo", (event) => { console.log(event); });
@@ -310,20 +616,28 @@ export default class Draw extends EventEmitter {
                         geometry: point,
                         symbol: this.marksymbol
                     });
+                    const labelsymbol = this.textsymbol;
+                    labelsymbol.text = "(" + parseFloat(event.coordinates[0]).toFixed(3)
+                        + "," + parseFloat(event.coordinates[0]).toFixed(3) + ")";
+                    const labelgraphic = new Graphic({
+                        geometry: point,
+                        symbol: labelsymbol
+                    });
                     this.view.map.remove(drawPointresultlayer);
+                    drawresultlayer.add(labelgraphic);
                     drawresultlayer.add(graphic);
-                    // this.drawtool.complete();
-                    this.emit('drawcomplete', graphic, 'point');
+                    const coordinates = "(" + parseFloat(event.coordinates[0]).toFixed(3)
+                        + "," + parseFloat(event.coordinates[0]).toFixed(3) + ")";
+                    this.emit('measurementcomplete', graphic, coordinates, 'point');
                  }
                 );
             });
     }
 
-    public drawMultipoint() {
+    public Multipoint() {
         load(['esri/views/draw/Draw', 'esri/views/draw/PointDrawAction', 'esri/Graphic', 'esri/layers/GraphicsLayer', 'esri/geometry/Polygon', 'esri/geometry/geometryEngine'])
             // tslint:disable-next-line:variable-name
             .then(([draw, PointDrawAction, Graphic, GraphicsLayer, Polygon, geometryEngine]) => {
-                this.emit('drawbegin', 'multipoint');
                 this.drawtool = new draw({
                     view: this.view
                 });
@@ -375,6 +689,14 @@ export default class Draw extends EventEmitter {
                             geometry: point,
                             symbol: this.marksymbol
                         });
+                        const labelsymbol = this.textsymbol;
+                        labelsymbol.text = "(" + parseFloat(addpoint[0]).toFixed(3)
+                            + "," + parseFloat(addpoint[1]).toFixed(3) + ")";
+                        const labelgraphic = new Graphic({
+                            geometry: point,
+                            symbol: labelsymbol
+                        });
+                        drawmultipointresultlayer.add(labelgraphic);
                         drawmultipointresultlayer.add(graphic);
                     });
                 });
@@ -392,6 +714,14 @@ export default class Draw extends EventEmitter {
                             geometry: point,
                             symbol: this.marksymbol
                         });
+                        const labelsymbol = this.textsymbol;
+                        labelsymbol.text = "(" + parseFloat(addpoint[0]).toFixed(3)
+                            + "," + parseFloat(addpoint[1]).toFixed(3) + ")";
+                        const labelgraphic = new Graphic({
+                            geometry: point,
+                            symbol: labelsymbol
+                        });
+                        drawmultipointMovelayer.add(labelgraphic);
                         drawmultipointMovelayer.add(graphic);
                     });
                   }
@@ -399,7 +729,10 @@ export default class Draw extends EventEmitter {
                 action.on("redo", (event) => { console.log(event); });
                 action.on("undo", (event) => { console.log(event); });
                 action.on("draw-complete", (event) => {
+                    this.view.map.remove(drawmultipointresultlayer);
+                    this.view.map.remove(drawmultipointMovelayer);
                     const graphicsmutipointlist = [];
+                    const pointarraylist = [];
                     event.vertices.map((addpoint) => {
                         const point = {
                             type: "point",
@@ -411,13 +744,19 @@ export default class Draw extends EventEmitter {
                             geometry: point,
                             symbol: this.marksymbol
                         });
-                        graphicsmutipointlist.push(graphic);
+                        const labelsymbol = this.textsymbol;
+                        labelsymbol.text = "(" + parseFloat(addpoint[0]).toFixed(3)
+                            + "," + parseFloat(addpoint[1]).toFixed(3) + ")";
+                        const labelgraphic = new Graphic({
+                            geometry: point,
+                            symbol: labelsymbol
+                        });
                         drawresultlayer.add(graphic);
+                        drawresultlayer.add(labelgraphic);
+                        graphicsmutipointlist.push(graphic);
+                        pointarraylist.push(addpoint);
                     });
-                    this.view.map.remove(drawmultipointresultlayer);
-                    this.view.map.remove(drawmultipointMovelayer);
-                    // this.drawtool.complete();
-                    this.emit('drawcomplete', graphicsmutipointlist, 'multipoint');
+                    this.emit('measurementcomplete', graphicsmutipointlist, pointarraylist, 'multipoint');
                  }
                 );
             });
@@ -427,7 +766,6 @@ export default class Draw extends EventEmitter {
         load(['esri/views/draw/Draw', 'esri/Graphic', 'esri/layers/GraphicsLayer', 'esri/geometry/geometryEngine'])
             // tslint:disable-next-line:variable-name
             .then(([draw, Graphic, GraphicsLayer, geometryEngine]) => {
-                this.emit('drawbegin', 'polyline');
                 this.drawtool = new draw({
                     view: this.view
                 });
@@ -513,6 +851,18 @@ export default class Draw extends EventEmitter {
                              } else {
                                 drawPolylinelayer.add(graphic);
                              }
+                            const labelsymbol = this.textsymbol;
+                            const lengthdistance = geometryEngine.geodesicLength(graphic.geometry, 'meters');
+                            const labelstring =  lengthdistance > 1000 ? "长度:" + (lengthdistance / 1000).toFixed(3) + "千米"
+                                : "长度:" + lengthdistance.toFixed(3) + "米";
+                            labelsymbol.text = labelstring;
+                            const pline = graphic.geometry.clone();
+                            const plastXYPoint = pline.removePoint(0, pline.paths[0].length - 1);
+                            const labelgraphic = new Graphic({
+                                geometry: plastXYPoint ,
+                                symbol: labelsymbol
+                            });
+                            drawPolylinelayer.add(labelgraphic);
                         }
                   });
                 action.on("draw-complete", (event) => {
@@ -571,9 +921,22 @@ export default class Draw extends EventEmitter {
                             polyLine = graphic;
                             drawresultlayer.add(graphic);
                         }
+                        const labelsymbol = this.textsymbol;
+                        const lengthdistance = geometryEngine.geodesicLength(graphic.geometry, 'meters');
+                        const labelstring = lengthdistance > 1000 ? "长度:" + (lengthdistance / 1000).toFixed(3) + "千米"
+                            : "长度:" + lengthdistance.toFixed(3) + "米";
+                        labelsymbol.text = labelstring;
+                        const pline = graphic.geometry.clone();
+                        const plastXYPoint = pline.removePoint(0, pline.paths[0].length - 1);
+                        const labelgraphic = new Graphic({
+                            geometry: plastXYPoint,
+                            symbol: labelsymbol
+                        });
+                        drawresultlayer.add(labelgraphic);
                         this.view.map.remove(drawPolylinelayer);
-                        // this.drawtool.complete();
-                        this.emit('drawcomplete', polyLine, 'polyline');
+                        this.emit('measurementcomplete', polyLine, {
+                            distance: lengthdistance
+                        } , 'polyline');
                     }
                 });
             });
@@ -583,7 +946,6 @@ export default class Draw extends EventEmitter {
         load(['esri/views/draw/Draw', 'esri/Graphic', 'esri/layers/GraphicsLayer', 'esri/geometry/geometryEngine'])
             // tslint:disable-next-line:variable-name
             .then(([draw, Graphic, GraphicsLayer, geometryEngine]) => {
-                this.emit('drawbegin', 'polygon');
                 this.drawtool = new draw({
                     view: this.view
                 });
@@ -630,6 +992,17 @@ export default class Draw extends EventEmitter {
                             geometry: polygon,
                             symbol: this.polygonsymbol
                         });
+                        const area = geometryEngine.geodesicArea(graphic.geometry, "square-meters");
+                        const arealabelsymbol = this.textsymbol;
+
+                        const labelstring = Math.abs(area) > 100000 ? "面积:" + (Math.abs(area) / 1000000).toFixed(3) + "平方千米"
+                            : "面积:" + Math.abs(area).toFixed(3) + "平方米";
+                        arealabelsymbol.text = labelstring;
+                        const arealabelgraphic = new Graphic({
+                            geometry: graphic.geometry.extent.center,
+                            symbol: arealabelsymbol
+                        });
+                        drawPolygonlayer.add(arealabelgraphic);
                         drawPolygonlayer.add(graphic);
                 });
                 action.on("draw-complete", (event) => {
@@ -645,10 +1018,20 @@ export default class Draw extends EventEmitter {
                             geometry: polygon,
                             symbol: this.polygonsymbol
                         });
+                        const polygonarea = geometryEngine.geodesicArea(graphic.geometry, "square-meters");
+                        const arealabelsymbol = this.textsymbol;
+                        const labelstring = Math.abs(polygonarea) > 100000 ? "面积:" +
+                        (Math.abs(polygonarea) / 1000000).toFixed(3) + "平方千米"
+                            : "面积:" + Math.abs(polygonarea).toFixed(3) + "平方米";
+                        arealabelsymbol.text = labelstring;
+                        const arealabelgraphic = new Graphic({
+                            geometry: graphic.geometry.extent.center,
+                            symbol: arealabelsymbol
+                        });
                         this.view.map.remove(drawPolygonlayer);
+                        drawresultlayer.add(arealabelgraphic);
                         drawresultlayer.add(graphic);
-                        // this.drawtool.complete();
-                        this.emit('drawcomplete', graphic, 'polygon');
+                        this.emit('measurementcomplete', graphic, { area: polygonarea }, 'polygon');
                 });
             });
     }
@@ -678,40 +1061,54 @@ export default class Draw extends EventEmitter {
     private async init(view: any) {
         this.displayedLayerid = new Guid().uuid;
         this.view = view;
-
         if (this.view.type === '2d') {
-              this.polygonsymbol = {
-                  type: "simple-fill",
-                  color: [255, 255, 255, 0.6],
-                  style: "solid",
-                  outline: {
-                      color: [255, 255, 0, 0.8],
-                      width: 2
-                  }
-              };
-              this.polylinesymbol = {
-                  type: "simple-line",
-                  color: [255, 255, 255, 0.6],
-                  width: "4px",
-                  style: "solid"
-              };
-              this.marksymbol = {
-                  type: "simple-marker",
-                  style: "circle",
-                  color: [255, 255, 0, 0.6],
-                  size: "24px",
-                  outline: {
-                      color: [255, 255, 0, 0.8],
-                      width: 2
-                  }
-              };
-       } else {
+            this.polygonsymbol = {
+                type: "simple-fill",
+                color: [255, 255, 255, 0.6],
+                style: "solid",
+                outline: {
+                    color: [255, 255, 0, 0.8],
+                    width: 2
+                }
+            };
+            this.polylinesymbol = {
+                type: "simple-line",
+                color: [255, 255, 255, 0.6],
+                width: "4px",
+                style: "solid"
+            };
+            this.marksymbol = {
+                type: "simple-marker",
+                style: "circle",
+                color: [255, 255, 0, 0.6],
+                size: "24px",
+                outline: {
+                    color: [255, 255, 0, 0.8],
+                    width: 2
+                }
+            };
+            this.textsymbol = {
+                type: "text",
+                color: "white",
+                angle: 0,
+                text: "",
+                xoffset: 60,
+                yoffset: 10,
+                horizontalAlignment: 'right',
+                verticalAlignment: 'bottom',
+                font: {
+                    size: 12,
+                    family: "Josefin Slab",
+                    weight: "bold"
+                }
+            };
+        } else {
             this.polygonsymbol = {
                 type: "polygon-3d",
                 symbolLayers: [{
                     type: "extrude",
                     castShadows: false,
-                    size: 100,
+                    size: 10,
                     material: { color: [255, 255, 255, 0.4] },
                     edges: {
                         type: "solid",
@@ -759,7 +1156,22 @@ export default class Draw extends EventEmitter {
                     }
                 }
             };
-       }
+            this.textsymbol = {
+                type: "text",
+                color: "white",
+                angle: 0,
+                text: "",
+                xoffset: 60,
+                yoffset: 10,
+                horizontalAlignment: 'right',
+                verticalAlignment: 'bottom',
+                font: {
+                    size: 12,
+                    family: "Josefin Slab",
+                    weight: "bold"
+                }
+            };
+        }
         this.view.on(MapEvent.click,  (event) => {
             this.view.hitTest(event).then(async  (response) => {
                 // if (response.results.length > 0) {

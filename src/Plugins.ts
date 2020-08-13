@@ -7,6 +7,7 @@ import GraphicOverlays from './GraphicOverlays';
 import HeatMap from './HeatMap';
 import Layers from './interface/Layers';
 import MaskBoundary from './MaskBoundary';
+import Measurement from './Measurement';
 import MigrationMap from './MigrationMap';
 import { load } from './modules';
 import Trajectory from './Trajectory';
@@ -21,6 +22,7 @@ export default {
   EchartFlashPointLayer,
   FlashPoint3DLayer,
   HeatMap,
+  Measurement,
   MaskBoundary,
   TrajectoryPlus,
   MigrationMap,
