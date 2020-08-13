@@ -79,7 +79,7 @@ export default class FeaureOverlays extends EventEmitter {
                                         symbol: {
                                             type: "picture-marker",
                                             url: styleelement.url,
-                                            width: styleelement.size.height,
+                                            width: styleelement.size.width,
                                             height: styleelement.size.height
                                         }
                                     });
