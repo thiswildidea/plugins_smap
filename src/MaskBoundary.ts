@@ -293,9 +293,9 @@ export default class MaskBoundary extends EventEmitter {
         }
     }
     public hide() {
-        const boundaryResultLayer = this.view.map.findLayerById(this.displayedLayerid);
-        if (boundaryResultLayer) {
-            boundaryResultLayer.visible = false;
+        const maskResultLayer = this.view.map.findLayerById(this.displayedLayerid);
+        if (maskResultLayer) {
+            maskResultLayer.visible = false;
         }
     }
     private async init(view: any) {

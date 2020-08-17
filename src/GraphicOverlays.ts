@@ -1765,6 +1765,19 @@ export default class GraphicOverlays extends EventEmitter {
             this.mapoverlayers = [];
         }
     }
+
+    public show() {
+        const gLayer = this.view.map.findLayerById(this.displayedLayerid);
+        if (gLayer) {
+            gLayer.visible = true;
+        }
+    }
+    public hide() {
+        const gLayer = this.view.map.findLayerById(this.displayedLayerid);
+        if (gLayer) {
+            gLayer.visible = false;
+        }
+    }
     private async init(view: any) {
         this.displayedLayerid = new Guid().uuid;
         this.view = view;

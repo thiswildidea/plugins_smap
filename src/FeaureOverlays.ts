@@ -16,6 +16,7 @@ export default class FeaureOverlays extends EventEmitter {
     public displayedLayerid: any = "";
     private view: any = null;
     private mapoverlayersflayer: Array<[string, string, any]> = [];
+    private  eventResult: any = null;
     constructor(view: any) {
         super();
         this.init(view);
@@ -607,6 +608,19 @@ export default class FeaureOverlays extends EventEmitter {
             this.mapoverlayersflayer = [];
         }
     }
+
+    public show() {
+        const fLayer = this.view.map.findLayerById(this.displayedLayerid);
+        if (fLayer) {
+            fLayer.visible = true;
+        }
+    }
+    public hide() {
+        const fLayer = this.view.map.findLayerById(this.displayedLayerid);
+        if (fLayer) {
+            fLayer.visible = false;
+        }
+    }
     private async init(view: any) {
         this.displayedLayerid = new Guid().uuid;
         this.view = view;
@@ -620,7 +634,7 @@ export default class FeaureOverlays extends EventEmitter {
                        query.where = "objectId =" + objectid;
                        response.results[0].graphic.layer.queryFeatures(query).then((result) => {
                            if (result.features.length > 0) {
-                                this.emit(MapEvent.click, result.features, event.mapPoint);
+                               this.emit(MapEvent.click, result.features, event, event.mapPoint);
                             }
                         });
                     }
@@ -638,12 +652,24 @@ export default class FeaureOverlays extends EventEmitter {
                         query.where = "objectId =" + objectid;
                         response.results[0].graphic.layer.queryFeatures(query).then((result) => {
                             if (result.features.length > 0) {
-                                this.emit(MapEvent.pointermove, result.features, this.view.toMap({
+                                this.eventResult = result.features;
+                                this.emit(MapEvent.pointermove, result.features, event, this.view.toMap({
                                     x: event.x,
                                     y: event.y
                                 }));
                             }
                         });
+                    }
+                } else {
+                    if (this.eventResult === null) {
+                      return;
+                    } else {
+                        const result = this.eventResult;
+                        this.eventResult = null;
+                        this.emit(MapEvent.pointerleave, result, event, this.view.toMap({
+                            x: event.x,
+                            y: event.y
+                        }));
                     }
                 }
             });
