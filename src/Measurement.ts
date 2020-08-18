@@ -992,6 +992,7 @@ export default class Measurement extends EventEmitter {
                             geometry: polygon,
                             symbol: this.polygonsymbol
                         });
+                        if (event.vertices.length > 3) {
                         const area = geometryEngine.geodesicArea(graphic.geometry, "square-meters");
                         const arealabelsymbol = this.textsymbol;
 
@@ -1003,6 +1004,8 @@ export default class Measurement extends EventEmitter {
                             symbol: arealabelsymbol
                         });
                         drawPolygonlayer.add(arealabelgraphic);
+
+                        }
                         drawPolygonlayer.add(graphic);
                 });
                 action.on("draw-complete", (event) => {
