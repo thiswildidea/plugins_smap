@@ -13,4 +13,8 @@ export default interface IPolygonOption extends IOverlayerOptions {
     picwidth: number;
     picheight: number;
     strokestyle: string;
+    // for circle
+    center: LngLat;
+    radius: number;
+    radiusUnit: string;
 }

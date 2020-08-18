@@ -5,6 +5,6 @@ export default class LngLat {
     constructor(x: number, y: number, z?: number) {
         this.X = x;
         this.Y = y;
-        this.Z = z === undefined ? 0 : z;
+        this.Z = z === undefined ? 0.15 : z;
     }
 }

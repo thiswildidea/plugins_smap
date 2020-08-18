@@ -4,6 +4,7 @@ import EventEmitter from './mod';
 import {
     load
 } from './modules';
+import Circle from './Overlays/Circle';
 import Label from './Overlays/Label';
 import Marker from './Overlays/Marker';
 import Overlayerbase from './Overlays/Overlayerbase';
@@ -21,9 +22,10 @@ export default class GraphicOverlays extends EventEmitter {
         this.init(view);
     }
     public add(overlayers: Overlayerbase | Overlayerbase[] | OverlayGroup): void {
-        load(['esri/Graphic', 'esri/geometry/Point', 'esri/layers/GraphicsLayer', 'esri/symbols/PictureMarkerSymbol', "esri/geometry/Polyline", "esri/geometry/Polygon"])
+        load(['esri/Graphic', 'esri/geometry/Point', 'esri/layers/GraphicsLayer', 'esri/symbols/PictureMarkerSymbol',
+            "esri/geometry/Polyline", "esri/geometry/Polygon", 'esri/geometry/Circle'])
             // tslint:disable-next-line:variable-name
-            .then(([Graphic, Point, GraphicsLayer, PictureMarkerSymbol, ArcGISPolyline, ArcGISPolygon]) => {
+            .then(([Graphic, Point, GraphicsLayer, PictureMarkerSymbol, ArcGISPolyline, ArcGISPolygon, esriCircle]) => {
                 let clientGraphicLayer = this.view.map.findLayerById(this.displayedLayerid);
                 if (!clientGraphicLayer) {
                     clientGraphicLayer = new GraphicsLayer({
@@ -300,6 +302,104 @@ export default class GraphicOverlays extends EventEmitter {
                                 }
                                 this.mapoverlayers.push(['smap-default', (overelement as Polygon).uuid, graphictext]);
                             }
+                        } else if (overelement.overlaytype.toLowerCase() === 'circle') {
+                            let fillSymbol;
+                            if (!overelement.symbol) {
+                                if ((overelement as Circle).symboltype === 'simple') {
+                                    fillSymbol = {
+                                        type: "simple-fill",
+                                        color: (overelement as Circle).fillColor,
+                                        style: (overelement as Circle).style,
+                                        outline: {
+                                            color: (overelement as Circle).strokeColor,
+                                            width: (overelement as Circle).strokeWeight,
+                                            style: (overelement as Circle).strokestyle
+                                        }
+                                    };
+                                } else {
+                                    fillSymbol = {
+                                        type: "picture-fill",
+                                        url: (overelement as Circle).url,
+                                        width: (overelement as Circle).picwidth,
+                                        height: (overelement as Circle).picheight,
+                                        outline: {
+                                            style: (overelement as Circle).strokestyle,
+                                            color: (overelement as Circle).strokeColor,
+                                            width: (overelement as Circle).strokeWeight
+                                        }
+                                    };
+                                }
+                            } else {
+                                fillSymbol = overelement.symbol;
+                            }
+                            if ((overelement as Overlayerbase).attributes && (overelement as Circle).center
+                                && (overelement as Circle).radius) {
+                                const dataattributes = (overelement as Overlayerbase).attributes;
+                                dataattributes['uuid'] = (overelement as Circle).uuid;
+                                const circlegraphic = new Graphic({
+                                    geometry: new esriCircle({
+                                        center: new Point({
+                                            x: (overelement as Circle).center.X,
+                                            y: (overelement as Circle).center.Y,
+                                            z: (overelement as Circle).center.Z,
+                                            spatialReference: this.view.spatialReference
+                                        }),
+                                        radius: (overelement as Circle).radius,
+                                        radiusUnit: (overelement as Circle).radiusUnit,
+                                        spatialReference: this.view.spatialReference
+                                    }),
+                                    symbol: fillSymbol,
+                                    attributes: dataattributes
+                                });
+                                this.mapoverlayers.push(['smap-default', (overelement as Circle).uuid, circlegraphic]);
+                                const graphicLayer = this.view.map.findLayerById(this.displayedLayerid);
+                                if (graphicLayer) {
+                                    graphicLayer.add(circlegraphic);
+                                }
+                                if ((overelement as Circle).label.visible) {
+                                    let polygonlabel = null;
+                                    if (!(overelement as Circle).label.labelingInfo) {
+                                        polygonlabel = {
+                                            type: (overelement as Circle).label.type,
+                                            text: (overelement as Circle).label.text,
+                                            color: (overelement as Circle).label.color,
+                                            angle: (overelement as Circle).label.angle,
+                                            backgroundColor: (overelement as Circle).label.backgroundColor,
+                                            borderLineColor: (overelement as Circle).label.borderLineColor,
+                                            borderLineSize: (overelement as Circle).label.borderLineSize,
+                                            kerning: (overelement as Circle).label.kerning,
+                                            lineHeight: (overelement as Circle).label.lineHeight,
+                                            lineWidth: (overelement as Circle).label.lineWidth,
+                                            rotated: (overelement as Circle).label.rotated,
+                                            haloColor: (overelement as Circle).label.haloColor,
+                                            haloSize: (overelement as Circle).label.haloSize,
+                                            xoffset: (overelement as Circle).label.xoffset,
+                                            yoffset: (overelement as Circle).label.yoffset,
+                                            verticalAlignment: (overelement as Circle).label.verticalAlignment,
+                                            horizontalAlignment: (overelement as Circle).label.horizontalAlignment,
+                                            font: {
+                                                size: (overelement as Circle).label.size,
+                                                family: "Josefin Slab",
+                                                weight: (overelement as Circle).label.weight
+                                            }
+                                        };
+                                    } else {
+                                        polygonlabel = (overelement as Circle).label.labelingInfo;
+                                    }
+                                    const graphictext = new Graphic({
+                                        geometry: circlegraphic.geometry.extent.center,
+                                        symbol: polygonlabel,
+                                        attributes: dataattributes
+                                    });
+                                    const cgraphicLayer = this.view.map.findLayerById(this.displayedLayerid);
+                                    if (cgraphicLayer) {
+                                        cgraphicLayer.add(graphictext);
+                                    }
+                                    this.mapoverlayers.push(['smap-default',
+                                    (overelement as Circle).uuid, graphictext]);
+                                }
+                          }
+
                         }
                     });
                 } else if (overlayers.type === 'group') {
@@ -578,9 +678,105 @@ export default class GraphicOverlays extends EventEmitter {
                                 this.mapoverlayers.push([(overlayers as OverlayGroup).uuid,
                                 (overelement as Polygon).uuid, graphictext]);
                             }
+                        } else if (overelement.overlaytype.toLowerCase() === 'circle') {
+                            let fillSymbol;
+                            if (!overelement.symbol) {
+                                if ((overelement as Circle).symboltype === 'simple') {
+                                    fillSymbol = {
+                                        type: "simple-fill",
+                                        color: (overelement as Circle).fillColor,
+                                        style: (overelement as Circle).style,
+                                        outline: {
+                                            color: (overelement as Circle).strokeColor,
+                                            width: (overelement as Circle).strokeWeight,
+                                            style: (overelement as Circle).strokestyle
+                                        }
+                                    };
+                                } else {
+                                    fillSymbol = {
+                                        type: "picture-fill",
+                                        url: (overelement as Circle).url,
+                                        width: (overelement as Circle).picwidth,
+                                        height: (overelement as Circle).picheight,
+                                        outline: {
+                                            style: (overelement as Circle).strokestyle,
+                                            color: (overelement as Circle).strokeColor,
+                                            width: (overelement as Circle).strokeWeight
+                                        }
+                                    };
+                                }
+                            } else {
+                                fillSymbol = overelement.symbol;
+                            }
+                            if ((overelement as Overlayerbase).attributes && (overelement as Circle).center
+                                && (overelement as Circle).radius) {
+                                const dataattributes = (overelement as Overlayerbase).attributes;
+                                dataattributes['uuid'] = (overelement as Circle).uuid;
+                                const circlegraphic = new Graphic({
+                                    geometry: new esriCircle({
+                                        center: new Point({
+                                            x: (overelement as Circle).center.X,
+                                            y: (overelement as Circle).center.Y,
+                                            z: (overelement as Circle).center.Z,
+                                            spatialReference: this.view.spatialReference
+                                        }),
+                                        radius: (overelement as Circle).radius,
+                                        radiusUnit: (overelement as Circle).radiusUnit,
+                                        spatialReference: this.view.spatialReference
+                                    }),
+                                    symbol: fillSymbol,
+                                    attributes: dataattributes
+                                });
+                                this.mapoverlayers.push(['smap-default', (overelement as Circle).uuid, circlegraphic]);
+                                const graphicLayer = this.view.map.findLayerById(this.displayedLayerid);
+                                if (graphicLayer) {
+                                    graphicLayer.add(circlegraphic);
+                                }
+                                if ((overelement as Circle).label.visible) {
+                                    let polygonlabel = null;
+                                    if (!(overelement as Circle).label.labelingInfo) {
+                                        polygonlabel = {
+                                            type: (overelement as Circle).label.type,
+                                            text: (overelement as Circle).label.text,
+                                            color: (overelement as Circle).label.color,
+                                            angle: (overelement as Circle).label.angle,
+                                            backgroundColor: (overelement as Circle).label.backgroundColor,
+                                            borderLineColor: (overelement as Circle).label.borderLineColor,
+                                            borderLineSize: (overelement as Circle).label.borderLineSize,
+                                            kerning: (overelement as Circle).label.kerning,
+                                            lineHeight: (overelement as Circle).label.lineHeight,
+                                            lineWidth: (overelement as Circle).label.lineWidth,
+                                            rotated: (overelement as Circle).label.rotated,
+                                            haloColor: (overelement as Circle).label.haloColor,
+                                            haloSize: (overelement as Circle).label.haloSize,
+                                            xoffset: (overelement as Circle).label.xoffset,
+                                            yoffset: (overelement as Circle).label.yoffset,
+                                            verticalAlignment: (overelement as Circle).label.verticalAlignment,
+                                            horizontalAlignment: (overelement as Circle).label.horizontalAlignment,
+                                            font: {
+                                                size: (overelement as Circle).label.size,
+                                                family: "Josefin Slab",
+                                                weight: (overelement as Circle).label.weight
+                                            }
+                                        };
+                                    } else {
+                                        polygonlabel = (overelement as Circle).label.labelingInfo;
+                                    }
+                                    const graphictext = new Graphic({
+                                        geometry: circlegraphic.geometry.extent.center,
+                                        symbol: polygonlabel,
+                                        attributes: dataattributes
+                                    });
+                                    const cgraphicLayer = this.view.map.findLayerById(this.displayedLayerid);
+                                    if (cgraphicLayer) {
+                                        cgraphicLayer.add(graphictext);
+                                    }
+                                    this.mapoverlayers.push(['smap-default',
+                                        (overelement as Circle).uuid, graphictext]);
+                                }
+                            }
                         }
-                    }
-                    );
+                    });
                 } else if (overlayers.type === 'element') {
                     if ((overlayers as Overlayerbase).overlaytype.toLowerCase() === 'marker') {
                         let psymbol;
@@ -851,6 +1047,105 @@ export default class GraphicOverlays extends EventEmitter {
                             this.mapoverlayers.push(['smap-default',
                                 (overlayers as Polygon).uuid, graphictext]);
                         }
+                    } else if ((overlayers as Overlayerbase).overlaytype.toLowerCase() === 'circle') {
+                        let fillSymbol;
+                        if (!(overlayers as Overlayerbase).symbol) {
+                            if ((overlayers as Circle).symboltype === 'simple') {
+                                fillSymbol = {
+                                    type: "simple-fill",
+                                    color: (overlayers as Circle).fillColor,
+                                    style: (overlayers as Circle).style,
+                                    outline: {
+                                        color: (overlayers as Circle).strokeColor,
+                                        width: (overlayers as Circle).strokeWeight,
+                                        style: (overlayers as Circle).strokestyle
+                                    }
+                                };
+                            } else {
+                                fillSymbol = {
+                                    type: "picture-fill",
+                                    url: (overlayers as Circle).url,
+                                    width: (overlayers as Circle).picwidth,
+                                    height: (overlayers as Circle).picheight,
+                                    outline: {
+                                        style: (overlayers as Circle).strokestyle,
+                                        color: (overlayers as Circle).strokeColor,
+                                        width: (overlayers as Circle).strokeWeight
+                                    }
+                                };
+                            }
+                        } else {
+                            fillSymbol = (overlayers as Overlayerbase).symbol;
+                        }
+                        if ((overlayers as Overlayerbase).attributes
+                            && (overlayers as Circle).center
+                            && (overlayers as Circle).radius) {
+                            const dataattributes = (overlayers as Overlayerbase).attributes;
+                            dataattributes['uuid'] = (overlayers as Circle).uuid;
+                            const circlegraphic = new Graphic({
+                                geometry: new esriCircle({
+                                    center: new Point({
+                                        x: (overlayers as Circle).center.X,
+                                        y: (overlayers as Circle).center.Y,
+                                        z: (overlayers as Circle).center.Z,
+                                        spatialReference: this.view.spatialReference
+                                    }),
+                                    radius: (overlayers as Circle).radius,
+                                    radiusUnit: (overlayers as Circle).radiusUnit,
+                                    spatialReference: this.view.spatialReference
+                                }),
+                                symbol: fillSymbol,
+                                attributes: dataattributes
+                            });
+                            this.mapoverlayers.push(['smap-default',
+                             ((overlayers as Overlayerbase) as Circle).uuid, circlegraphic]);
+                            const graphicLayer = this.view.map.findLayerById(this.displayedLayerid);
+                            if (graphicLayer) {
+                                graphicLayer.add(circlegraphic);
+                            }
+                            if (((overlayers as Overlayerbase) as Circle).label.visible) {
+                                let polygonlabel = null;
+                                if (!((overlayers as Overlayerbase) as Circle).label.labelingInfo) {
+                                    polygonlabel = {
+                                        type: (overlayers as Circle).label.type,
+                                        text: (overlayers as Circle).label.text,
+                                        color: (overlayers as Circle).label.color,
+                                        angle: (overlayers as Circle).label.angle,
+                                        backgroundColor: (overlayers as Circle).label.backgroundColor,
+                                        borderLineColor: (overlayers as Circle).label.borderLineColor,
+                                        borderLineSize: (overlayers as Circle).label.borderLineSize,
+                                        kerning: (overlayers as Circle).label.kerning,
+                                        lineHeight: (overlayers as Circle).label.lineHeight,
+                                        lineWidth: (overlayers as Circle).label.lineWidth,
+                                        rotated: (overlayers as Circle).label.rotated,
+                                        haloColor: (overlayers as Circle).label.haloColor,
+                                        haloSize: (overlayers as Circle).label.haloSize,
+                                        xoffset: (overlayers as Circle).label.xoffset,
+                                        yoffset: (overlayers as Circle).label.yoffset,
+                                        verticalAlignment: (overlayers as Circle).label.verticalAlignment,
+                                        horizontalAlignment: (overlayers as Circle).label.horizontalAlignment,
+                                        font: {
+                                            size: (overlayers as Circle).label.size,
+                                            family: "Josefin Slab",
+                                            weight: (overlayers as Circle).label.weight
+                                        }
+                                    };
+                                } else {
+                                    polygonlabel = (overlayers as Circle).label.labelingInfo;
+                                }
+                                const graphictext = new Graphic({
+                                    geometry: circlegraphic.geometry.extent.center,
+                                    symbol: polygonlabel,
+                                    attributes: dataattributes
+                                });
+                                const cgraphicLayer = this.view.map.findLayerById(this.displayedLayerid);
+                                if (cgraphicLayer) {
+                                    cgraphicLayer.add(graphictext);
+                                }
+                                this.mapoverlayers.push(['smap-default',
+                                    (overlayers as Circle).uuid, graphictext]);
+                            }
+                        }
                     }
                 }
             }).catch((err) => { console.error(err); });
@@ -895,9 +1190,9 @@ export default class GraphicOverlays extends EventEmitter {
         }
     }
     public update(overlayers: Overlayerbase | Overlayerbase[] | OverlayGroup): void {
-        load(['esri/Graphic', 'esri/geometry/Point', 'esri/symbols/PictureMarkerSymbol', "esri/geometry/Polyline", "esri/geometry/Polygon"])
+        load(['esri/Graphic', 'esri/geometry/Point', 'esri/symbols/PictureMarkerSymbol', "esri/geometry/Polyline", "esri/geometry/Polygon", 'esri/geometry/Circle'])
             // tslint:disable-next-line:variable-name
-            .then(([Graphic, Point, PictureMarkerSymbol, ArcGISPolyline, ArcGISPolygon]) => {
+            .then(([Graphic, Point, PictureMarkerSymbol, ArcGISPolyline, ArcGISPolygon, esriCircle]) => {
                 if (overlayers instanceof Array) {
                     overlayers.forEach((overelement) => {
                         const graphiclist = this.mapoverlayers.filter((item) => {
@@ -1177,6 +1472,106 @@ export default class GraphicOverlays extends EventEmitter {
                                 }
                                 this.mapoverlayers.push(['smap-default',
                                     (overelement as Polygon).uuid, graphictext]);
+                            }
+                        } else if (overelement.overlaytype.toLowerCase() === 'circle') {
+                            let fillSymbol;
+                            if (!overelement.symbol) {
+                                if ((overelement as Circle).symboltype === 'simple') {
+                                    fillSymbol = {
+                                        type: "simple-fill",
+                                        color: (overelement as Circle).fillColor,
+                                        style: (overelement as Circle).style,
+                                        outline: {
+                                            color: (overelement as Circle).strokeColor,
+                                            width: (overelement as Circle).strokeWeight,
+                                            style: (overelement as Circle).strokestyle
+                                        }
+                                    };
+                                } else {
+                                    fillSymbol = {
+                                        type: "picture-fill",
+                                        url: (overelement as Circle).url,
+                                        width: (overelement as Circle).picwidth,
+                                        height: (overelement as Circle).picheight,
+                                        outline: {
+                                            style: (overelement as Circle).strokestyle,
+                                            color: (overelement as Circle).strokeColor,
+                                            width: (overelement as Circle).strokeWeight
+                                        }
+                                    };
+                                }
+                            } else {
+                                fillSymbol = overelement.symbol;
+                            }
+
+                            if ((overelement as Overlayerbase).attributes
+                                && (overelement as Circle).center
+                                && (overelement as Circle).radius) {
+                                const dataattributes = (overelement as Overlayerbase).attributes;
+                                dataattributes['uuid'] = (overelement as Circle).uuid;
+                                const circlegraphic = new Graphic({
+                                    geometry: new esriCircle({
+                                        center: new Point({
+                                            x: (overelement as Circle).center.X,
+                                            y: (overelement as Circle).center.Y,
+                                            z: (overelement as Circle).center.Z,
+                                            spatialReference: this.view.spatialReference
+                                        }),
+                                        radius: (overelement as Circle).radius,
+                                        radiusUnit: (overelement as Circle).radiusUnit,
+                                        spatialReference: this.view.spatialReference
+                                    }),
+                                    symbol: fillSymbol,
+                                    attributes: dataattributes
+                                });
+                                this.mapoverlayers.push(['smap-default',
+                                    (overelement as Circle).uuid, circlegraphic]);
+                                const graphicLayer = this.view.map.findLayerById(this.displayedLayerid);
+                                if (graphicLayer) {
+                                    graphicLayer.add(circlegraphic);
+                                }
+                                if (((overelement as Overlayerbase) as Circle).label.visible) {
+                                    let polygonlabel = null;
+                                    if (!((overelement as Overlayerbase) as Circle).label.labelingInfo) {
+                                        polygonlabel = {
+                                            type: (overelement as Circle).label.type,
+                                            text: (overelement as Circle).label.text,
+                                            color: (overelement as Circle).label.color,
+                                            angle: (overelement as Circle).label.angle,
+                                            backgroundColor: (overelement as Circle).label.backgroundColor,
+                                            borderLineColor: (overelement as Circle).label.borderLineColor,
+                                            borderLineSize: (overelement as Circle).label.borderLineSize,
+                                            kerning: (overelement as Circle).label.kerning,
+                                            lineHeight: (overelement as Circle).label.lineHeight,
+                                            lineWidth: (overelement as Circle).label.lineWidth,
+                                            rotated: (overelement as Circle).label.rotated,
+                                            haloColor: (overelement as Circle).label.haloColor,
+                                            haloSize: (overelement as Circle).label.haloSize,
+                                            xoffset: (overelement as Circle).label.xoffset,
+                                            yoffset: (overelement as Circle).label.yoffset,
+                                            verticalAlignment: (overelement as Circle).label.verticalAlignment,
+                                            horizontalAlignment: (overelement as Circle).label.horizontalAlignment,
+                                            font: {
+                                                size: (overelement as Circle).label.size,
+                                                family: "Josefin Slab",
+                                                weight: (overelement as Circle).label.weight
+                                            }
+                                        };
+                                    } else {
+                                        polygonlabel = (overelement as Circle).label.labelingInfo;
+                                    }
+                                    const graphictext = new Graphic({
+                                        geometry: circlegraphic.geometry.extent.center,
+                                        symbol: polygonlabel,
+                                        attributes: dataattributes
+                                    });
+                                    const cgraphicLayer = this.view.map.findLayerById(this.displayedLayerid);
+                                    if (cgraphicLayer) {
+                                        cgraphicLayer.add(graphictext);
+                                    }
+                                    this.mapoverlayers.push(['smap-default',
+                                        (overelement as Circle).uuid, graphictext]);
+                                }
                             }
                         }
                     });
@@ -1466,6 +1861,106 @@ export default class GraphicOverlays extends EventEmitter {
                                 this.mapoverlayers.push(['smap-default',
                                     (overlayers as Polygon).uuid, graphictext]);
                             }
+                        } else if (overelement.overlaytype.toLowerCase() === 'circle') {
+                            let fillSymbol;
+                            if (!overelement.symbol) {
+                                if ((overelement as Circle).symboltype === 'simple') {
+                                    fillSymbol = {
+                                        type: "simple-fill",
+                                        color: (overelement as Circle).fillColor,
+                                        style: (overelement as Circle).style,
+                                        outline: {
+                                            color: (overelement as Circle).strokeColor,
+                                            width: (overelement as Circle).strokeWeight,
+                                            style: (overelement as Circle).strokestyle
+                                        }
+                                    };
+                                } else {
+                                    fillSymbol = {
+                                        type: "picture-fill",
+                                        url: (overelement as Circle).url,
+                                        width: (overelement as Circle).picwidth,
+                                        height: (overelement as Circle).picheight,
+                                        outline: {
+                                            style: (overelement as Circle).strokestyle,
+                                            color: (overelement as Circle).strokeColor,
+                                            width: (overelement as Circle).strokeWeight
+                                        }
+                                    };
+                                }
+                            } else {
+                                fillSymbol = overelement.symbol;
+                            }
+
+                            if ((overelement as Overlayerbase).attributes
+                                && (overelement as Circle).center
+                                && (overelement as Circle).radius) {
+                                const dataattributes = (overelement as Overlayerbase).attributes;
+                                dataattributes['uuid'] = (overelement as Circle).uuid;
+                                const circlegraphic = new Graphic({
+                                    geometry: new esriCircle({
+                                        center: new Point({
+                                            x: (overelement as Circle).center.X,
+                                            y: (overelement as Circle).center.Y,
+                                            z: (overelement as Circle).center.Z,
+                                            spatialReference: this.view.spatialReference
+                                        }),
+                                        radius: (overelement as Circle).radius,
+                                        radiusUnit: (overelement as Circle).radiusUnit,
+                                        spatialReference: this.view.spatialReference
+                                    }),
+                                    symbol: fillSymbol,
+                                    attributes: dataattributes
+                                });
+                                this.mapoverlayers.push(['smap-default',
+                                    (overelement as Circle).uuid, circlegraphic]);
+                                const graphicLayer = this.view.map.findLayerById(this.displayedLayerid);
+                                if (graphicLayer) {
+                                    graphicLayer.add(circlegraphic);
+                                }
+                                if (((overelement as Overlayerbase) as Circle).label.visible) {
+                                    let polygonlabel = null;
+                                    if (!((overelement as Overlayerbase) as Circle).label.labelingInfo) {
+                                        polygonlabel = {
+                                            type: (overelement as Circle).label.type,
+                                            text: (overelement as Circle).label.text,
+                                            color: (overelement as Circle).label.color,
+                                            angle: (overelement as Circle).label.angle,
+                                            backgroundColor: (overelement as Circle).label.backgroundColor,
+                                            borderLineColor: (overelement as Circle).label.borderLineColor,
+                                            borderLineSize: (overelement as Circle).label.borderLineSize,
+                                            kerning: (overelement as Circle).label.kerning,
+                                            lineHeight: (overelement as Circle).label.lineHeight,
+                                            lineWidth: (overelement as Circle).label.lineWidth,
+                                            rotated: (overelement as Circle).label.rotated,
+                                            haloColor: (overelement as Circle).label.haloColor,
+                                            haloSize: (overelement as Circle).label.haloSize,
+                                            xoffset: (overelement as Circle).label.xoffset,
+                                            yoffset: (overelement as Circle).label.yoffset,
+                                            verticalAlignment: (overelement as Circle).label.verticalAlignment,
+                                            horizontalAlignment: (overelement as Circle).label.horizontalAlignment,
+                                            font: {
+                                                size: (overelement as Circle).label.size,
+                                                family: "Josefin Slab",
+                                                weight: (overelement as Circle).label.weight
+                                            }
+                                        };
+                                    } else {
+                                        polygonlabel = (overelement as Circle).label.labelingInfo;
+                                    }
+                                    const graphictext = new Graphic({
+                                        geometry: circlegraphic.geometry.extent.center,
+                                        symbol: polygonlabel,
+                                        attributes: dataattributes
+                                    });
+                                    const cgraphicLayer = this.view.map.findLayerById(this.displayedLayerid);
+                                    if (cgraphicLayer) {
+                                        cgraphicLayer.add(graphictext);
+                                    }
+                                    this.mapoverlayers.push(['smap-default',
+                                        (overelement as Circle).uuid, graphictext]);
+                                }
+                            }
                         }
                     });
                 } else if (overlayers.type === 'element') {
@@ -1746,6 +2241,106 @@ export default class GraphicOverlays extends EventEmitter {
                             }
                             this.mapoverlayers.push(['smap-default',
                                 (overlayers as Polygon).uuid, graphictext]);
+                        }
+                    } else if (overlayers.overlaytype.toLowerCase() === 'circle') {
+                        let fillSymbol;
+                        if (!(overlayers as Overlayerbase).symbol) {
+                            if ((overlayers as Circle).symboltype === 'simple') {
+                                fillSymbol = {
+                                    type: "simple-fill",
+                                    color: (overlayers as Circle).fillColor,
+                                    style: (overlayers as Circle).style,
+                                    outline: {
+                                        color: (overlayers as Circle).strokeColor,
+                                        width: (overlayers as Circle).strokeWeight,
+                                        style: (overlayers as Circle).strokestyle
+                                    }
+                                };
+                            } else {
+                                fillSymbol = {
+                                    type: "picture-fill",
+                                    url: (overlayers as Circle).url,
+                                    width: (overlayers as Circle).picwidth,
+                                    height: (overlayers as Circle).picheight,
+                                    outline: {
+                                        style: (overlayers as Circle).strokestyle,
+                                        color: (overlayers as Circle).strokeColor,
+                                        width: (overlayers as Circle).strokeWeight
+                                    }
+                                };
+                            }
+                        } else {
+                            fillSymbol = (overlayers as Overlayerbase).symbol;
+                        }
+
+                        if ((overlayers as Overlayerbase).attributes
+                            && (overlayers as Circle).center
+                            && (overlayers as Circle).radius) {
+                            const dataattributes = (overlayers as Overlayerbase).attributes;
+                            dataattributes['uuid'] = (overlayers as Circle).uuid;
+                            const circlegraphic = new Graphic({
+                                geometry: new esriCircle({
+                                    center: new Point({
+                                        x: (overlayers as Circle).center.X,
+                                        y: (overlayers as Circle).center.Y,
+                                        z: (overlayers as Circle).center.Z,
+                                        spatialReference: this.view.spatialReference
+                                    }),
+                                    radius: (overlayers as Circle).radius,
+                                    radiusUnit: (overlayers as Circle).radiusUnit,
+                                    spatialReference: this.view.spatialReference
+                                }),
+                                symbol: fillSymbol,
+                                attributes: dataattributes
+                            });
+                            this.mapoverlayers.push(['smap-default',
+                                (overlayers as Circle).uuid, circlegraphic]);
+                            const graphicLayer = this.view.map.findLayerById(this.displayedLayerid);
+                            if (graphicLayer) {
+                                graphicLayer.add(circlegraphic);
+                            }
+                            if (((overlayers as Overlayerbase) as Circle).label.visible) {
+                                let polygonlabel = null;
+                                if (!((overlayers as Overlayerbase) as Circle).label.labelingInfo) {
+                                    polygonlabel = {
+                                        type: (overlayers as Circle).label.type,
+                                        text: (overlayers as Circle).label.text,
+                                        color: (overlayers as Circle).label.color,
+                                        angle: (overlayers as Circle).label.angle,
+                                        backgroundColor: (overlayers as Circle).label.backgroundColor,
+                                        borderLineColor: (overlayers as Circle).label.borderLineColor,
+                                        borderLineSize: (overlayers as Circle).label.borderLineSize,
+                                        kerning: (overlayers as Circle).label.kerning,
+                                        lineHeight: (overlayers as Circle).label.lineHeight,
+                                        lineWidth: (overlayers as Circle).label.lineWidth,
+                                        rotated: (overlayers as Circle).label.rotated,
+                                        haloColor: (overlayers as Circle).label.haloColor,
+                                        haloSize: (overlayers as Circle).label.haloSize,
+                                        xoffset: (overlayers as Circle).label.xoffset,
+                                        yoffset: (overlayers as Circle).label.yoffset,
+                                        verticalAlignment: (overlayers as Circle).label.verticalAlignment,
+                                        horizontalAlignment: (overlayers as Circle).label.horizontalAlignment,
+                                        font: {
+                                            size: (overlayers as Circle).label.size,
+                                            family: "Josefin Slab",
+                                            weight: (overlayers as Circle).label.weight
+                                        }
+                                    };
+                                } else {
+                                    polygonlabel = (overlayers as Circle).label.labelingInfo;
+                                }
+                                const graphictext = new Graphic({
+                                    geometry: circlegraphic.geometry.extent.center,
+                                    symbol: polygonlabel,
+                                    attributes: dataattributes
+                                });
+                                const cgraphicLayer = this.view.map.findLayerById(this.displayedLayerid);
+                                if (cgraphicLayer) {
+                                    cgraphicLayer.add(graphictext);
+                                }
+                                this.mapoverlayers.push(['smap-default',
+                                    (overlayers as Circle).uuid, graphictext]);
+                            }
                         }
                     }
                 }
