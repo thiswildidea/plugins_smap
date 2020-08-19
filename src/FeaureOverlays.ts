@@ -112,8 +112,18 @@ export default class FeaureOverlays extends EventEmitter {
                             source: [],
                             spatialReference: this.view.spatialReference
                         });
-                        if ((overlayers as Overlayerbase).elevationInfo) {
+                        if ((overlayers as OverlayGroup).elevationInfo) {
                             clientoperateLayer.elevationInfo = (overlayers as Overlayerbase).elevationInfo;
+                        }
+                        if ((overlayers as OverlayGroup).frreduction) {
+                            if (this.view.type === '3d') {
+                                clientoperateLayer.featureReduction = {
+                                    type: (overlayers as OverlayGroup).frreduction.type
+                                };
+                            } else {
+                                clientoperateLayer.featureReduction =
+                                (overlayers as OverlayGroup).frreduction.clusterConfig;
+                            }
                         }
                         this.view.map.add(clientoperateLayer);
                         (overlayers as OverlayGroup).overlayers.forEach((overelement) => {
