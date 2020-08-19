@@ -2379,7 +2379,11 @@ export default class GraphicOverlays extends EventEmitter {
         this.view.on(MapEvent.click, (event) => {
             this.view.hitTest(event).then(async (response) => {
                 if (response.results.length > 0) {
+                    if (!response.results[0].graphic.layer) {
+                        return;
+                    }
                     const layerid = response.results[0].graphic.layer.id;
+                    if (!layerid) { return; }
                     if (layerid === this.displayedLayerid) {
                         this.emit(MapEvent.click, response, event.mapPoint);
                     }
@@ -2390,7 +2394,11 @@ export default class GraphicOverlays extends EventEmitter {
         this.view.on(MapEvent.pointermove, (event) => {
             this.view.hitTest(event).then(async (response) => {
                 if (response.results.length > 0) {
+                    if (!response.results[0].graphic.layer) {
+                        return;
+                    }
                     const layerid = response.results[0].graphic.layer.id;
+                    if (!layerid) { return; }
                     if (layerid === this.displayedLayerid) {
                         this.emit(MapEvent.pointermove, response, this.view.toMap({
                             x: event.x,

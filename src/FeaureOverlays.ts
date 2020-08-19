@@ -62,33 +62,38 @@ export default class FeaureOverlays extends EventEmitter {
                                 uniqueValueInfos: []
                             };
                             (overlayers as OverlayGroup).style.forEach((styleelement) => {
-                                if (this.view.type === '3d') {
-                                    symbolrenderer.uniqueValueInfos.push({
-                                        value: styleelement.style,
-                                        label: styleelement.style,
-                                        symbol: {
-                                            type: "point-3d",
-                                            symbolLayers: [{
-                                                type: "icon",
-                                                size: styleelement.size.height,
-                                                resource: {
-                                                    href: styleelement.url
-                                                }
-                                            }]
-                                        }
-                                    });
-                                } else {
-                                    symbolrenderer.uniqueValueInfos.push({
-                                        value: styleelement.style,
-                                        label: styleelement.style,
-                                        symbol: {
-                                            type: "picture-marker",
-                                            url: styleelement.url,
-                                            width: styleelement.size.width,
-                                            height: styleelement.size.height
-                                        }
-                                    });
-                                }
+                                symbolrenderer.uniqueValueInfos.push({
+                                    value: styleelement.style,
+                                    label: styleelement.style,
+                                    symbol: styleelement.symbol
+                                });
+                                // if (this.view.type === '3d') {
+                                //     symbolrenderer.uniqueValueInfos.push({
+                                //         value: styleelement.style,
+                                //         label: styleelement.style,
+                                //         symbol: {
+                                //             type: "point-3d",
+                                //             symbolLayers: [{
+                                //                 type: "icon",
+                                //                 size: styleelement.size.height,
+                                //                 resource: {
+                                //                     href: styleelement.url
+                                //                 }
+                                //             }]
+                                //         }
+                                //     });
+                                // } else {
+                                //     symbolrenderer.uniqueValueInfos.push({
+                                //         value: styleelement.style,
+                                //         label: styleelement.style,
+                                //         symbol: {
+                                //             type: "picture-marker",
+                                //             url: styleelement.url,
+                                //             width: styleelement.size.width,
+                                //             height: styleelement.size.height
+                                //         }
+                                //     });
+                                // }
                             });
                         } else {
                             symbolrenderer = (overlayers as OverlayGroup).renderer;
@@ -334,7 +339,7 @@ export default class FeaureOverlays extends EventEmitter {
                             objectIdField: 'objectId',
                             geometryType: 'polyline',
                             renderer: symbolrenderer,
-                            screenSizePerspectiveEnabled: this.view.type === '3d',
+                            // screenSizePerspectiveEnabled: this.view.type === '3d',
                             popupEnabled: false,
                             popupTemplate: false,
                             fields: datafiled,
@@ -449,7 +454,7 @@ export default class FeaureOverlays extends EventEmitter {
                             objectIdField: 'objectId',
                             geometryType: 'polygon',
                             renderer: symbolrenderer,
-                            screenSizePerspectiveEnabled: this.view.type === '3d',
+                            // screenSizePerspectiveEnabled: this.view.type === '3d',
                             popupEnabled: false,
                             popupTemplate: false,
                             fields: datafiled,
@@ -1577,7 +1582,18 @@ export default class FeaureOverlays extends EventEmitter {
             this.mapoverlayersflayer = [];
         }
     }
-
+    public addcluster(clusterConfig: any) {
+        const fLayer = this.view.map.findLayerById(this.displayedLayerid);
+        if (fLayer) {
+            fLayer.featureReduction = clusterConfig;
+        }
+    }
+    public deletecluster() {
+        const fLayer = this.view.map.findLayerById(this.displayedLayerid);
+        if (fLayer) {
+            fLayer.featureReduction = null;
+        }
+    }
     public show() {
         const fLayer = this.view.map.findLayerById(this.displayedLayerid);
         if (fLayer) {
@@ -1596,7 +1612,11 @@ export default class FeaureOverlays extends EventEmitter {
         this.view.on(MapEvent.click, (event) => {
             this.view.hitTest(event).then(async (response) => {
                 if (response.results.length > 0) {
+                    if (!response.results[0].graphic.layer) {
+                        return;
+                    }
                     const layerid = response.results[0].graphic.layer.id;
+                    if (!layerid) { return; }
                     if (layerid === this.displayedLayerid) {
                        const  objectid = response.results[0].graphic.attributes.objectId;
                        const query = response.results[0].graphic.layer.createQuery();
@@ -1614,7 +1634,11 @@ export default class FeaureOverlays extends EventEmitter {
         this.view.on(MapEvent.pointermove, (event) => {
             this.view.hitTest(event).then(async (response) => {
                 if (response.results.length > 0) {
+                    if (!response.results[0].graphic.layer) {
+                        return ;
+                    }
                     const layerid = response.results[0].graphic.layer.id;
+                    if (!layerid) {return; }
                     if (layerid === this.displayedLayerid) {
                         const objectid = response.results[0].graphic.attributes.objectId;
                         const query = response.results[0].graphic.layer.createQuery();
