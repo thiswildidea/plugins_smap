@@ -30,7 +30,7 @@ export default class GraphicOverlays extends EventEmitter {
                 if (!clientGraphicLayer) {
                     clientGraphicLayer = new GraphicsLayer({
                         id: this.displayedLayerid,
-                        title: this.displayedLayerid
+                        title: 'Overlayer-' + this.displayedLayerid
                     });
                     this.view.map.add(clientGraphicLayer);
                 }

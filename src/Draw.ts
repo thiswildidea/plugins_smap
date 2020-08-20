@@ -42,7 +42,7 @@ export default class Draw extends EventEmitter {
                 if (!drawcircleresultlayer) {
                     drawcircleresultlayer = new GraphicsLayer({
                         id: this.displayedLayerid,
-                        title: '画圆显示层',
+                        title: '绘制圆实时追踪显示层',
                         listMode: 'hide'
                     });
                     this.view.map.add(drawcircleresultlayer);
@@ -154,7 +154,7 @@ export default class Draw extends EventEmitter {
                 if (drawrectangleresultlayer == null) {
                     drawrectangleresultlayer = new GraphicsLayer({
                         id: this.displayedLayerid,
-                        title: '画矩形追踪显示层',
+                        title: '绘制矩形追踪实时显示层',
                         listMode: 'hide'
                     });
                     this.view.map.add(drawrectangleresultlayer);
@@ -272,7 +272,7 @@ export default class Draw extends EventEmitter {
                 if (drawPointresultlayer == null) {
                     drawPointresultlayer = new GraphicsLayer({
                         id: this.displayedLayerid,
-                        title: '画点移动追踪显示层',
+                        title: '绘制点移动实时追踪显示层',
                         listMode: 'hide'
                     });
                     this.view.map.add(drawPointresultlayer);
@@ -286,8 +286,8 @@ export default class Draw extends EventEmitter {
                     drawPointresultlayer.removeAll();
                     const point = {
                         type: "point",
-                        x: event.coordinates[0],
-                        y: event.coordinates[1],
+                        x: event.vertices[0][0],
+                        y: event.vertices[0][1],
                         spatialReference: this.view.spatialReference
                     };
                     const graphic = new Graphic({
@@ -302,8 +302,8 @@ export default class Draw extends EventEmitter {
                 action.on("draw-complete", (event) => {
                     const point = {
                         type: "point",
-                        x: event.coordinates[0],
-                        y: event.coordinates[1],
+                        x: event.vertices[0][0],
+                        y: event.vertices[0][1],
                         spatialReference: this.view.spatialReference
                     };
                     const graphic = new Graphic({
@@ -343,7 +343,7 @@ export default class Draw extends EventEmitter {
                 if (drawmultipointresultlayer == null) {
                     drawmultipointresultlayer = new GraphicsLayer({
                         id: this.displayedLayerid,
-                        title: '画多点显示层',
+                        title: '绘制多点临时显示层',
                         listMode: 'hide'
                     });
                     this.view.map.add(drawmultipointresultlayer);
@@ -354,7 +354,7 @@ export default class Draw extends EventEmitter {
                 if (drawmultipointMovelayer == null) {
                     drawmultipointMovelayer = new GraphicsLayer({
                         id: this.displayedLayerid,
-                        title: '移动追踪点显示层',
+                        title: '绘制多点移动追踪显示层',
                         listMode: 'hide'
                     });
                     this.view.map.add(drawmultipointMovelayer);
@@ -447,7 +447,7 @@ export default class Draw extends EventEmitter {
                 if (drawPolylinelayer == null) {
                     drawPolylinelayer = new GraphicsLayer({
                         id: this.displayedLayerid,
-                        title: '画线显示层',
+                        title: '绘制线实时追踪显示层',
                         listMode: 'hide'
                     });
                     this.view.map.add(drawPolylinelayer);
@@ -603,7 +603,7 @@ export default class Draw extends EventEmitter {
                 if (drawPolygonlayer == null) {
                     drawPolygonlayer = new GraphicsLayer({
                         id: this.displayedLayerid,
-                        title: '画面显示层',
+                        title: '绘制多边形实时追踪显示层',
                         listMode: 'hide'
                     });
                     this.view.map.add(drawPolygonlayer);

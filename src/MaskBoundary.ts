@@ -30,7 +30,7 @@ export default class MaskBoundary extends EventEmitter {
                 if (maskgraphiclayer == null) {
                     maskgraphiclayer = new GraphicsLayer({
                         id: this.displayedLayerid,
-                        title: '遮罩层',
+                        title: maskOptions.boundaryType + '遮罩层',
                         listMode: 'hide'
                     });
                     this.view.map.add(maskgraphiclayer);

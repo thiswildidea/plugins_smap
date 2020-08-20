@@ -100,7 +100,7 @@ export default class FeaureOverlays extends EventEmitter {
                         }
                         const clientoperateLayer = new FeatureLayer({
                             id: this.displayedLayerid,
-                            title: this.displayedLayerid,
+                            title: "Overlayer-marker-" + this.displayedLayerid,
                             objectIdField: 'objectId',
                             geometryType: 'point',
                             renderer: symbolrenderer,
@@ -230,7 +230,7 @@ export default class FeaureOverlays extends EventEmitter {
                         }
                         const clientoperateLayer = new FeatureLayer({
                             id: this.displayedLayerid,
-                            title: this.displayedLayerid,
+                            title: "Overlayer-circle-" + this.displayedLayerid,
                             objectIdField: 'objectId',
                             geometryType: 'polygon',
                             renderer: symbolrenderer,
@@ -345,7 +345,7 @@ export default class FeaureOverlays extends EventEmitter {
                         }
                         const clientoperateLayer = new FeatureLayer({
                             id: this.displayedLayerid,
-                            title: this.displayedLayerid,
+                            title: "Overlayer-polyline-" + this.displayedLayerid,
                             objectIdField: 'objectId',
                             geometryType: 'polyline',
                             renderer: symbolrenderer,
@@ -460,7 +460,7 @@ export default class FeaureOverlays extends EventEmitter {
                         }
                         const clientoperateLayer = new FeatureLayer({
                             id: this.displayedLayerid,
-                            title: this.displayedLayerid,
+                            title: "Overlayer-polygon-" + this.displayedLayerid,
                             objectIdField: 'objectId',
                             geometryType: 'polygon',
                             renderer: symbolrenderer,
@@ -607,7 +607,7 @@ export default class FeaureOverlays extends EventEmitter {
                         }
                         const clientoperateLayer = new FeatureLayer({
                             id: this.displayedLayerid,
-                            title: this.displayedLayerid,
+                            title: "Overlayer-marker-" + this.displayedLayerid,
                             objectIdField: 'objectId',
                             geometryType: 'point',
                             renderer: markrenderer,
@@ -733,7 +733,7 @@ export default class FeaureOverlays extends EventEmitter {
                         }
                         const clientoperateLayer = new FeatureLayer({
                              id: this.displayedLayerid,
-                             title: this.displayedLayerid,
+                             title: "Overlayer-circle-" + this.displayedLayerid,
                              objectIdField: 'objectId',
                              geometryType: 'polygon',
                              renderer: circlerenderer,
@@ -848,7 +848,7 @@ export default class FeaureOverlays extends EventEmitter {
                           }
                              const clientoperateLayer = new FeatureLayer({
                                     id: this.displayedLayerid,
-                                    title: this.displayedLayerid,
+                                    title: "Overlayer-polyline-" + this.displayedLayerid,
                                     objectIdField: 'objectId',
                                     geometryType: 'polyline',
                                     renderer: polylinerenderer,
@@ -982,7 +982,7 @@ export default class FeaureOverlays extends EventEmitter {
                          }
                          const clientoperateLayer = new FeatureLayer({
                              id: this.displayedLayerid,
-                             title: this.displayedLayerid,
+                             title: "Overlayer-polygon-" + this.displayedLayerid,
                              objectIdField: 'objectId',
                              geometryType: 'polygon',
                              renderer: polygonrenderer,

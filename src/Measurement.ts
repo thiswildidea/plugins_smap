@@ -31,7 +31,7 @@ export default class Measurement extends EventEmitter {
                 if (drawresultlayer == null) {
                     drawresultlayer = new GraphicsLayer({
                         id: this.displayedLayerid,
-                        title: '绘制结果显示层',
+                        title: '测量结果显示层',
                         listMode: 'hide'
                     });
                     this.view.map.add(drawresultlayer);
@@ -42,7 +42,7 @@ export default class Measurement extends EventEmitter {
                 if (!drawcircleresultlayer) {
                     drawcircleresultlayer = new GraphicsLayer({
                         id: this.displayedLayerid,
-                        title: '画圆显示层',
+                        title: '测量圆实时追踪显示层',
                         listMode: 'hide'
                     });
                     this.view.map.add(drawcircleresultlayer);
@@ -234,7 +234,7 @@ export default class Measurement extends EventEmitter {
                 if (!drawresultlayer) {
                     drawresultlayer = new GraphicsLayer({
                         id: this.displayedLayerid,
-                        title: '绘制结果显示层',
+                        title: '测量结果显示层',
                         listMode: 'hide'
                     });
                     this.view.map.add(drawresultlayer);
@@ -245,7 +245,7 @@ export default class Measurement extends EventEmitter {
                 if (drawrectangleresultlayer == null) {
                     drawrectangleresultlayer = new GraphicsLayer({
                         id: this.displayedLayerid,
-                        title: '画矩形追踪显示层',
+                        title: '测量矩形实时追踪显示层',
                         listMode: 'hide'
                     });
                     this.view.map.add(drawrectangleresultlayer);
@@ -559,7 +559,7 @@ export default class Measurement extends EventEmitter {
                 if (!drawresultlayer) {
                     drawresultlayer = new GraphicsLayer({
                         id: this.displayedLayerid,
-                        title: '绘制结果显示层',
+                        title: '测量结果显示层',
                         listMode: 'hide'
                     });
                     this.view.map.add(drawresultlayer);
@@ -570,7 +570,7 @@ export default class Measurement extends EventEmitter {
                 if (drawPointresultlayer == null) {
                     drawPointresultlayer = new GraphicsLayer({
                         id: this.displayedLayerid,
-                        title: '画点移动追踪显示层',
+                        title: '测量点移动实时追踪显示层',
                         listMode: 'hide'
                     });
                     this.view.map.add(drawPointresultlayer);
@@ -584,8 +584,8 @@ export default class Measurement extends EventEmitter {
                     drawPointresultlayer.removeAll();
                     const point = {
                         type: "point",
-                        x: event.coordinates[0],
-                        y: event.coordinates[1],
+                        x: event.vertices[0][0],
+                        y: event.vertices[0][1],
                         spatialReference: this.view.spatialReference
                     };
                     const graphic = new Graphic({
@@ -594,8 +594,8 @@ export default class Measurement extends EventEmitter {
                    });
                     drawPointresultlayer.add(graphic);
                     const labelsymbol = this.textsymbol;
-                    labelsymbol.text = "(" + parseFloat(event.coordinates[0]).toFixed(3)
-                        + "," + parseFloat(event.coordinates[0]).toFixed(3) + ")";
+                    labelsymbol.text = "(" + parseFloat(event.vertices[0][0]).toFixed(3)
+                        + "," + parseFloat(event.vertices[0][1]).toFixed(3) + ")";
                     const labelgraphic = new Graphic({
                         geometry: point,
                         symbol: labelsymbol
@@ -608,8 +608,8 @@ export default class Measurement extends EventEmitter {
                 action.on("draw-complete", (event) => {
                     const point = {
                         type: "point",
-                        x: event.coordinates[0],
-                        y: event.coordinates[1],
+                        x: event.vertices[0][0],
+                        y: event.vertices[0][1],
                         spatialReference: this.view.spatialReference
                     };
                     const graphic = new Graphic({
@@ -617,8 +617,8 @@ export default class Measurement extends EventEmitter {
                         symbol: this.marksymbol
                     });
                     const labelsymbol = this.textsymbol;
-                    labelsymbol.text = "(" + parseFloat(event.coordinates[0]).toFixed(3)
-                        + "," + parseFloat(event.coordinates[0]).toFixed(3) + ")";
+                    labelsymbol.text = "(" + parseFloat(event.vertices[0][0]).toFixed(3)
+                        + "," + parseFloat(event.vertices[0][1]).toFixed(3) + ")";
                     const labelgraphic = new Graphic({
                         geometry: point,
                         symbol: labelsymbol
@@ -626,8 +626,8 @@ export default class Measurement extends EventEmitter {
                     this.view.map.remove(drawPointresultlayer);
                     drawresultlayer.add(labelgraphic);
                     drawresultlayer.add(graphic);
-                    const coordinates = "(" + parseFloat(event.coordinates[0]).toFixed(3)
-                        + "," + parseFloat(event.coordinates[0]).toFixed(3) + ")";
+                    const coordinates = "(" + parseFloat(event.vertices[0][0]).toFixed(3)
+                        + "," + parseFloat(event.vertices[0][0]).toFixed(3) + ")";
                     this.emit('measurementcomplete', graphic, coordinates, 'point');
                  }
                 );
@@ -646,7 +646,7 @@ export default class Measurement extends EventEmitter {
                 if (!drawresultlayer) {
                     drawresultlayer = new GraphicsLayer({
                         id: this.displayedLayerid,
-                        title: '绘制结果显示层',
+                        title: '测量结果显示层',
                         listMode: 'hide'
                     });
                     this.view.map.add(drawresultlayer);
@@ -657,7 +657,7 @@ export default class Measurement extends EventEmitter {
                 if (drawmultipointresultlayer == null) {
                     drawmultipointresultlayer = new GraphicsLayer({
                         id: this.displayedLayerid,
-                        title: '画多点显示层',
+                        title: '测量多点临时显示层',
                         listMode: 'hide'
                     });
                     this.view.map.add(drawmultipointresultlayer);
@@ -668,7 +668,7 @@ export default class Measurement extends EventEmitter {
                 if (drawmultipointMovelayer == null) {
                     drawmultipointMovelayer = new GraphicsLayer({
                         id: this.displayedLayerid,
-                        title: '移动追踪点显示层',
+                        title: '测量多点移动追踪显示层',
                         listMode: 'hide'
                     });
                     this.view.map.add(drawmultipointMovelayer);
@@ -774,7 +774,7 @@ export default class Measurement extends EventEmitter {
                 if (!drawresultlayer) {
                     drawresultlayer = new GraphicsLayer({
                         id: this.displayedLayerid,
-                        title: '绘制结果显示层',
+                        title: '测量结果显示层',
                         listMode: 'hide'
                     });
                     this.view.map.add(drawresultlayer);
@@ -785,7 +785,7 @@ export default class Measurement extends EventEmitter {
                 if (drawPolylinelayer == null) {
                     drawPolylinelayer = new GraphicsLayer({
                         id: this.displayedLayerid,
-                        title: '画线显示层',
+                        title: '测量多边线实时追踪显示层',
                         listMode: 'hide'
                     });
                     this.view.map.add(drawPolylinelayer);
@@ -954,7 +954,7 @@ export default class Measurement extends EventEmitter {
                 if (!drawresultlayer) {
                     drawresultlayer = new GraphicsLayer({
                         id: this.displayedLayerid,
-                        title: '绘制结果显示层',
+                        title: '测量结果显示层',
                         listMode: 'hide'
                     });
                     this.view.map.add(drawresultlayer);
@@ -965,7 +965,7 @@ export default class Measurement extends EventEmitter {
                 if (drawPolygonlayer == null) {
                     drawPolygonlayer = new GraphicsLayer({
                         id: this.displayedLayerid,
-                        title: '画面显示层',
+                        title: '测量多边形实时追踪显示层',
                         listMode: 'hide'
                     });
                     this.view.map.add(drawPolygonlayer);
