@@ -113,7 +113,9 @@ export default class FeaureOverlays extends EventEmitter {
                             spatialReference: this.view.spatialReference
                         });
                         if ((overlayers as OverlayGroup).elevationInfo) {
-                            clientoperateLayer.elevationInfo = (overlayers as Overlayerbase).elevationInfo;
+                            if (this.view.type === '3d') {
+                                clientoperateLayer.elevationInfo = (overlayers as OverlayGroup).elevationInfo;
+                            }
                         }
                         if ((overlayers as OverlayGroup).frreduction) {
                             if (this.view.type === '3d') {
@@ -242,7 +244,9 @@ export default class FeaureOverlays extends EventEmitter {
                             spatialReference: this.view.spatialReference
                         });
                         if ((overlayers as Overlayerbase).elevationInfo) {
-                            clientoperateLayer.elevationInfo = (overlayers as Overlayerbase).elevationInfo;
+                            if (this.view.type === '3d') {
+                                clientoperateLayer.elevationInfo = (overlayers as OverlayGroup).elevationInfo;
+                            }
                         }
                         this.view.map.add(clientoperateLayer);
                         (overlayers as OverlayGroup).overlayers.forEach((overelement) => {
@@ -357,7 +361,9 @@ export default class FeaureOverlays extends EventEmitter {
                             spatialReference: this.view.spatialReference
                         });
                         if ((overlayers as Overlayerbase).elevationInfo) {
-                            clientoperateLayer.elevationInfo = (overlayers as Overlayerbase).elevationInfo;
+                            if (this.view.type === '3d') {
+                                clientoperateLayer.elevationInfo = (overlayers as OverlayGroup).elevationInfo;
+                            }
                         }
                         this.view.map.add(clientoperateLayer);
                         (overlayers as OverlayGroup).overlayers.forEach((overelement) => {
@@ -472,7 +478,9 @@ export default class FeaureOverlays extends EventEmitter {
                             spatialReference: this.view.spatialReference
                         });
                         if ((overlayers as Overlayerbase).elevationInfo) {
-                            clientoperateLayer.elevationInfo = (overlayers as Overlayerbase).elevationInfo;
+                            if (this.view.type === '3d') {
+                                clientoperateLayer.elevationInfo = (overlayers as OverlayGroup).elevationInfo;
+                            }
                         }
                         this.view.map.add(clientoperateLayer);
                         (overlayers as OverlayGroup).overlayers.forEach((overelement) => {
@@ -620,7 +628,9 @@ export default class FeaureOverlays extends EventEmitter {
                             spatialReference: this.view.spatialReference
                         });
                         if ((overlayers as Overlayerbase).elevationInfo) {
-                            clientoperateLayer.elevationInfo = (overlayers as Overlayerbase).elevationInfo;
+                            if (this.view.type === '3d') {
+                                clientoperateLayer.elevationInfo = (overlayers as Overlayerbase).elevationInfo;
+                            }
                         }
                         if ((overlayers as Marker).position && (overlayers as Overlayerbase).attributes) {
                            const dataattributes = (overlayers as Overlayerbase).attributes;
@@ -746,7 +756,9 @@ export default class FeaureOverlays extends EventEmitter {
                              spatialReference: this.view.spatialReference
                          });
                         if ((overlayers as Overlayerbase).elevationInfo) {
-                             clientoperateLayer.elevationInfo = (overlayers as Overlayerbase).elevationInfo;
+                            if (this.view.type === '3d') {
+                                clientoperateLayer.elevationInfo = (overlayers as Overlayerbase).elevationInfo;
+                            }
                          }
                         if ((overlayers as Circle).center && (overlayers as Circle).radius &&
                           (overlayers as Overlayerbase).attributes) {
@@ -861,7 +873,9 @@ export default class FeaureOverlays extends EventEmitter {
                                     spatialReference: this.view.spatialReference
                          });
                              if ((overlayers as Overlayerbase).elevationInfo) {
-                             clientoperateLayer.elevationInfo = (overlayers as Overlayerbase).elevationInfo;
+                                 if (this.view.type === '3d') {
+                                     clientoperateLayer.elevationInfo = (overlayers as Overlayerbase).elevationInfo;
+                                 }
                          }
                              if ((overlayers as Polyline).path &&
                              (overlayers as Overlayerbase).attributes) {
@@ -995,7 +1009,9 @@ export default class FeaureOverlays extends EventEmitter {
                              spatialReference: this.view.spatialReference
                          });
                          if ((overlayers as Overlayerbase).elevationInfo) {
-                             clientoperateLayer.elevationInfo = (overlayers as Overlayerbase).elevationInfo;
+                             if (this.view.type === '3d') {
+                                 clientoperateLayer.elevationInfo = (overlayers as Overlayerbase).elevationInfo;
+                             }
                          }
                          if ((overlayers as Polygon).paths &&
                              (overlayers as Overlayerbase).attributes) {
