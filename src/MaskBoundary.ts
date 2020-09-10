@@ -156,7 +156,7 @@ export default class MaskBoundary extends EventEmitter {
                             });
                         });
                 } else {
-                    console.log(boundaryLayer);
+                    // console.log(boundaryLayer);
                     if (boundaryLayer === null) { return; }
                     const queryParams = boundaryLayer.createQuery();
                     queryParams.where = maskOptions.boundaryDefinition;

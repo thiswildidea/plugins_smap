@@ -8,6 +8,7 @@ import HeatMap from './HeatMap';
 import Layers from './interface/Layers';
 import MaskBoundary from './MaskBoundary';
 import Measurement from './Measurement';
+import MeshLine from './MeshLine';
 import MigrationMap from './MigrationMap';
 import { load } from './modules';
 import Trajectory from './Trajectory';
@@ -23,6 +24,7 @@ export default {
   FlashPoint3DLayer,
   HeatMap,
   Measurement,
+  MeshLine,
   MaskBoundary,
   TrajectoryPlus,
   MigrationMap,
