@@ -7,11 +7,11 @@ import {
 import Guid from './utils/Guid';
 import MapEvent from './utils/MapEvent';
 export default class FlashGifLayer extends EventEmitter {
-    public markpointsRendererArray: Array<[string, any]> = [];
-    private markpoints: any = null;
+    public markpointsRendererArray: Array<[string, any]> = []; // 渲染苏州
+    private markpoints: any = null; // 撒点
     private view: any = null;
-    private flashGifLayer: any = null;
-    private markpointscontainerid: any = null;
+    private flashGifLayer: any = null; // gif 渲染
+    private markpointscontainerid: any = null; // gif的容器id
     constructor(view: any) {
         super();
         this.init(view);
@@ -26,6 +26,7 @@ export default class FlashGifLayer extends EventEmitter {
                     item.markerid = new Guid().uuid;
                     return item;
                 });
+                // gif 的容器id
                 this.markpointscontainerid = new Guid().uuid;
                 this.flashGifLayer = new flashgiflayer({
                     points: this.markpoints,
