@@ -5,4 +5,7 @@ export default interface IMeshLine {
     color?: any;
     opacity?: number;
     dash?: number;
+    rest?: number;
+    linesegment?: number;
+    linesegmentfade?: number;
 }

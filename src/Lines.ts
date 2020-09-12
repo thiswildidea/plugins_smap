@@ -6,7 +6,7 @@ import {
 } from './modules';
 import Guid from './utils/Guid';
 import MapEvent from './utils/MapEvent';
-export default class MeshLine extends EventEmitter {
+export default class Lines extends EventEmitter {
     public meshLineRendererArray: Array<[string, any]> = [];
     private view: any = null;
     constructor(view: any) {
@@ -14,15 +14,13 @@ export default class MeshLine extends EventEmitter {
         this.init(view);
     }
     public add(meshLineOptions: IMeshLine= {}) {
-        load(["smiapi/utils/MeshLines", "esri/views/3d/externalRenderers"])
+        load(["smiapi/utils/Lines", "esri/views/3d/externalRenderers"])
             // tslint:disable-next-line:variable-name
             .then(([MeshLines, externalRenderers]) => {
                 if (!meshLineOptions.paths) { return; }
                 const meshLineRenderer = new MeshLines(this.view, meshLineOptions.paths,
                     meshLineOptions.width, meshLineOptions.color, meshLineOptions.opacity,
-                    meshLineOptions.dash, meshLineOptions.rest, meshLineOptions.linesegment,
-                    meshLineOptions.linesegmentfade
-                    );
+                    meshLineOptions.dash, meshLineOptions.rest);
                 externalRenderers.add(this.view, meshLineRenderer);
                 this.meshLineRendererArray.push([new Guid().uuid, meshLineRenderer]);
             })

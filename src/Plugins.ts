@@ -1,11 +1,14 @@
 import Boundary from './Boundary';
 import Draw from './Draw';
+import DynamicPolygon from './DynamicPolygon';
 import EchartFlashPointLayer from './EchartFlashPointLayer';
 import FeaureOverlays from './FeaureOverlays';
+import FlashGifLayer from './FlashGifLayer';
 import FlashPoint3DLayer from './FlashPoint3DLayer';
 import GraphicOverlays from './GraphicOverlays';
 import HeatMap from './HeatMap';
 import Layers from './interface/Layers';
+import Lines from './Lines';
 import MaskBoundary from './MaskBoundary';
 import Measurement from './Measurement';
 import MeshLine from './MeshLine';
@@ -18,13 +21,16 @@ export default {
   Layers,
   Boundary,
   Draw,
+  DynamicPolygon,
   GraphicOverlays,
   FeaureOverlays,
   EchartFlashPointLayer,
   FlashPoint3DLayer,
+  FlashGifLayer,
   HeatMap,
   Measurement,
   MeshLine,
+  Lines,
   MaskBoundary,
   TrajectoryPlus,
   MigrationMap,

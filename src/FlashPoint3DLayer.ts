@@ -57,6 +57,7 @@ export default class FlashPoint3DLayer extends EventEmitter {
         load(["esri/views/3d/externalRenderers"])
             // tslint:disable-next-line:variable-name
             .then(([externalRenderers]) => {
+                if (!this.falshpoint3DRenderer) { return; }
                 externalRenderers.remove(this.view, this.falshpoint3DRenderer);
             });
     }
