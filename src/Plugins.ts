@@ -1,4 +1,6 @@
+import Aurora from './Aurora';
 import Boundary from './Boundary';
+import ContourMapLayer from './ContourMapLayer';
 import Draw from './Draw';
 import DynamicPolygon from './DynamicPolygon';
 import EchartFlashPointLayer from './EchartFlashPointLayer';
@@ -17,6 +19,7 @@ import Trajectory from './Trajectory';
 import TrajectoryPlus from './TrajectoryPlus';
 export default {
   load,
+  Aurora,
   Layers,
   Boundary,
   Draw,
@@ -27,6 +30,7 @@ export default {
   FlashPoint3DLayer,
   FlashGifLayer,
   HeatMap,
+  ContourMapLayer,
   Measurement,
   MeshLine,
   MaskBoundary,
