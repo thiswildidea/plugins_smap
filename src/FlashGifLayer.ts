@@ -18,7 +18,7 @@ export default class FlashGifLayer extends EventEmitter {
     }
 
     public add(flashPointOptions: IFlashGifOptions) {
-        load(['smiapi/utils/flashgiflayer', "esri/geometry/Point", "esri/views/3d/externalRenderers"])
+        load(['smiapi/utils/4E3CE3AF-B592-B4F6-576E1B86F84B6969', "esri/geometry/Point", "esri/views/3d/externalRenderers"])
             // tslint:disable-next-line:variable-name
             .then(([flashgiflayer, Point , externalRenderers]) => {
                 if (!flashPointOptions.points) {return; }

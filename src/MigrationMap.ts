@@ -12,7 +12,7 @@ export default class MigrationMap extends EventEmitter {
         this.init(view);
     }
     public add(mgrationMapOptions: IMigrationMapOptions= {}) {
-        load(['esri/layers/echartsLayer'])
+        load(['esri/layers/599EFB79-18C9-DC0A-E2C9FC2F2316C660'])
             // tslint:disable-next-line:no-shadowed-variable
             .then(([echartsLayer]) => {
             //  this.loadAPIScript('echartsgl', Mapcofig.jsapi + '/extensions/echarts/echarts-gl.js').then(() => {

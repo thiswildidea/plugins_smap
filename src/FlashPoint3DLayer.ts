@@ -15,7 +15,7 @@ export default class FlashPoint3DLayer extends EventEmitter {
     }
 
     public add(flashPointOptions: IFlashPointOptions) {
-        load(['smiapi/utils/FlashPoint3DLayer', "esri/geometry/Point", "esri/views/3d/externalRenderers"])
+        load(['smiapi/utils/92586C78-6DE2-946F-F03F88AF0F8D0D7F', "esri/geometry/Point", "esri/views/3d/externalRenderers"])
             // tslint:disable-next-line:variable-name
             .then(([flashPoint3DLayer, Point , externalRenderers]) => {
                 this.falshpoint3DRenderer = new flashPoint3DLayer({

@@ -14,7 +14,7 @@ export default class MeshLine extends EventEmitter {
         this.init(view);
     }
     public add(meshLineOptions: IMeshLine= {}) {
-        load(["smiapi/utils/MeshLines", "esri/views/3d/externalRenderers"])
+        load(["smiapi/utils/B622344F-BB19-15F1-3920E863621B4D9B", "esri/views/3d/externalRenderers"])
             // tslint:disable-next-line:variable-name
             .then(([MeshLines, externalRenderers]) => {
                 if (!meshLineOptions.paths) { return; }

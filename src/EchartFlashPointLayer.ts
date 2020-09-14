@@ -16,7 +16,7 @@ export default class EchartFlashPointLayer extends EventEmitter {
         this.init(view);
     }
     public add(echartFlashPointOptions: IEchartFlashPointOptions) {
-        load(['esri/layers/echartsLayer'])
+        load(["smiapi/utils/599EFB79-18C9-DC0A-E2C9FC2F2316C660"])
             // tslint:disable-next-line:no-shadowed-variable
             .then(([echartsLayer]) => {
                 const parent = document.getElementsByClassName("esri-view-surface")[0];
@@ -89,7 +89,7 @@ export default class EchartFlashPointLayer extends EventEmitter {
 
       }
     public update(echartFlashPointOptions: IEchartFlashPointOptions) {
-        load(['esri/layers/echartsLayer'])
+        load(["smiapi/utils/599EFB79-18C9-DC0A-E2C9FC2F2316C660"])
             // tslint:disable-next-line:no-shadowed-variable
             .then(([echartsLayer]) => {
                 const parent = document.getElementsByClassName("esri-view-surface")[0];
