@@ -8,7 +8,6 @@ import FlashPoint3DLayer from './FlashPoint3DLayer';
 import GraphicOverlays from './GraphicOverlays';
 import HeatMap from './HeatMap';
 import Layers from './interface/Layers';
-import Lines from './Lines';
 import MaskBoundary from './MaskBoundary';
 import Measurement from './Measurement';
 import MeshLine from './MeshLine';
@@ -30,7 +29,6 @@ export default {
   HeatMap,
   Measurement,
   MeshLine,
-  Lines,
   MaskBoundary,
   TrajectoryPlus,
   MigrationMap,

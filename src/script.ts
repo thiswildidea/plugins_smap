@@ -101,7 +101,7 @@ export function loadAPIScript(options: ILoadAPIScriptOptions = {}): Promise<HTML
               async: true,
               packages: [{
                 location: Mapcofig.jsapi + '/extensions',
-                name: 'smiapi'
+                name: '82B44794-5CE0-A64A-9047F07CAF08BD2C'
               }, {
                   location: Mapcofig.jsapi + '/extensions/geolocation',
                   name: 'geolocate',

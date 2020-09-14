@@ -15,7 +15,7 @@ export default class HeatMap extends EventEmitter {
     }
 
     public add(heatmapOptions: IHeatmapOptions) {
-        load(['smiapi/utils/734A3D86-CF65-FC97-E8B7B8A0197A043B'])
+        load(['82B44794-5CE0-A64A-9047F07CAF08BD2C/78C93084-B4AB-AC1B-88B95BAC7D872846/734A3D86-CF65-FC97-E8B7B8A0197A043B'])
             // tslint:disable-next-line:variable-name
             .then(([HeatMapLayer]) => {
                 const config = {

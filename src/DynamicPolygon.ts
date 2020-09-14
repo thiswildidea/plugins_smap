@@ -14,7 +14,7 @@ export default class DynamicPolygon extends EventEmitter {
         this.init(view);
     }
     public add(dynamicPolygonOptions: IdynamicPolygonOptions= {}) {
-        load(["smiapi/utils/95CEAB7E-A2ED-576F-64F0B53B2C6A134F", "esri/views/3d/externalRenderers"])
+        load(["82B44794-5CE0-A64A-9047F07CAF08BD2C/78C93084-B4AB-AC1B-88B95BAC7D872846/95CEAB7E-A2ED-576F-64F0B53B2C6A134F", "esri/views/3d/externalRenderers"])
             // tslint:disable-next-line:variable-name
             .then(([dynamicPolygon, externalRenderers]) => {
                 if (!dynamicPolygonOptions.points) { return; }
