@@ -2,7 +2,9 @@ import Aurora from './Aurora';
 import Boundary from './Boundary';
 import ContourMapLayer from './ContourMapLayer';
 import Draw from './Draw';
+import DynamicCylinderFence from './DynamicCylinderFence';
 import DynamicPolygon from './DynamicPolygon';
+import DynamicSquareFence from './DynamicSquareFence';
 import EchartFlashPointLayer from './EchartFlashPointLayer';
 import FeaureOverlays from './FeaureOverlays';
 import FlashGifLayer from './FlashGifLayer';
@@ -35,6 +37,8 @@ export default {
   MeshLine,
   MaskBoundary,
   TrajectoryPlus,
+  DynamicSquareFence,
+  DynamicCylinderFence,
   MigrationMap,
   Trajectory
 };
