@@ -40,7 +40,7 @@ define(['dojo/_base/declare', 'esri/geometry/Point', 'esri/geometry/SpatialRefer
       var e = new l.BoxBufferGeometry(this.radius, this.radius, this.height);
       var f = new l.MeshBasicMaterial({
         color: 0xFFB400,
-        d,
+        map:d,
         opacity: 1,
       });
       e.rotateZ(Math.PI / 2);

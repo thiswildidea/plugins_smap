@@ -40,7 +40,7 @@ define(['dojo/_base/declare', 'esri/geometry/Point', 'esri/geometry/SpatialRefer
       var e = new l.CylinderGeometry(this.radius, this.radius, this.height, 50, 1, true);
       var f = new l.MeshBasicMaterial({
         color: 0xFFB400,
-        d,
+        map: d,
         opacity: 1,
       });
       e.rotateZ(Math.PI / 2);
