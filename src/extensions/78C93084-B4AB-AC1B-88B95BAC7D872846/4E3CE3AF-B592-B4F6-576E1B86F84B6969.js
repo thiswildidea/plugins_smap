@@ -29,8 +29,8 @@ define(['dojo/_base/declare', 'esri/geometry/Point', 'esri/geometry/SpatialRefer
             this.gifRenderer.setSize(this.view.width, this.view.height);
             this.gifRenderer.domElement.style.position = 'absolute';
             this.gifRenderer.domElement.style.top = '0px';
-            this.gifRenderer.domElement.setAttribute('id', this.markercontainerid)
-             document.querySelector('.esri-view .esri-view-root .esri-view-surface').appendChild(this.gifRenderer.domElement);
+            this.gifRenderer.domElement.setAttribute('id', this.markercontainerid) 
+            document.querySelector('.esri-view .esri-view-root .esri-view-surface').appendChild(this.gifRenderer.domElement);
             this.scene = new n.Scene();
             this.camera = new n.PerspectiveCamera();
             const axesHelper = new n.AxesHelper(10000000);
@@ -38,12 +38,14 @@ define(['dojo/_base/declare', 'esri/geometry/Point', 'esri/geometry/SpatialRefer
             let transform = new n.Matrix4();
             let transformation = new Array(16);
             this.points.forEach((point) => {
-                const z = point.z === undefined ? 0 : point.z 
-                transform.fromArray(l.renderCoordinateTransformAt(this.view, [point.x, point.y, z], this.view.spatialReference, transformation));
+                const z = point.z === undefined ? 0 : point.z
+                 transform.fromArray(l.renderCoordinateTransformAt(this.view, [point.x, point.y, z], this.view.spatialReference, transformation));
                 let vector3 = new n.Vector3(transform.elements[12], transform.elements[13], transform.elements[14]);
                 const div = document.createElement('div');
-                div.setAttribute('id', point.markerid)
-                div.innerHTML = '<div><img src="' + point.url + '" /></div>';
+                div.setAttribute('id', point.markerid) 
+                const width = point.width === undefined ? 40 : point.width
+                const height = point.height === undefined ? 40 : point.height
+                 div.innerHTML = '<div><img src="' + point.url + '" style="width:' + width + "px;height:" + height + 'px;" /></div>';
                 const divObj = new window.CSS2DObject(div);
                 divObj.position.set(vector3.x, vector3.y, vector3.z);
                 this.scene.add(divObj)
@@ -80,8 +82,8 @@ define(['dojo/_base/declare', 'esri/geometry/Point', 'esri/geometry/SpatialRefer
                         });
                         var b = g.view.toScreen(pointorigin);
                         return Math.sqrt((b.x - c.x) * (b.x - c.x) + (b.y - c.y) * (b.y - c.y))
-                    })
-                     var e = 0;
+                    }) 
+                    var e = 0;
                     d.forEach(function (a, i) {
                         if (a < d[e]) {
                             e = i
@@ -103,8 +105,8 @@ define(['dojo/_base/declare', 'esri/geometry/Point', 'esri/geometry/SpatialRefer
                         });
                         var b = g.view.toScreen(pointorigin);
                         return Math.sqrt((b.x - c.x) * (b.x - c.x) + (b.y - c.y) * (b.y - c.y))
-                    })
-                     var e = 0;
+                    }) 
+                    var e = 0;
                     d.forEach(function (a, i) {
                         if (a < d[e]) {
                             e = i

@@ -89,7 +89,9 @@ define([
 
         const div = document.createElement('div');
         div.setAttribute('id', point.markerid)
-        div.innerHTML = '<div><img src="' + point.url + '" /></div>';
+        const width = point.width === undefined ? 40 : point.width
+        const height = point.height === undefined ? 40 : point.height
+        div.innerHTML = '<div><img src="' + point.url + '" style="width:'+width+"px;height:" +height+'px;" /></div>';
         const divObj = new window.CSS2DObject(div);
         divObj.position.set(vector3.x, vector3.y, vector3.z);
         this.scene.add(divObj);

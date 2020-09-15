@@ -1,148 +1,78 @@
-/*    
-    Copyright 2016 Esri
-
-    Licensed under the Apache License, Version 2.0 (the "License");
-    you may not use this file except in compliance with the License.
-    You may obtain a copy of the License at
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-    Unless required by applicable law or agreed to in writing, software
-    distributed under the License is distributed on an "AS IS" BASIS,
-    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-    See the License for the specific language governing permissions and
-    limitations under the License.
-*/
-
-define([
-    'esri/Camera',
-    'dojo/_base/declare',
-    'esri/views/3d/externalRenderers',
-    "esri/geometry/support/webMercatorUtils"
-], function (
-    Camera,
-    declare,
-    externalRenderers,
-    webMercatorUtils
-) {
-    // Enforce strict mode
+;
+define(['esri/Camera', 'dojo/_base/declare', 'esri/views/3d/externalRenderers', "esri/geometry/support/webMercatorUtils"], function (f, g, h, i) {
     'use strict';
-
-    // Constants
-    var THREE = window.THREE;
-    var RADIUS = 6378137;
-    var CORE = 1216000;
-
-    return declare([], {
-        constructor: function (view, center, radius, height, textureurl) {
-            this.view = view;
-            this.center = center;
-            this.radius = radius;
-            this.textureurl = textureurl;
-            this.height = height;
+    var j = window.THREE;
+    var k = 6378137;
+    var l = 1216000;
+    return g([], {
+        constructor: function (a, b, c, d, e) {
+            this.view = a;
+            this.center = b;
+            this.radius = c;
+            this.textureurl = e;
+            this.height = d
         },
-        setup: function (context) {
-            // Create the THREE.js webgl renderer
-            this.renderer = new THREE.WebGLRenderer({
-                context: context.gl,
+        setup: function (b) {
+            this.renderer = new j.WebGLRenderer({
+                context: b.gl,
                 premultipliedAlpha: false,
             });
-
             this.renderer.setPixelRatio(window.devicePixelRatio);
             this.renderer.setViewport(0, 0, this.view.width, this.view.height);
-
-            // Make sure it does not clear anything before rendering
             this.renderer.autoClear = false;
             this.renderer.autoClearDepth = false;
             this.renderer.autoClearColor = false;
             this.renderer.autoClearStencil = false;
-
-            var originalSetRenderTarget = this.renderer.setRenderTarget.bind(this.renderer);
-            this.renderer.setRenderTarget = function (target) {
-                originalSetRenderTarget(target);
-                if (target == null) {
-                    context.bindRenderTarget();
+            var c = this.renderer.setRenderTarget.bind(this.renderer);
+            this.renderer.setRenderTarget = function (a) {
+                c(a);
+                if (a == null) {
+                    b.bindRenderTarget()
                 }
             };
-            //
-            this.scene = new THREE.Scene();
-            this.camera = new THREE.PerspectiveCamera();
-
-            
-
-            // Create lights that will resemble the sun light lighting that we do internally
+            this.scene = new j.Scene();
+            this.camera = new j.PerspectiveCamera();
             this._createLights();
-
-            // Create objects and add them to the scene
             this._createObjects();
-
-            // Set starting geometries
-            this._updateObjects();
+            this._updateObjects()
         },
-        render: function (context) {
-            // Make sure to reset the internal THREE.js state
+        render: function (a) {
             this.renderer.resetGLState();
-
-            // Update the THREE.js camera so it's synchronized to our camera
-            this._updateCamera(context);
-
-            // Update the THREE.js lights so it's synchronized to our light
-            this._updateLights(context);
-
-            // Advance current geometry
-            this._updateObjects(context);
-
-            // Render the scene
-            this.renderer.render(this.scene, this.camera);
+            this._updateCamera(a);
+            this._updateLights(a);
+            this._updateObjects(a);
+            this.renderer.render(this.scene, this.camera)
         },
-        dispose: function (content) { },
+        dispose: function (a) { },
         _createLights: function () {
-            // Add ambient light
-            this.scene.add(new THREE.AmbientLight(0x404040, 1));
-
-            // Add directional light
-            var directionalLight = new THREE.DirectionalLight(0xffffff, 0.5);
-            directionalLight.position.set(1, 0, 0);
-            this.scene.add(directionalLight);
+            this.scene.add(new j.AmbientLight(0x404040, 1));
+            var a = new j.DirectionalLight(0xffffff, 0.5);
+            a.position.set(1, 0, 0);
+            this.scene.add(a)
         },
         _createObjects: function () {
-            var scope = this;
-            // Aurora - material
-            var m3 = new THREE.MeshBasicMaterial({
-                side: THREE.DoubleSide,
+            var a = this;
+            var b = new j.MeshBasicMaterial({
+                side: j.DoubleSide,
                 transparent: true,
-                map: new THREE.TextureLoader().load(scope.textureurl)
+                map: new j.TextureLoader().load(a.textureurl)
             });
-            var height = scope.height;
-            var g3 = new THREE.ConeBufferGeometry(
-                scope.radius,  // radius
-                height,      // height
-                100,         // radius segments
-                1,           // height segments
-                true         // open ended
-            );
-            g3.translate(this.center[1], 0, this.center[0]); 
-            g3.rotateZ(Math.PI / 2);  // Move to 0�,0�
-            g3.rotateY(-Math.PI / 2)
-        
-
-            const point = webMercatorUtils.xyToLngLat(scope.center[0], scope.center[1])
-            // var north1 = g3.clone();
-            // north1.rotateY(point[0] * Math.PI / -90); 
-            // north1.rotateZ(-point[1] * Math.PI / -90);
-            this.scene.add(new THREE.Mesh(g3, m3));
+            var c = a.height;
+            var d = new j.ConeBufferGeometry(a.radius, c, 100, 1, true);
+            d.translate(this.center[1], 0, this.center[0]);
+            d.rotateZ(Math.PI / 2);
+            d.rotateY(-Math.PI / 2)
+            const point = i.xyToLngLat(a.center[0], a.center[1])
+            this.scene.add(new j.Mesh(d, b))
         },
-        _updateCamera: function (context) {
-            // Get Esri's camera
-            var c = context.camera;
-
-            // Update three.js camera
+        _updateCamera: function (a) {
+            var c = a.camera;
             this.camera.projectionMatrix.fromArray(c.projectionMatrix);
             this.camera.position.set(c.eye[0], c.eye[1], c.eye[2]);
             this.camera.up.set(c.up[0], c.up[1], c.up[2]);
-            this.camera.lookAt(new THREE.Vector3(c.center[0], c.center[1], c.center[2]));
+            this.camera.lookAt(new j.Vector3(c.center[0], c.center[1], c.center[2]))
         },
-        _updateLights: function (context) { },
-        _updateObjects: function (context) { }
-    });
-});
+        _updateLights: function (a) { },
+        _updateObjects: function (a) { }
+    })
+});;
