@@ -18,7 +18,7 @@ export default class FlashGifLayer extends EventEmitter {
     }
 
     public add(flashPointOptions: IFlashGifOptions) {
-        load(['82B44794-5CE0-A64A-9047F07CAF08BD2C/78C93084-B4AB-AC1B-88B95BAC7D872846/4E3CE3AF-B592-B4F6-576E1B86F84B6969', "esri/geometry/Point", "esri/views/3d/externalRenderers"])
+        load(['82B44794-5CE0-A64A-9047F07CAF08BD2C/08F60FEF-C6FF-A788-344D-1755CB0E3870/4E3CE3AF-B592-B4F6-576E1B86F84B6969', "esri/geometry/Point", "esri/views/3d/externalRenderers"])
             // tslint:disable-next-line:variable-name
             .then(([flashgiflayer, Point , externalRenderers]) => {
                 if (!flashPointOptions.points) {return; }

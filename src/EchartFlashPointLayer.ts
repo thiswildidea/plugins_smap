@@ -16,7 +16,7 @@ export default class EchartFlashPointLayer extends EventEmitter {
         this.init(view);
     }
     public add(echartFlashPointOptions: IEchartFlashPointOptions) {
-        load(["82B44794-5CE0-A64A-9047F07CAF08BD2C/78C93084-B4AB-AC1B-88B95BAC7D872846/599EFB79-18C9-DC0A-E2C9FC2F2316C660"])
+        load(["82B44794-5CE0-A64A-9047F07CAF08BD2C/08F60FEF-C6FF-A788-344D-1755CB0E3870/599EFB79-18C9-DC0A-E2C9FC2F2316C660"])
             // tslint:disable-next-line:no-shadowed-variable
             .then(([echartsLayer]) => {
                 const parent = document.getElementsByClassName("esri-view-surface")[0];
@@ -89,7 +89,7 @@ export default class EchartFlashPointLayer extends EventEmitter {
 
       }
     public update(echartFlashPointOptions: IEchartFlashPointOptions) {
-        load(["82B44794-5CE0-A64A-9047F07CAF08BD2C/78C93084-B4AB-AC1B-88B95BAC7D872846/599EFB79-18C9-DC0A-E2C9FC2F2316C660"])
+        load(["82B44794-5CE0-A64A-9047F07CAF08BD2C/08F60FEF-C6FF-A788-344D-1755CB0E3870/599EFB79-18C9-DC0A-E2C9FC2F2316C660"])
             // tslint:disable-next-line:no-shadowed-variable
             .then(([echartsLayer]) => {
                 const parent = document.getElementsByClassName("esri-view-surface")[0];

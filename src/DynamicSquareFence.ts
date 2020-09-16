@@ -14,7 +14,7 @@ export default class DynamicSquareFence extends EventEmitter {
         this.init(view);
     }
     public add(ssquareFenceOptions: ISquareFence= {}) {
-        load(["82B44794-5CE0-A64A-9047F07CAF08BD2C/78C93084-B4AB-AC1B-88B95BAC7D872846/78C93084-B4AB-AC1B-88B95BAC7D872846", "esri/views/3d/externalRenderers"])
+        load(["82B44794-5CE0-A64A-9047F07CAF08BD2C/08F60FEF-C6FF-A788-344D-1755CB0E3870/789A68E1-657F-D870-37F9E6DF554E1C27", "esri/views/3d/externalRenderers"])
             // tslint:disable-next-line:variable-name
             .then(([dynamicSquareFence, externalRenderers]) => {
                 const auroraRenderer = new dynamicSquareFence(this.view, ssquareFenceOptions.center,

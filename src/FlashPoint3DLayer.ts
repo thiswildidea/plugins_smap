@@ -15,7 +15,7 @@ export default class FlashPoint3DLayer extends EventEmitter {
     }
 
     public add(flashPointOptions: IFlashPointOptions) {
-        load(['82B44794-5CE0-A64A-9047F07CAF08BD2C/78C93084-B4AB-AC1B-88B95BAC7D872846/92586C78-6DE2-946F-F03F88AF0F8D0D7F', "esri/geometry/Point", "esri/views/3d/externalRenderers"])
+        load(['82B44794-5CE0-A64A-9047F07CAF08BD2C/08F60FEF-C6FF-A788-344D-1755CB0E3870/92586C78-6DE2-946F-F03F88AF0F8D0D7F', "esri/geometry/Point", "esri/views/3d/externalRenderers"])
             // tslint:disable-next-line:variable-name
             .then(([flashPoint3DLayer, Point , externalRenderers]) => {
                 this.falshpoint3DRenderer = new flashPoint3DLayer({

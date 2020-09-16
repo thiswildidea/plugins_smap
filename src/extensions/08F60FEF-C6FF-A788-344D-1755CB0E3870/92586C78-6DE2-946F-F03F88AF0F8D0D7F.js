@@ -1,5 +1,5 @@
 ;
-define(['dojo/_base/declare', 'dojo/on', "esri/views/3d/externalRenderers", "esri/geometry/SpatialReference", "esri/geometry/Point", "esri/geometry/support/webMercatorUtils", "http://10.201.37.225:8080/smiapi/arcgis/extensions/78C93084-B4AB-AC1B-88B95BAC7D872846/gl-matrix.js", 'dojo/domReady!'], function (r, s, t, u, v, w, z) {
+define(['dojo/_base/declare', 'dojo/on', "esri/views/3d/externalRenderers", "esri/geometry/SpatialReference", "esri/geometry/Point", "esri/geometry/support/webMercatorUtils", "http://10.201.37.225:8080/smiapi/arcgis/extensions/08F60FEF-C6FF-A788-344D-1755CB0E3870/gl-matrix.js", 'dojo/domReady!'], function (r, s, t, u, v, w, z) {
     var A = r(null, {
         constructor: function (a, b, c) {
             this.view = a.view, this.nring = a.nring = undefined ? 1.0 : a.nring

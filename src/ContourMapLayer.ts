@@ -19,8 +19,8 @@ export default class ContourMapLayer extends EventEmitter {
     }
 
     public add(heatmapOptions: IContourMapOptions) {
-        load(['82B44794-5CE0-A64A-9047F07CAF08BD2C/78C93084-B4AB-AC1B-88B95BAC7D872846/Mesh',
-            '82B44794-5CE0-A64A-9047F07CAF08BD2C/78C93084-B4AB-AC1B-88B95BAC7D872846/Extrusion', "esri/views/3d/externalRenderers"])
+        load(['82B44794-5CE0-A64A-9047F07CAF08BD2C/08F60FEF-C6FF-A788-344D-1755CB0E3870/Mesh',
+            '82B44794-5CE0-A64A-9047F07CAF08BD2C/08F60FEF-C6FF-A788-344D-1755CB0E3870/Extrusion', "esri/views/3d/externalRenderers"])
             // tslint:disable-next-line:variable-name
             .then(([Mesh, Extrusion, externalRenderers]) => {
                 const cconfig = heatmapOptions.config;
