@@ -241,7 +241,7 @@ define([
             }
             var material = new THREE.MeshBasicMaterial({
                 transparent: true,
-                wireframe: scope.options.wireframe == undefined ? false : scope.options.wireframe,
+                wireframe: scope.options.wireframe === undefined ? false : scope.options.wireframe,
                 opacity: scope.options.opacity || 1,
                 color: scope.options.color || "#ac3d3d"
             });
@@ -253,15 +253,33 @@ define([
             scope.object3d.position.copy(new THREE.Vector3((minX + maxX) / 2, (minY + maxY) / 2, z));
             scope.object3d.scale.z = scope.options.scaleZ == undefined ? 1 : scope.options.scaleZ;
             scope.scene.add(scope.object3d);
+            console.log(scope.object3d)
             context.resetWebGLState();
+        },
+
+        setMaterialColor: function (rgb) {
+            if (!this.object3d) { return }
+            this.object3d.material.color.set(rgb);
+        },
+        setwireframe: function () {
+            if (!this.object3d) { return }
+            this.object3d.material.wireframe = !this.object3d.material.wireframe;
+        },
+        setopacity: function (opacity) {
+            if (!this.object3d) { return }
+            this.object3d.material.opacity = opacity;
+        },
+        setaltitude: function (altitude) {
+            if (!this.object3d) { return }
+            this.object3d.position.z = altitude;
+        },
+
+        setscaleZ: function (scaleZ) {
+            if (!this.object3d) { return }
+            this.object3d.scale.z = scaleZ;
         },
         addAttribute: function (bufferGeomertry, key, value) {
             bufferGeomertry.setAttribute(key, value);
-            // if (THREE.REVISION > 109) {
-            //     bufferGeomertry.setAttribute(key, value);
-            // } else {
-            //     bufferGeomertry.addAttribute(key, value);
-            // }
             return bufferGeomertry;
         },
         coordinateToVector3: function (coord, z = 0) {
