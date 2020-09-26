@@ -253,7 +253,6 @@ define([
             scope.object3d.position.copy(new THREE.Vector3((minX + maxX) / 2, (minY + maxY) / 2, z));
             scope.object3d.scale.z = scope.options.scaleZ == undefined ? 1 : scope.options.scaleZ;
             scope.scene.add(scope.object3d);
-            console.log(scope.object3d)
             context.resetWebGLState();
         },
 

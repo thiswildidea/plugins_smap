@@ -16,6 +16,8 @@ import Layers from './interface/Layers';
 import MaskBoundary from './MaskBoundary';
 import Measurement from './Measurement';
 import MeshLine from './MeshLine';
+import Ripplewall from './Ripplewall';
+
 import MigrationMap from './MigrationMap';
 import { load } from './modules';
 import Trajectory from './Trajectory';
@@ -26,6 +28,7 @@ export default {
   Layers,
   Boundary,
   Draw,
+  Ripplewall,
   DynamicPolygon,
   GraphicOverlays,
   FeaureOverlays,
