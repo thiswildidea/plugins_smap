@@ -6,6 +6,7 @@ import DynamicCylinderFence from './DynamicCylinderFence';
 import DynamicPolygon from './DynamicPolygon';
 import DynamicSquareFence from './DynamicSquareFence';
 import EchartFlashPointLayer from './EchartFlashPointLayer';
+import ElectricShieldRenderer from './ElectricShieldRenderer';
 import FeaureOverlays from './FeaureOverlays';
 import FlashGifLayer from './FlashGifLayer';
 import FlashPoint3DLayer from './FlashPoint3DLayer';
@@ -16,10 +17,9 @@ import Layers from './interface/Layers';
 import MaskBoundary from './MaskBoundary';
 import Measurement from './Measurement';
 import MeshLine from './MeshLine';
-import Ripplewall from './Ripplewall';
-
 import MigrationMap from './MigrationMap';
 import { load } from './modules';
+import RipplewallRenderer from './RipplewallRenderer';
 import Trajectory from './Trajectory';
 import TrajectoryPlus from './TrajectoryPlus';
 export default {
@@ -28,7 +28,8 @@ export default {
   Layers,
   Boundary,
   Draw,
-  Ripplewall,
+  RipplewallRenderer,
+  ElectricShieldRenderer,
   DynamicPolygon,
   GraphicOverlays,
   FeaureOverlays,

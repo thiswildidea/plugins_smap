@@ -67,8 +67,8 @@ define([
             this.scene = new THREE.Scene();
             this.camera = new THREE.PerspectiveCamera();
 
-            // const axesHelper = new THREE.AxesHelper(10000000);
-            // this.scene.add(axesHelper);
+            const axesHelper = new THREE.AxesHelper(0);
+            this.scene.add(axesHelper);
             this._setupScene(context);
 
 
@@ -83,7 +83,7 @@ define([
                     },
                     color: {
                         type: "uvs",
-                        value: new THREE.Color('#DC143C')
+                        value: new THREE.Color(scope.options.color)
                     },
                     opacity: {
                         type: "pv2",
@@ -104,6 +104,7 @@ define([
                 transparent: !0,
                 depthWrite: !1,
                 depthTest: !0,
+                wireframe: scope.options.wireframe === undefined ? false : scope.options.wireframe,
                 side: THREE.DoubleSide
             });
 
@@ -121,7 +122,8 @@ define([
             // const height = scope.distanceToVector3(scope.options.height, scope.options.height).x;
             const height = scope.options.height;
             const centerPt = scope.coordinateToVector3([center[0], center[1]]);
-            const wall = scope.options.polygon.splice(0, scope.options.polygon.length - 1)
+            // const wall = scope.options.polygon.splice(0, scope.options.polygon.length - 1)
+            const wall = scope.options.polygon;
             const positionsV = [];
             let joinLonLat = [];
             wall.forEach(xy => {
