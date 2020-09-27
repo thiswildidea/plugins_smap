@@ -7,4 +7,7 @@ export default interface IOverlayerOptions {
     symbol?: any;
     elevationInfo?: any;
     attributes: any;
+    visible?: boolean;
+    maxScale?: number;
+    minScale?: number;
 }

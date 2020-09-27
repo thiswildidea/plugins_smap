@@ -20,6 +20,10 @@ export default interface IOverLayerGroupOption {
     // elevationInfo
     elevationInfo?: any;
 
+    visible?: boolean;
+    maxScale?: number;
+    minScale?: number;
+
     // 聚集
     frreduction?: FeatureReduction;
 }

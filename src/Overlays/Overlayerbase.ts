@@ -10,6 +10,9 @@ export default class Overlayerbase {
     public renderer: any;
     public symbol: any;
     public elevationInfo: any;
+    public visible: boolean;
+    public minScale: number;
+    public maxScale: number;
     constructor(overlayeroption: IOverlayerOptions) {
         this.uuid = new Guid().uuid;
         this.label = overlayeroption.label !== undefined ? overlayeroption.label : new Label({ visible: false});
@@ -18,5 +21,8 @@ export default class Overlayerbase {
         this.type = "element";
         this.elevationInfo = overlayeroption.elevationInfo;
         this.symbol = overlayeroption.symbol;
+        this.visible = overlayeroption.visible === undefined ? true : overlayeroption.visible;
+        this.maxScale = overlayeroption.maxScale || 0;
+        this.minScale = overlayeroption.minScale || 0;
     }
 }

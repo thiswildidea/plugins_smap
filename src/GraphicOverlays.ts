@@ -789,6 +789,8 @@ export default class GraphicOverlays extends EventEmitter {
                     }
                 }
             });
+            clientGraphicLayer.minScale = (overlayers as OverlayGroup).minScale;
+            clientGraphicLayer.maxScale = (overlayers as OverlayGroup).maxScale;
         } else if (overlayers.type === 'element') {
             if ((overlayers as Overlayerbase).overlaytype.toLowerCase() === 'marker') {
                 let psymbol;

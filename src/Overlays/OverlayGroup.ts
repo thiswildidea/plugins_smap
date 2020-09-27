@@ -15,6 +15,9 @@ export default class OverlayGroup {
     public renderer: any;
     public elevationInfo: any;
     public frreduction: FeatureReduction;
+    public visible: boolean;
+    public minScale: number;
+    public maxScale: number;
     constructor(olayers: Overlayerbase[], overLayerGroupOption: IOverLayerGroupOption) {
         this.uuid = new Guid().uuid;
         this.overlayers = olayers;
@@ -27,5 +30,8 @@ export default class OverlayGroup {
         this.frreduction = overLayerGroupOption.frreduction === undefined ? null : overLayerGroupOption.frreduction;
         this.renderer = overLayerGroupOption.renderer === undefined ? null : overLayerGroupOption.renderer;
         this.elevationInfo = overLayerGroupOption.elevationInfo;
+        this.visible = overLayerGroupOption.visible === undefined ? true : overLayerGroupOption.visible;
+        this.maxScale = overLayerGroupOption.maxScale || 0;
+        this.minScale = overLayerGroupOption.minScale || 0;
     }
 }
