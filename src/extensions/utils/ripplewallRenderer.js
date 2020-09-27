@@ -16,7 +16,7 @@ define([
     webMercatorUtils
 ) {
     var THREE = window.THREE;
-    var ripplewall = declare([], {
+    var ripplewallRenderer = declare([], {
         constructor: function (view, polygon, options) {
             this.view = view;
             this.radius = 6378137;
@@ -52,7 +52,7 @@ define([
             this.renderer.autoClear = false;
             this.renderer.autoClearDepth = false;
             this.renderer.autoClearColor = false;
-            // this.renderer.autoClearStencil = false;
+            this.renderer.autoClearStencil = false;
 
             // The ArcGIS JS API renders to custom offscreen buffers, and not to the default framebuffers.
             // We have to inject this bit of code into the three.js runtime in order for it to bind those
@@ -185,6 +185,28 @@ define([
             const position = scope.coordinateToVector3([center.x, center.y], scope.options.altitude);
             scope.object3d.position.copy(position);
             context.resetWebGLState();
+        },
+
+        setMaterialColor: function (rgb) {
+            if (!this.object3d) { return }
+            this.object3d.material.uniforms.color.value=rgb;
+        },
+        setwireframe: function () {
+            if (!this.object3d) { return }
+            this.object3d.material.wireframe = !this.object3d.material.wireframe;
+        },
+        setopacity: function (opacity) {
+            if (!this.object3d) { return }
+            this.object3d.material.opacity = opacity;
+        },
+        setaltitude: function (altitude) {
+            if (!this.object3d) { return }
+            this.object3d.position.z = altitude;
+        },
+
+        setscaleZ: function (scaleZ) {
+            if (!this.object3d) { return }
+            this.object3d.scale.z = scaleZ;
         },
 
         distanceToVector3: function (w, h, coord) {
@@ -411,5 +433,5 @@ define([
             context.resetWebGLState();
         }
     });
-    return ripplewall;
+    return ripplewallRenderer;
 });

@@ -1,5 +1,6 @@
 import Aurora from './Aurora';
 import Boundary from './Boundary';
+import CloudRenderer from './CloudRenderer';
 import ContourMapLayer from './ContourMapLayer';
 import Draw from './Draw';
 import DynamicCylinderFence from './DynamicCylinderFence';
@@ -27,6 +28,7 @@ export default {
   Aurora,
   Layers,
   Boundary,
+  CloudRenderer,
   Draw,
   RipplewallRenderer,
   ElectricShieldRenderer,

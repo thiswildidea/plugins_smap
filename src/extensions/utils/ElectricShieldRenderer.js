@@ -16,10 +16,10 @@ define([
     webMercatorUtils
 ) {
     var THREE = window.THREE;
-    var ElectricShield = declare([], {
+    var ElectricShieldRenderer = declare([], {
         constructor: function (view, points, options) {
             this.view = view;
-            this.ElectricShieldobject3d=[];
+            this.ElectricShieldobject3d = [];
             const OPTIONS = {
                 speed: 0.02,
                 radius: 1,
@@ -66,10 +66,13 @@ define([
         _setupScene: function (context) {
             var scope = this;
             scope.material = scope.getMaterial()
-            const { altitude, radius } = scope.options;
-            scope.options.points.forEach((point)=>{
+            const {
+                altitude,
+                radius
+            } = scope.options;
+            scope.options.points.forEach((point) => {
                 const geometry = new THREE.SphereBufferGeometry(point.radius, 50, 50, 0, Math.PI * 2);
-                const object3d  = new THREE.Mesh(geometry, scope.material);
+                const object3d = new THREE.Mesh(geometry, scope.material);
                 const position = scope.coordinateToVector3([point.x, point.y], point.altitude);
                 object3d.position.copy(position);
                 object3d.rotation.x = Math.PI / 2;
@@ -176,13 +179,54 @@ define([
                 blending: THREE.AdditiveBlending,
                 depthWrite: !1,
                 shading: THREE.FlatShading,
-                opacity:0.1,
+                opacity: 0.1,
                 depthTest: !0,
                 side: THREE.DoubleSide,
                 transparent: !0,
                 wireframe: scope.options.wireframe === undefined ? false : scope.options.wireframe,
             });
             return material;
+        },
+        setMaterialColor: function (rgb) {
+            if (!this.ElectricShieldobject3d.length) {
+                return
+            }
+            this.ElectricShieldobject3d.forEach((item) => {
+                item.material.color.set(rgb);
+            })
+        },
+        setwireframe: function () {
+            if (!this.ElectricShieldobject3d.length) {
+                return
+            }
+            this.ElectricShieldobject3d.forEach((item) => {
+                item.material.wireframe = !item.material.wireframe;
+            })
+        },
+        setopacity: function (opacity) {
+            if (!this.ElectricShieldobject3d.length) {
+                return
+            }
+            this.ElectricShieldobject3d.forEach((item) => {
+                item.material.opacity = opacity;
+            })
+        },
+        setaltitude: function (altitude) {
+            if (!this.ElectricShieldobject3d.length) {
+                return
+            }
+            this.ElectricShieldobject3d.forEach((item) => {
+                item.position.z = altitude;
+            })
+        },
+
+        setscaleZ: function (scaleZ) {
+            if (!this.ElectricShieldobject3d.length) {
+                return
+            }
+            this.ElectricShieldobject3d.forEach((item) => {
+                item.scale.z = scaleZ;
+            })
         },
 
         coordinateToVector3: function (coord, z = 0) {
@@ -225,8 +269,8 @@ define([
                 new THREE.Vector3(cam.center[0], cam.center[1], cam.center[2])
             );
 
-            this.ElectricShieldobject3d.map((item)=>{
-               
+            this.ElectricShieldobject3d.map((item) => {
+
                 item.material.uniforms.time.value += this.options.speed;
             })
             this.camera.projectionMatrix.fromArray(cam.projectionMatrix);
@@ -236,5 +280,5 @@ define([
             context.resetWebGLState();
         }
     });
-    return ElectricShield;
+    return ElectricShieldRenderer;
 });

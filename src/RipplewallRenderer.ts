@@ -14,10 +14,10 @@ export default class RipplewallRenderer extends EventEmitter {
         this.init(view);
     }
     public add(ripplewallOptions: IRipplewallOptions) {
-        load(["82B44794-5CE0-A64A-9047F07CAF08BD2C/08F60FEF-C6FF-A788-344D-1755CB0E3870/ripplewall", "esri/views/3d/externalRenderers"])
+        load(["82B44794-5CE0-A64A-9047F07CAF08BD2C/08F60FEF-C6FF-A788-344D-1755CB0E3870/ripplewallRenderer", "esri/views/3d/externalRenderers"])
             // tslint:disable-next-line:variable-name
-            .then(([ripplewall, externalRenderers]) => {
-                this.ripplewallRenderer = new ripplewall(this.view,
+            .then(([ripplewallRenderer, externalRenderers]) => {
+                this.ripplewallRenderer = new ripplewallRenderer(this.view,
                     ripplewallOptions.polygon, ripplewallOptions.options);
                 externalRenderers.add(this.view, this.ripplewallRenderer);
             })
@@ -32,6 +32,27 @@ export default class RipplewallRenderer extends EventEmitter {
                 if (!this.ripplewallRenderer) { return; }
                 externalRenderers.remove(this.view, this.ripplewallRenderer);
             });
+    }
+    public setMaterialColor(color: any) {
+        if (!this.ripplewallRenderer) { return; }
+        this.ripplewallRenderer.setMaterialColor(color);
+    }
+    public setwireframe() {
+        if (!this.ripplewallRenderer) { return; }
+        this.ripplewallRenderer.setwireframe();
+    }
+    public setaltitude(altitude: any) {
+        if (!this.ripplewallRenderer) { return; }
+        this.ripplewallRenderer.setaltitude(altitude);
+    }
+
+    public setscaleZ(scaleZ: any) {
+        if (!this.ripplewallRenderer) { return; }
+        this.ripplewallRenderer.setscaleZ(scaleZ);
+    }
+    public setopacity(opacity: any) {
+        if (!this.ripplewallRenderer) { return; }
+        this.ripplewallRenderer.setopacity(opacity);
     }
     private async init(view: any) {
         this.view = view;
