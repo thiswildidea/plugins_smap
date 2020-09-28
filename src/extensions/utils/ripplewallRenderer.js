@@ -17,7 +17,7 @@ define([
 ) {
     var THREE = window.THREE;
     var ripplewallRenderer = declare([], {
-        constructor: function (view, polygon, options) {
+        constructor: function (view, points, options) {
             this.view = view;
             this.radius = 6378137;
             const OPTIONS = {
@@ -26,7 +26,7 @@ define([
                 height: 10
             }
             this.options = this.extend({}, OPTIONS, options, {
-                polygon: polygon
+                points: points
             });
 
             this.vertexs = {
@@ -112,25 +112,27 @@ define([
             });
 
 
-            const polygon = new Polygon({
-                hasZ: true,
-                hasM: true,
-                rings: [scope.options.polygon],
-                spatialReference: {
-                    wkid: 102100
-                }
-            });
-            const center = polygon.extent.center;
+            // const polygon = new Polygon({
+            //     hasZ: true,
+            //     hasM: true,
+            //     rings: [scope.options.points],
+            //     spatialReference: {
+            //         wkid: 102100
+            //     }
+            // });
+            // const center = polygon.extent.center;
 
             // const height = scope.distanceToVector3(scope.options.height, scope.options.height).x;
+            // const height = scope.options.height;
+            // const centerPt = scope.coordinateToVector3([center[0], center[1]]);
+            // const wall = scope.options.points.splice(0, scope.options.points.length - 1)
+            
             const height = scope.options.height;
-            const centerPt = scope.coordinateToVector3([center[0], center[1]]);
-            // const wall = scope.options.polygon.splice(0, scope.options.polygon.length - 1)
-            const wall = scope.options.polygon;
+            const wall = scope.options.points;
             const positionsV = [];
             let joinLonLat = [];
             wall.forEach(xy => {
-                const polyPice = scope.coordinateToVector3([xy[0], xy[1]]).sub(centerPt);
+                const polyPice = scope.coordinateToVector3([xy[0], xy[1]]);
                 positionsV.push(polyPice);
                 joinLonLat.push(polyPice.x);
                 joinLonLat.push(polyPice.y);

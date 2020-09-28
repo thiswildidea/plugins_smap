@@ -14,11 +14,11 @@ export default class RipplewallRenderer extends EventEmitter {
         this.init(view);
     }
     public add(ripplewallOptions: IRipplewallOptions) {
-        load(["82B44794-5CE0-A64A-9047F07CAF08BD2C/08F60FEF-C6FF-A788-344D-1755CB0E3870/ripplewallRenderer", "esri/views/3d/externalRenderers"])
+        load(["82B44794-5CE0-A64A-9047F07CAF08BD2C/08F60FEF-C6FF-A788-344D-1755CB0E3870/A3918F4D-C4F3-2F18-68573969137963CE", "esri/views/3d/externalRenderers"])
             // tslint:disable-next-line:variable-name
             .then(([ripplewallRenderer, externalRenderers]) => {
                 this.ripplewallRenderer = new ripplewallRenderer(this.view,
-                    ripplewallOptions.polygon, ripplewallOptions.options);
+                    ripplewallOptions.points, ripplewallOptions.options);
                 externalRenderers.add(this.view, this.ripplewallRenderer);
             })
             .catch((err) => {
