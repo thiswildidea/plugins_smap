@@ -46,6 +46,11 @@ define(['dojo/_base/declare', "esri/geometry/geometryEngine", "esri/geometry/Ext
             };
             this.scene = new G.Scene();
             this.camera = new G.PerspectiveCamera();
+
+            const axesHelper = new G.AxesHelper(1);
+            axesHelper.position.copy(1000000, 100000, 100000);
+            this.scene.add(axesHelper);
+            
             this._setupScene(b)
         },
         transparentObject: function (a, b) {

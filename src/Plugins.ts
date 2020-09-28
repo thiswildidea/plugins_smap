@@ -15,6 +15,7 @@ import GraphicOverlays from './GraphicOverlays';
 import HeatMap from './HeatMap';
 import HeatMap3dLayer from './HeatMap3dLayer';
 import Layers from './interface/Layers';
+import LayerSkyRenderer from './LayerSkyRenderer';
 import MaskBoundary from './MaskBoundary';
 import Measurement from './Measurement';
 import MeshLine from './MeshLine';
@@ -39,6 +40,7 @@ export default {
   FlashPoint3DLayer,
   FlashGifLayer,
   HeatMap,
+  LayerSkyRenderer,
   HeatMap3dLayer,
   ContourMapLayer,
   Measurement,

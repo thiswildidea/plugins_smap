@@ -76,8 +76,10 @@ define([
             this.scene = new THREE.Scene();
             this.camera = new THREE.PerspectiveCamera();
 
-            // const axesHelper = new THREE.AxesHelper(10000000);
-            // this.scene.add(axesHelper);
+            const axesHelper = new THREE.AxesHelper(1);
+            axesHelper.position.copy(1000000, 100000, 100000);
+            this.scene.add(axesHelper);
+            
             this._setupScene(context);
 
 

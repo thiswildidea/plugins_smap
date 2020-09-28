@@ -16,8 +16,8 @@ define([
     webMercatorUtils
 ) {
     var THREE = window.THREE;
-    var CloudRenderer = declare([], {
-        constructor: function (view, point, options) {
+        var LayerSkyRenderer = declare([], {
+        constructor: function (view, url, options) {
             this.view = view;
             const OPTIONS = {
                 width: 500,
@@ -26,7 +26,7 @@ define([
                 interactive: false
             }
             this.options = this.extend({}, OPTIONS, options, {
-                point: point
+                url: url
             });
         },
 
@@ -57,8 +57,7 @@ define([
             this.scene = new THREE.Scene();
             this.camera = new THREE.PerspectiveCamera();
 
-            const axesHelper = new THREE.AxesHelper(1);
-            axesHelper.position.copy(1000000,100000,100000);
+            const axesHelper = new THREE.AxesHelper(0);
             this.scene.add(axesHelper);
             this._setupScene(context);
 
@@ -66,71 +65,24 @@ define([
         },
         _setupScene: function (context) {
             var scope = this;
-            const texture = new THREE.TextureLoader().load(scope.options.cloudurl);
-            scope.material = new THREE.MeshBasicMaterial({
-                map: texture,
-                opacity: 0.8
-            });
-            scope.material.depthWrite = false;
-            scope.material.depthTest = false;
-            scope.material.transparent = true;
-            const geometry = new THREE.PlaneBufferGeometry(scope.options.width, scope.options.height);
-            scope.object3d = new THREE.Mesh(geometry, scope.material);
-            const position = scope.coordinateToVector3([scope.options.point.x, scope.options.point.y], scope.options.point.altitude);
-            scope.object3d.position.copy(position);
-            scope.scene.add(scope.object3d);
-            const random = Math.random();
-            const flag = random <= 0.3 ? "x" : random < 0.6 ? "y" : "z";
-            scope.positionflag = flag;
-            const offset = Math.min(scope.options.width, scope.options.height);
-            scope.offset = offset;
-            scope._offset = 0;
-            scope._offsetAdd = random > 0.5;
+            var r = scope.options.url;
+            var urls = [
+                r + "xpos.png",
+                r + "xneg.png",
+                r + "ypos.png",
+                r + "yneg.png",
+                r + "zpos.png",
+                r + "zneg.png"
+            ];
+
+            var textureCube = new THREE.CubeTextureLoader().load(urls);
+
+            scope.scene.background = textureCube;
+            scope.scene.rotation.x = -Math.PI / 2;
+   
             context.resetWebGLState();
         },
         
-        setMaterialColor: function (rgb) {
-            if (!this.cloudobject3ds.length) {
-                return
-            }
-            this.cloudobject3ds.forEach((item) => {
-                item.material.color.set(rgb);
-            })
-        },
-        setwireframe: function () {
-            if (!this.cloudobject3ds.length) {
-                return
-            }
-            this.cloudobject3ds.forEach((item) => {
-                item.material.wireframe = !item.material.wireframe;
-            })
-        },
-        setopacity: function (opacity) {
-            if (!this.cloudobject3ds.length) {
-                return
-            }
-            this.cloudobject3ds.forEach((item) => {
-                item.material.opacity = opacity;
-            })
-        },
-        setaltitude: function (altitude) {
-            if (!this.cloudobject3ds.length) {
-                return
-            }
-            this.cloudobject3ds.forEach((item) => {
-                item.position.z = altitude;
-            })
-        },
-
-        setscaleZ: function (scaleZ) {
-            if (!this.cloudobject3ds.length) {
-                return
-            }
-            this.cloudobject3ds.forEach((item) => {
-                item.scale.z = scaleZ;
-            })
-        },
-
         coordinateToVector3: function (coord, z = 0) {
 
             const p = coord;
@@ -170,32 +122,6 @@ define([
             this.camera.lookAt(
                 new THREE.Vector3(cam.center[0], cam.center[1], cam.center[2])
             );
-
-            const pitch = this.view.camera.tilt;
-            const bearing = this.view.camera.heading;
-            // this.object3d.rotation.x = (pitch * Math.PI) / 180;
-            // this.object3d.rotation.z = (-bearing * Math.PI) / 180;
-
-
-           
-
-
-            // const offset = 0.001 * 500;
-            const offset = this.options.offset;
-            if (this._offsetAdd) {
-                this._offset += offset;
-                this.object3d.position[this.positionflag] += offset;
-                if (this._offset >= this.offset) {
-                    this._offsetAdd = false;
-                }
-            } else {
-                this._offset -= offset;
-                this.object3d.position[this.positionflag] -= offset;
-                if (this._offset <= -this.offset) {
-                    this._offsetAdd = true;
-                }
-            }
-            
             this.camera.projectionMatrix.fromArray(cam.projectionMatrix);
             this.renderer.state.reset();
             this.renderer.render(this.scene, this.camera);
@@ -203,5 +129,5 @@ define([
             context.resetWebGLState();
         }
     });
-    return CloudRenderer;
+        return LayerSkyRenderer;
 });

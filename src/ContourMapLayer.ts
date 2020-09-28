@@ -5,6 +5,8 @@ import {
     load
 } from './modules';
 import Guid from './utils/Guid';
+
+// 未使用
 export default class ContourMapLayer extends EventEmitter {
     public contourMapLayerRendererArray: Array<[string, any]> = []; // 渲染
     private contourMapLayerRenderer: any = null; // 渲染
