@@ -15,7 +15,7 @@ export default class CloudRenderer extends EventEmitter {
         this.init(view);
     }
     public add(cloudRendererOptions: ICloudRendereriOptions) {
-        load(["82B44794-5CE0-A64A-9047F07CAF08BD2C/08F60FEF-C6FF-A788-344D-1755CB0E3870/CloudRenderer", "esri/views/3d/externalRenderers"])
+        load(["82B44794-5CE0-A64A-9047F07CAF08BD2C/08F60FEF-C6FF-A788-344D-1755CB0E3870/2F6637EA-8119-A957-B8685F98373F16C0", "esri/views/3d/externalRenderers"])
             // tslint:disable-next-line:variable-name
             .then(([cloudRenderer, externalRenderers]) => {
                 cloudRendererOptions.points.forEach((pointitem) => {
