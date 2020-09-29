@@ -22,6 +22,7 @@ import MeshLine from './MeshLine';
 import MigrationMap from './MigrationMap';
 import { load } from './modules';
 import RipplewallRenderer from './RipplewallRenderer';
+import SpriteLineRenderer from './SpriteLineRenderer';
 import Trajectory from './Trajectory';
 import TrajectoryPlus from './TrajectoryPlus';
 export default {
@@ -46,6 +47,7 @@ export default {
   Measurement,
   MeshLine,
   MaskBoundary,
+  SpriteLineRenderer,
   TrajectoryPlus,
   DynamicSquareFence,
   DynamicCylinderFence,
