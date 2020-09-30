@@ -21,7 +21,7 @@ define([
             this.view = view;
             const OPTIONS = {
                 altitude: 0,
-                speed: 0.01
+                speed: 0.1
             }
             this.options = this.extend({}, OPTIONS, options, {
                 lineString: lineString
@@ -68,7 +68,7 @@ define([
             texture.anisotropy = 16;
             texture.wrapS = THREE.RepeatWrapping;
             texture.wrapT = THREE.RepeatWrapping;
-            
+
             let material = new MeshLineMaterial({
                 map: texture,
                 useMap: true,
@@ -81,8 +81,10 @@ define([
 
             scope.options.offset = material.uniforms.offset.value;
             scope.options.clock = new THREE.Clock();
-            const { positions } = scope.getLinePosition(lineString, layer);
-            const positions1 = scope._getLinePosition(lineString, layer).positions;
+            const {
+                positions
+            } = scope.getLinePosition(scope.options.lineString);
+            const positions1 = scope._getLinePosition(scope.options.lineString).positions;
 
             const geometry = new THREE.Geometry();
             for (let i = 0; i < positions.length; i += 3) {
@@ -90,18 +92,49 @@ define([
             }
             const meshLine = new MeshLine();
             meshLine.setGeometry(geometry);
-            material.uniforms.resolution.value.set(width, height);
+            material.uniforms.resolution.value.set(scope.view.size[0], scope.view.size[1]);
 
-            const line = new THREE.Mesh(meshLine.geometry, material);
-            scope.scene.add.add(line);
-            const { altitude } = options;
-            const center = lineString.getCenter();
-            const v = scope.coordinateToVector3(center, z);
-            scope.scene.add.position.copy(v);
+            scope.object3d = new THREE.Mesh(meshLine.geometry, material);
+            scope.scene.add(scope.object3d);
+            const { altitude } = scope.options;
+            const center = scope.options.lineString.getCenter();
+            const v = scope.coordinateToVector3(center, 0);
+            scope.object3d.position.copy(v);
+
             context.resetWebGLState();
         },
 
-        _getLinePosition: function (lineString, layer) {
+        getLinePosition: function (lineString, cenerter) {
+            const positions = [];
+            const positionsV = [];
+            if (Array.isArray(lineString) && lineString[0] instanceof THREE.Vector3) {
+                for (let i = 0, len = lineString.length; i < len; i++) {
+                    const v = lineString[i];
+                    positions.push(v.x, v.y, v.z);
+                    positionsV.push(v);
+                }
+            } else {
+                if (Array.isArray(lineString)) lineString = new maptalks.LineString(lineString);
+                if (!lineString || !(lineString instanceof maptalks.LineString)) return;
+                const z = 0;
+                const coordinates = lineString.getCoordinates();
+                const centerPt = this.coordinateToVector3(cenerter || lineString.getCenter());
+                for (let i = 0, len = coordinates.length; i < len; i++) {
+                    let coordinate = coordinates[i];
+                    if (Array.isArray(coordinate)) {
+                        coordinate = new maptalks.Coordinate(coordinate);
+                    }
+                    const v = this.coordinateToVector3(coordinate, z).sub(centerPt);
+                    positions.push(v.x, v.y, v.z);
+                    positionsV.push(v);
+                }
+            }
+            return {
+                positions: positions,
+                positionsV: positionsV
+            }
+        },
+        _getLinePosition:function (lineString, layer) {
             const positions = [];
             const positionsV = [];
             if (Array.isArray(lineString) && lineString[0] instanceof THREE.Vector3) {
@@ -119,7 +152,7 @@ define([
                     let coordinate = coordinates[i];
                     if (Array.isArray(coordinate))
                         coordinate = new maptalks.Coordinate(coordinate);
-                    const v = layer.coordinateToVector3(coordinate, z);
+                    const v = this.coordinateToVector3(coordinate, z);
                     positions.push(v.x, v.y, v.z);
                     positionsV.push(v);
                 }
@@ -129,44 +162,7 @@ define([
                 positionsV: positionsV
             }
         },
-        _getChunkLinesPosition: function (chunkLines, layer) {
-            const positions = [],
-                positionsV = [],
-                lnglats = [];
-            for (let i = 0, len = chunkLines.length; i < len; i++) {
-                const line = chunkLines[i];
-                for (let j = 0, len1 = line.length; j < len1; j++) {
-                    const lnglat = line[j];
-                    if (lnglats.length > 0) {
-                        const key = lnglat.join(',').toString();
-                        const key1 = lnglats[lnglats.length - 1].join(',').toString();
-                        if (key !== key1) {
-                            lnglats.push(lnglat);
-                        }
-                    } else {
-                        lnglats.push(lnglat);
-                    }
-                }
-            }
-            let z = 0;
-            lnglats.forEach(lnglat => {
-                const h = lnglat[2];
-                if (h) {
-                    z = layer.distanceToVector3(h, h).x;
-                }
-                const v = layer.coordinateToVector3(lnglat, z);
-                positionsV.push(v);
-                positions.push(v.x, v.y, v.z);
-            });
-            return {
-                positions: positions,
-                positionsV: positionsV,
-                lnglats: lnglats
-            };
-        },
-
         coordinateToVector3: function (coord, z = 0) {
-
             const p = coord;
             let transform = new THREE.Matrix4();
             let transformation = new Array(16);
@@ -174,7 +170,7 @@ define([
             transform.fromArray(
                 externalRenderers.renderCoordinateTransformAt(
                     this.view,
-                    [p[0], p[1], z],
+                    [p.x, p.y, z],
                     this.view.spatialReference,
                     transformation
                 )
@@ -184,6 +180,7 @@ define([
                 transform.elements[13],
                 transform.elements[14]
             );
+            console.log(vector3)
             return vector3;
         },
         extend: function (dest) { // (Object[, Object, ...]) ->

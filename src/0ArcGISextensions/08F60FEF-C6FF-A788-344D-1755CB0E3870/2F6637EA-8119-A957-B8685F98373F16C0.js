@@ -44,7 +44,7 @@ define(['dojo/_base/declare', "esri/geometry/geometryEngine", "esri/geometry/Ext
             const texture = new m.TextureLoader().load(b.options.cloudurl);
             b.material = new m.MeshBasicMaterial({
                 map: texture,
-                opacity: 0.8
+                opacity: 1
             });
             b.material.depthWrite = false;
             b.material.depthTest = false;

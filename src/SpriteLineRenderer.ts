@@ -1,5 +1,4 @@
 import Mapcofig from './config/Mapcofig';
-import GeoJSON from './geometry/GeoJSON';
 import ISpriteLineOptions from './interface/ISpriteLineOptions';
 import EventEmitter from './mod';
 import {
@@ -15,12 +14,10 @@ export default class SpriteLineRenderer extends EventEmitter {
         this.init(view);
     }
     public add(spritesLineOptions: ISpriteLineOptions) {
-        load(["82B44794-5CE0-A64A-9047F07CAF08BD2C/08F60FEF-C6FF-A788-344D-1755CB0E3870/SpriteLineRenderer", "esri/views/3d/externalRenderers"])
+        load(["82B44794-5CE0-A64A-9047F07CAF08BD2C/08F60FEF-C6FF-A788-344D-1755CB0E3870/2FEB8C35-3834-8C8E-451683376C475670", "esri/views/3d/externalRenderers"])
             // tslint:disable-next-line:variable-name
             .then(([SpriteLine, externalRenderers]) => {
-
-                const multiLineStrings = GeoJSON.toGeometry(spritesLineOptions.geojson);
-                for (const multiLineString of multiLineStrings) {
+                for (const multiLineString of spritesLineOptions.multiLineStrings) {
                    multiLineString._geometries.map((lineString) => {
                        const spriteLineRenderer = new SpriteLine(this.view, lineString, spritesLineOptions.options);
                        this.spriteLineRendererArray.push([new Guid().uuid, spriteLineRenderer]);
