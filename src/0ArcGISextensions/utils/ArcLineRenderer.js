@@ -16,13 +16,13 @@ define([
     webMercatorUtils
 ) {
     var THREE = window.THREE;
-    var SpriteLineRenderer = declare([], {
+    var ArcLineRenderer = declare([], {
         constructor: function (view, lineString, options) {
             this.view = view;
-            const OPTIONS = {
-                altitude: 0,
-                speed: 0.1
-            }
+            var OPTIONS = {
+                height: 0,
+                altitude: 0
+            };
             this.options = this.extend({}, OPTIONS, options, {
                 lineString: lineString
             });
@@ -64,43 +64,32 @@ define([
         },
         _setupScene: function (context) {
             var scope = this;
-            let texture = new THREE.TextureLoader().load(scope.options.textureURL);
-            texture.anisotropy = 16;
-            texture.wrapS = THREE.RepeatWrapping;
-            texture.wrapT = THREE.RepeatWrapping;
+            const {
+                altitude,
+                height
+            } = scope.options;
 
-            let material = new MeshLineMaterial({
-                map: texture,
-                useMap: true,
-                lineWidth: scope.options.lineWidth,
-                sizeAttenuation: false,
+
+            var material = new THREE.LineBasicMaterial({
+                linewidth: 10,
+                color: 'rgb(13,141,255)',
+                opacity: 1,
                 transparent: true,
-                near: scope.camera.near,
-                far: scope.camera.far
+                blending: THREE.AdditiveBlending
             });
 
-            scope.options.offset = material.uniforms.offset.value;
-            scope.options.clock = new THREE.Clock();
-            const {
-                positions
-            } = scope.getLinePosition(scope.options.lineString);
-            const positions1 = scope._getLinePosition(scope.options.lineString).positions;
-
-            const geometry = new THREE.Geometry();
-            for (let i = 0; i < positions.length; i += 3) {
-                geometry.vertices.push(new THREE.Vector3(positions[i], positions[i + 1], positions[i + 2]));
-            }
-            const meshLine = new MeshLine();
-            meshLine.setGeometry(geometry);
-            material.uniforms.resolution.value.set(scope.view.size[0], scope.view.size[1]);
-
-            scope.object3d = new THREE.Mesh(meshLine.geometry, material);
+            const points = scope.getArcPoints(scope.options.lineString, height);
+            const positions = scope.getLinePosition(points).positions;
+            const geometry = new THREE.BufferGeometry();
+            geometry.addAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
+            
+            scope.object3d = new THREE.Line(geometry, material);
+            scope.object3d.computeLineDistances();
             scope.scene.add(scope.object3d);
-            const { altitude } = scope.options;
+            const z = scope.options.altitude;
             const center = scope.options.lineString.getCenter();
-            const v = scope.coordinateToVector3(center, 0);
+            const v = scope.coordinateToVector3(scope.options.lineString[0], z);
             scope.object3d.position.copy(v);
-
             context.resetWebGLState();
         },
 
@@ -134,33 +123,29 @@ define([
                 positionsV: positionsV
             }
         },
-        _getLinePosition:function (lineString, layer) {
-            const positions = [];
-            const positionsV = [];
-            if (Array.isArray(lineString) && lineString[0] instanceof THREE.Vector3) {
-                for (let i = 0, len = lineString.length; i < len; i++) {
-                    const v = lineString[i];
-                    positions.push(v.x, v.y, v.z);
-                    positionsV.push(v);
-                }
-            } else {
-                if (Array.isArray(lineString)) lineString = new mapking.LineString(lineString);
-                if (!lineString || !(lineString instanceof mapking.LineString)) return;
-                const z = 0;
+
+        getArcPoints: function (lineString, height) {
+            const lnglats = [];
+            if (Array.isArray(lineString)) {
+                lnglats.push(lineString[0], lineString[lineString.length - 1]);
+            } else if (lineString instanceof mapking.LineString) {
                 const coordinates = lineString.getCoordinates();
-                for (let i = 0, len = coordinates.length; i < len; i++) {
-                    let coordinate = coordinates[i];
-                    if (Array.isArray(coordinate))
-                        coordinate = new mapking.Coordinate(coordinate);
-                    const v = this.coordinateToVector3(coordinate, z);
-                    positions.push(v.x, v.y, v.z);
-                    positionsV.push(v);
-                }
+                lnglats.push(coordinates[0], coordinates[coordinates.length - 1]);
             }
-            return {
-                positions: positions,
-                positionsV: positionsV
+            const [first, last] = lnglats;
+            let center;
+            if (Array.isArray(first)) {
+                center = [first[0] / 2 + last[0] / 2, first[1] / 2 + last[1] / 2];
+            } else if (first instanceof mapking.Coordinate) {
+                center = [first.x / 2 + last.x / 2, first.y / 2 + last.y / 2];
             }
+            // const centerPt = this.coordinateToVector3(lineString.getCenter());
+            const v = this.coordinateToVector3(first);
+            const v1 = this.coordinateToVector3(last);
+            const vh = this.coordinateToVector3(lineString.getCenter(), height);
+            const ellipse = new THREE.CatmullRomCurve3([v, vh, v1], false, 'catmullrom');
+            const points = ellipse.getPoints(40);
+            return points;
         },
         coordinateToVector3: function (coord, z = 0) {
             const p = coord;
@@ -180,7 +165,6 @@ define([
                 transform.elements[13],
                 transform.elements[14]
             );
-            console.log(vector3)
             return vector3;
         },
         extend: function (dest) { // (Object[, Object, ...]) ->
@@ -200,7 +184,7 @@ define([
             this.camera.lookAt(
                 new THREE.Vector3(cam.center[0], cam.center[1], cam.center[2])
             );
-            this.options.offset.x -= this.options.speed * this.options.clock.getDelta();
+            // this.options.offset.x -= this.options.speed * this.options.clock.getDelta();
             this.camera.projectionMatrix.fromArray(cam.projectionMatrix);
             this.renderer.state.reset();
             this.renderer.render(this.scene, this.camera);
@@ -208,5 +192,5 @@ define([
             context.resetWebGLState();
         }
     });
-    return SpriteLineRenderer;
+    return ArcLineRenderer;
 });

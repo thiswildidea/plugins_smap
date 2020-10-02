@@ -1,3 +1,4 @@
+import ArcLineRenderer from './ArcLineRenderer';
 import Aurora from './Aurora';
 import Boundary from './Boundary';
 import CloudRenderer from './CloudRenderer';
@@ -9,6 +10,7 @@ import DynamicSquareFence from './DynamicSquareFence';
 import EchartFlashPointLayer from './EchartFlashPointLayer';
 import ElectricShieldRenderer from './ElectricShieldRenderer';
 import FeaureOverlays from './FeaureOverlays';
+import FireRenderer from './FireRenderer';
 import FlashGifLayer from './FlashGifLayer';
 import FlashPoint3DLayer from './FlashPoint3DLayer';
 import GraphicOverlays from './GraphicOverlays';
@@ -31,6 +33,7 @@ export default {
   Layers,
   Boundary,
   CloudRenderer,
+  FireRenderer,
   Draw,
   RipplewallRenderer,
   ElectricShieldRenderer,
@@ -48,6 +51,7 @@ export default {
   MeshLine,
   MaskBoundary,
   SpriteLineRenderer,
+  ArcLineRenderer,
   TrajectoryPlus,
   DynamicSquareFence,
   DynamicCylinderFence,

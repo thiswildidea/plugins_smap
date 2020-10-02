@@ -85,15 +85,15 @@ define(['dojo/_base/declare', "esri/geometry/geometryEngine", "esri/geometry/Ext
                     positionsV.push(v)
                 }
             } else {
-                if (Array.isArray(a)) a = new maptalks.LineString(a);
-                if (!a || !(a instanceof maptalks.LineString)) return;
+                if (Array.isArray(a)) a = new mapking.LineString(a);
+                if (!a || !(a instanceof mapking.LineString)) return;
                 const z = 0;
                 const coordinates = a.getCoordinates();
                 const centerPt = this.coordinateToVector3(b || a.getCenter());
                 for (let i = 0, len = coordinates.length; i < len; i++) {
                     let coordinate = coordinates[i];
                     if (Array.isArray(coordinate)) {
-                        coordinate = new maptalks.Coordinate(coordinate)
+                        coordinate = new mapking.Coordinate(coordinate)
                     }
                     const v = this.coordinateToVector3(coordinate, z).sub(centerPt);
                     positions.push(v.x, v.y, v.z);
@@ -115,13 +115,13 @@ define(['dojo/_base/declare', "esri/geometry/geometryEngine", "esri/geometry/Ext
                     positionsV.push(v)
                 }
             } else {
-                if (Array.isArray(a)) a = new maptalks.LineString(a);
-                if (!a || !(a instanceof maptalks.LineString)) return;
+                if (Array.isArray(a)) a = new mapking.LineString(a);
+                if (!a || !(a instanceof mapking.LineString)) return;
                 const z = 0;
                 const coordinates = a.getCoordinates();
                 for (let i = 0, len = coordinates.length; i < len; i++) {
                     let coordinate = coordinates[i];
-                    if (Array.isArray(coordinate)) coordinate = new maptalks.Coordinate(coordinate);
+                    if (Array.isArray(coordinate)) coordinate = new mapking.Coordinate(coordinate);
                     const v = this.coordinateToVector3(coordinate, z);
                     positions.push(v.x, v.y, v.z);
                     positionsV.push(v)

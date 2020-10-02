@@ -1,5 +1,5 @@
 
-export default interface IRipplewallOptions {
+export default interface ISpriteLineOptions {
     options: any;
     multiLineStrings: any;
 }
