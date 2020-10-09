@@ -1,8 +1,10 @@
+import ArcLineAnimationRenderer from './ArcLineAnimationRenderer';
 import ArcLineRenderer from './ArcLineRenderer';
 import Aurora from './Aurora';
 import Boundary from './Boundary';
 import CloudRenderer from './CloudRenderer';
 import ContourMapLayer from './ContourMapLayer';
+import CurveLineRenderer from './CurveLineRenderer';
 import Draw from './Draw';
 import DynamicCylinderFence from './DynamicCylinderFence';
 import DynamicPolygon from './DynamicPolygon';
@@ -36,6 +38,8 @@ export default {
   FireRenderer,
   Draw,
   RipplewallRenderer,
+  CurveLineRenderer,
+  ArcLineAnimationRenderer,
   ElectricShieldRenderer,
   DynamicPolygon,
   GraphicOverlays,
