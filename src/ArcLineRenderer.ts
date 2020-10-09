@@ -18,15 +18,18 @@ export default class ArcLineRenderer extends EventEmitter {
             // tslint:disable-next-line:variable-name
             .then(([arcLineRenderer, externalRenderers]) => {
 
-                const offset = Infinity;
-                arcLineOptions.lineStrings.slice(0, offset).map((d) => {
-                const options = {
-                    height: d.len
-                };
-                const arcLine = new arcLineRenderer(this.view, d.lineString, options);
+                // const offset = Infinity;
+                // arcLineOptions.lineStrings.slice(0, offset).map((d) => {
+                // const options = {
+                //     height: d.len
+                // };
+                // const arcLine = new arcLineRenderer(this.view, d.lineString, options);
+                // this.arcLineRendererArray.push([new Guid().uuid, arcLine]);
+                // externalRenderers.add(this.view, arcLine);
+                // });
+                const arcLine = new arcLineRenderer(this.view, arcLineOptions.lineStrings, arcLineOptions.options);
                 this.arcLineRendererArray.push([new Guid().uuid, arcLine]);
                 externalRenderers.add(this.view, arcLine);
-                });
             })
             .catch((err) => {
                 console.error(err);

@@ -17,14 +17,15 @@ define([
 ) {
     var THREE = window.THREE;
     var ArcLineRenderer = declare([], {
-        constructor: function (view, lineString, options) {
+        constructor: function (view, lineStrings, options) {
             this.view = view;
+            this.object3ds=[];
             var OPTIONS = {
                 height: 0,
                 altitude: 0
             };
             this.options = this.extend({}, OPTIONS, options, {
-                lineString: lineString
+                lineStrings: lineStrings
             });
         },
 
@@ -72,24 +73,28 @@ define([
 
             var material = new THREE.LineBasicMaterial({
                 linewidth: 10,
-                color: 'rgb(13,141,255)',
+                color: scope.options.color || 'rgb(13,141,255)',
                 opacity: 1,
                 transparent: true,
                 blending: THREE.AdditiveBlending
             });
 
-            const points = scope.getArcPoints(scope.options.lineString, height);
-            const positions = scope.getLinePosition(points).positions;
-            const geometry = new THREE.BufferGeometry();
-            geometry.addAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
-            
-            scope.object3d = new THREE.Line(geometry, material);
-            scope.object3d.computeLineDistances();
-            scope.scene.add(scope.object3d);
-            const z = scope.options.altitude;
-            const center = scope.options.lineString.getCenter();
-            const v = scope.coordinateToVector3(scope.options.lineString[0], z);
-            scope.object3d.position.copy(v);
+            const offset = Infinity;
+            scope.options.lineStrings.slice(0, offset).map((d) => {
+                const points = scope.getArcPoints(d.lineString, d.len);
+                const positions = scope.getLinePosition(points).positions;
+                const geometry = new THREE.BufferGeometry();
+                geometry.addAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
+                const object3d = new THREE.Line(geometry, material);
+                object3d.computeLineDistances();
+                scope.scene.add(object3d);
+                scope.object3ds.push(object3d);
+                const z = scope.options.altitude;
+                const center = d.lineString.getCenter();
+                const coordinates = d.lineString.getCoordinates();
+                const v = scope.coordinateToVector3(coordinates[0], z);
+                object3d.position.copy(v);
+            })
             context.resetWebGLState();
         },
 
