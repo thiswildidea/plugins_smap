@@ -1,109 +1,181 @@
 ;
-define(['dojo/_base/declare', ], function (i, ) {
-    var j = i([], {
-        constructor: function (a) {
-            a = a || {};
-            this.gradient = a.gradient || {
-                0.25: 'rgba(0, 0, 255, 1)',
-                0.55: 'rgba(0, 255, 0, 1)',
-                0.85: 'rgba(255, 255, 0, 1)',
-                1.0: 'rgba(255, 0, 0, 1)'
+define(['dojo/_base/declare', "esri/geometry/geometryEngine", "esri/geometry/Extent", "esri/views/3d/externalRenderers", "esri/geometry/Polygon", "esri/geometry/Point", "esri/geometry/support/webMercatorUtils"], function (d, e, f, g, h, j, l) {
+    var m = window.THREE;
+    var n = d([], {
+        constructor: function (a, b, c) {
+            this.view = a;
+            this.object3ds = [];
+            const OPTIONS = {
+                altitude: 0,
+                speed: 0.1
+            }
+            this.options = this.extend({}, OPTIONS, c, {
+                multiLineStrings: b
+            })
+        },
+        setup: function (b) {
+            this.renderer = new m.WebGLRenderer({
+                context: b.gl,
+                premultipliedAlpha: false,
+            });
+            this.renderer.setPixelRatio(window.devicePixelRatio);
+            this.renderer.setViewport(0, 0, this.view.width, this.view.height);
+            this.renderer.autoClear = false;
+            this.renderer.autoClearDepth = false;
+            this.renderer.autoClearColor = false;
+            this.renderer.autoClearStencil = false;
+            var c = this.renderer.setRenderTarget.bind(this.renderer);
+            this.renderer.setRenderTarget = function (a) {
+                c(a);
+                if (a == null) {
+                    b.bindRenderTarget()
+                }
             };
-            this.maxSize = a.maxSize || 35;
-            this.minSize = a.minSize || 0;
-            this.max = a.max || 100;
-            this.min = a.min || 0;
-            this.initPalette()
+            this.scene = new m.Scene();
+            this.camera = new m.PerspectiveCamera();
+            const axesHelper = new m.AxesHelper(1);
+            axesHelper.position.copy(1000000, 100000, 100000);
+            this.scene.add(axesHelper);
+            this._setupScene(b)
         },
-        setMax: function (a) {
-            this.max = a || 100
+        _setupScene: function (a) {
+            var b = this;
+            let texture = new m.TextureLoader().load(b.options.textureURL);
+            texture.anisotropy = 16;
+            texture.wrapS = m.RepeatWrapping;
+            texture.wrapT = m.RepeatWrapping;
+            let material = new MeshLineMaterial({
+                map: texture,
+                useMap: true,
+                lineWidth: b.options.lineWidth,
+                sizeAttenuation: false,
+                transparent: true,
+                near: b.camera.near,
+                far: b.camera.far
+            });
+            b.options.offset = material.uniforms.offset.value;
+            b.options.clock = new m.Clock();
+            const offset = Infinity;
+            b.options.multiLineStrings.slice(0, offset).map((multiLineString) => {
+                multiLineString._geometries.map((lineString) => {
+                    const {
+                        positions
+                    } = b.getLinePosition(lineString);
+                    const positions1 = b._getLinePosition(lineString).positions;
+                    const geometry = new m.Geometry();
+                    for (let i = 0; i < positions.length; i += 3) {
+                        geometry.vertices.push(new m.Vector3(positions[i], positions[i + 1], positions[i + 2]))
+                    }
+                    const meshLine = new MeshLine();
+                    meshLine.setGeometry(geometry);
+                    material.uniforms.resolution.value.set(b.view.size[0], b.view.size[1]);
+                    const object3d = new m.Mesh(meshLine.geometry, material);
+                    b.scene.add(object3d);
+                    b.object3ds.push(object3d);
+                    const {
+                        altitude
+                    } = b.options;
+                    const center = lineString.getCenter();
+                    const v = b.coordinateToVector3(center, altitude);
+                    object3d.position.copy(v)
+                })
+            }) 
+            a.resetWebGLState()
         },
-        setMin: function (a) {
-            this.min = a || 0
-        },
-        setMaxSize: function (a) {
-            this.maxSize = a || 35
-        },
-        setMinSize: function (a) {
-            this.minSize = a || 0
-        },
-        initPalette: function () {
-            var a = this.gradient;
-            var b = this.Canvas(256, 1);
-            var c = this.paletteCtx = b.getContext('2d');
-            var d = c.createLinearGradient(0, 0, 256, 1);
-            for (var e in a) {
-                d.addColorStop(parseFloat(e), a[e])
+        setaltitude: function (a) {
+            if (!this.object3ds.length) {
+                return
             }
-            c.fillStyle = d;
-            c.fillRect(0, 0, 256, 1)
+            this.object3ds.forEach((item) => {
+                item.position.z = a
+            })
         },
-        getColor: function (a) {
-            var b = this.getImageData(a);
-            return 'rgba(' + b[0] + ', ' + b[1] + ', ' + b[2] + ', ' + b[3] / 256 + ')'
-        },
-        getImageData: function (a) {
-            var b = this.paletteCtx.getImageData(0, 0, 256, 1).data;
-            if (a === undefined) {
-                return b
-            }
-            var c = this.max;
-            var d = this.min;
-            if (a > c) {
-                a = c
-            }
-            if (a < d) {
-                a = d
-            }
-            var e = Math.floor((a - d) / (c - d) * (256 - 1)) * 4;
-            return [b[e], b[e + 1], b[e + 2], b[e + 3]]
-        },
-        getSize: function (a) {
-            var b = 0;
-            var c = this.max;
-            var d = this.min;
-            var e = this.maxSize;
-            var f = this.minSize;
-            if (a > c) {
-                a = c
-            }
-            if (a < d) {
-                a = d
-            }
-            if (c > d) {
-                b = f + (a - d) / (c - d) * (e - f)
+        getLinePosition: function (a, b) {
+            const positions = [];
+            const positionsV = [];
+            if (Array.isArray(a) && a[0] instanceof m.Vector3) {
+                for (let i = 0, len = a.length; i < len; i++) {
+                    const v = a[i];
+                    positions.push(v.x, v.y, v.z);
+                    positionsV.push(v)
+                }
             } else {
-                return e
-            }
-            return b
-        },
-        getLegend: function (a) {
-            var b = this.gradient;
-            var c = a.width || 20;
-            var d = a.height || 180;
-            var e = this.Canvas(c, d);
-            var f = e.getContext('2d');
-            var g = f.createLinearGradient(0, d, 0, 0);
-            for (var h in b) {
-                g.addColorStop(parseFloat(h), b[h])
-            }
-            f.fillStyle = g;
-            f.fillRect(0, 0, c, d);
-            return e
-        },
-        Canvas: function (a=1, b=1) {
-            let canvas;
-            if (typeof document === 'undefined') {} else {
-                canvas = document.createElement('canvas');
-                if (a) {
-                    canvas.width = a
-                }
-                if (b) {
-                    canvas.height = b
+                if (Array.isArray(a)) a = new mapking.LineString(a);
+                if (!a || !(a instanceof mapking.LineString)) return;
+                const z = this.options.altitude;
+                const coordinates = a.getCoordinates();
+                const centerPt = this.coordinateToVector3(b || a.getCenter());
+                for (let i = 0, len = coordinates.length; i < len; i++) {
+                    let coordinate = coordinates[i];
+                    if (Array.isArray(coordinate)) {
+                        coordinate = new mapking.Coordinate(coordinate)
+                    }
+                    const v = this.coordinateToVector3(coordinate, z).sub(centerPt);
+                    positions.push(v.x, v.y, v.z);
+                    positionsV.push(v)
                 }
             }
-            return canvas
+            return {
+                positions: positions,
+                positionsV: positionsV
+            }
+        },
+        _getLinePosition: function (a, b) {
+            const positions = [];
+            const positionsV = [];
+            if (Array.isArray(a) && a[0] instanceof m.Vector3) {
+                for (let i = 0, len = a.length; i < len; i++) {
+                    const v = a[i];
+                    positions.push(v.x, v.y, v.z);
+                    positionsV.push(v)
+                }
+            } else {
+                if (Array.isArray(a)) a = new mapking.LineString(a);
+                if (!a || !(a instanceof mapking.LineString)) return;
+                const z = this.options.altitude;
+                const coordinates = a.getCoordinates();
+                for (let i = 0, len = coordinates.length; i < len; i++) {
+                    let coordinate = coordinates[i];
+                    if (Array.isArray(coordinate)) coordinate = new mapking.Coordinate(coordinate);
+                    const v = this.coordinateToVector3(coordinate, z);
+                    positions.push(v.x, v.y, v.z);
+                    positionsV.push(v)
+                }
+            }
+            return {
+                positions: positions,
+                positionsV: positionsV
+            }
+        },
+        coordinateToVector3: function (a, b=0) {
+            const p = a;
+            let transform = new m.Matrix4();
+            let transformation = new Array(16);
+            transform.fromArray(g.renderCoordinateTransformAt(this.view, [p.x, p.y, b], this.view.spatialReference, transformation));
+            let vector3 = new m.Vector3(transform.elements[12], transform.elements[13], transform.elements[14]);
+            return vector3
+        },
+        extend: function (a) {
+            for (let i = 1; i < arguments.length; i++) {
+                const src = arguments[i];
+                for (const k in src) {
+                    a[k] = src[k]
+                }
+            }
+            return a
+        },
+        render: function (a) {
+            const cam = a.camera;
+            this.camera.position.set(cam.eye[0], cam.eye[1], cam.eye[2]);
+            this.camera.up.set(cam.up[0], cam.up[1], cam.up[2]);
+            this.camera.lookAt(new m.Vector3(cam.center[0], cam.center[1], cam.center[2]));
+            this.options.offset.x -= this.options.speed * this.options.clock.getDelta();
+            this.camera.projectionMatrix.fromArray(cam.projectionMatrix);
+            this.renderer.state.reset();
+            this.renderer.render(this.scene, this.camera);
+            g.requestRender(this.view);
+            a.resetWebGLState()
         }
-    }) 
-    return j
+    });
+    return n
 });;

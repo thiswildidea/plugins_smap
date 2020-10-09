@@ -4,12 +4,13 @@ define(['dojo/_base/declare', "esri/geometry/geometryEngine", "esri/geometry/Ext
     var n = d([], {
         constructor: function (a, b, c) {
             this.view = a;
+            this.object3ds = [];
             const OPTIONS = {
                 altitude: 0,
                 speed: 0.1
             }
             this.options = this.extend({}, OPTIONS, c, {
-                lineString: b
+                multiLineStrings: b
             })
         },
         setup: function (b) {
@@ -54,26 +55,40 @@ define(['dojo/_base/declare', "esri/geometry/geometryEngine", "esri/geometry/Ext
             });
             b.options.offset = material.uniforms.offset.value;
             b.options.clock = new m.Clock();
-            const {
-                positions
-            } = b.getLinePosition(b.options.lineString);
-            const positions1 = b._getLinePosition(b.options.lineString).positions;
-            const geometry = new m.Geometry();
-            for (let i = 0; i < positions.length; i += 3) {
-                geometry.vertices.push(new m.Vector3(positions[i], positions[i + 1], positions[i + 2]))
-            }
-            const meshLine = new MeshLine();
-            meshLine.setGeometry(geometry);
-            material.uniforms.resolution.value.set(b.view.size[0], b.view.size[1]);
-            b.object3d = new m.Mesh(meshLine.geometry, material);
-            b.scene.add(b.object3d);
-            const {
-                altitude
-            } = b.options;
-            const center = b.options.lineString.getCenter();
-            const v = b.coordinateToVector3(center, 0);
-            b.object3d.position.copy(v);
+            const offset = Infinity;
+            b.options.multiLineStrings.slice(0, offset).map((multiLineString) => {
+                multiLineString._geometries.map((lineString) => {
+                    const {
+                        positions
+                    } = b.getLinePosition(lineString);
+                    const positions1 = b._getLinePosition(lineString).positions;
+                    const geometry = new m.Geometry();
+                    for (let i = 0; i < positions.length; i += 3) {
+                        geometry.vertices.push(new m.Vector3(positions[i], positions[i + 1], positions[i + 2]))
+                    }
+                    const meshLine = new MeshLine();
+                    meshLine.setGeometry(geometry);
+                    material.uniforms.resolution.value.set(b.view.size[0], b.view.size[1]);
+                    const object3d = new m.Mesh(meshLine.geometry, material);
+                    b.scene.add(object3d);
+                    b.object3ds.push(object3d);
+                    const {
+                        altitude
+                    } = b.options;
+                    const center = lineString.getCenter();
+                    const v = b.coordinateToVector3(center, altitude);
+                    object3d.position.copy(v)
+                })
+            }) 
             a.resetWebGLState()
+        },
+        setaltitude: function (a) {
+            if (!this.object3ds.length) {
+                return
+            }
+            this.object3ds.forEach((item) => {
+                item.position.z = a
+            })
         },
         getLinePosition: function (a, b) {
             const positions = [];
@@ -87,7 +102,7 @@ define(['dojo/_base/declare', "esri/geometry/geometryEngine", "esri/geometry/Ext
             } else {
                 if (Array.isArray(a)) a = new mapking.LineString(a);
                 if (!a || !(a instanceof mapking.LineString)) return;
-                const z = 0;
+                const z = this.options.altitude;
                 const coordinates = a.getCoordinates();
                 const centerPt = this.coordinateToVector3(b || a.getCenter());
                 for (let i = 0, len = coordinates.length; i < len; i++) {
@@ -117,7 +132,7 @@ define(['dojo/_base/declare', "esri/geometry/geometryEngine", "esri/geometry/Ext
             } else {
                 if (Array.isArray(a)) a = new mapking.LineString(a);
                 if (!a || !(a instanceof mapking.LineString)) return;
-                const z = 0;
+                const z = this.options.altitude;
                 const coordinates = a.getCoordinates();
                 for (let i = 0, len = coordinates.length; i < len; i++) {
                     let coordinate = coordinates[i];
@@ -138,7 +153,6 @@ define(['dojo/_base/declare', "esri/geometry/geometryEngine", "esri/geometry/Ext
             let transformation = new Array(16);
             transform.fromArray(g.renderCoordinateTransformAt(this.view, [p.x, p.y, b], this.view.spatialReference, transformation));
             let vector3 = new m.Vector3(transform.elements[12], transform.elements[13], transform.elements[14]);
-            console.log(vector3) 
             return vector3
         },
         extend: function (a) {

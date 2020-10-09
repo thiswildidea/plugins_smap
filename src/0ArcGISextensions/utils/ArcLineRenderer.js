@@ -89,13 +89,22 @@ define([
                 object3d.computeLineDistances();
                 scope.scene.add(object3d);
                 scope.object3ds.push(object3d);
-                const z = scope.options.altitude;
-                const center = d.lineString.getCenter();
-                const coordinates = d.lineString.getCoordinates();
-                const v = scope.coordinateToVector3(coordinates[0], z);
+                // const z = scope.options.altitude;
+                // const center = d.lineString.getCenter();
+                // const coordinates = d.lineString.getCoordinates();
+                // const v = scope.coordinateToVector3(coordinates[0], z);
                 // object3d.position.copy(v);
             })
             context.resetWebGLState();
+        },
+
+        setaltitude: function (altitude) {
+            if (!this.object3ds.length) {
+                return
+            }
+            this.object3ds.forEach((item) => {
+                item.position.z = altitude;
+            })
         },
 
         getLinePosition: function (lineString, cenerter) {

@@ -17,15 +17,16 @@ define([
 ) {
     var THREE = window.THREE;
     var ArcLineAnimationRenderer = declare([], {
-        constructor: function (view, lineString, options) {
+        constructor: function (view, lineStrings, options) {
             this.view = view;
+            this.object3ds = [];
             const OPTIONS = {
                 height: 0,
                 altitude: 0,
                 speed: 0.1
             }
             this.options = this.extend({}, OPTIONS, options, {
-                lineString: lineString
+                lineStrings: lineStrings
             });
         },
 
@@ -82,27 +83,42 @@ define([
 
             scope.options.offset = material.uniforms.offset.value;
             scope.options.clock = new THREE.Clock();
+
+            const offset = Infinity;
+            scope.options.lineStrings.slice(0, offset).map((d) => {
+                const {
+                    altitude,
+                    height
+                } = scope.options;
+                const points = scope.getArcPoints(d.lineString, d.len);
+                const geometry = new THREE.Geometry();
+                geometry.vertices = points;
+                const meshLine = new MeshLine();
+                meshLine.setGeometry(geometry);
+
+                material.uniforms.resolution.value.set(scope.view.size[0], scope.view.size[1]);
+
+                const object3d = new THREE.Mesh(meshLine.geometry, material);
+                scope.scene.add(object3d);
+                scope.object3ds.push(object3d);
             
-            const { altitude, height } = scope.options;
-            const points = scope.getArcPoints(scope.options.lineString, height);
-            const geometry = new THREE.Geometry();
-            geometry.vertices = points;
-            const meshLine = new MeshLine();
-            meshLine.setGeometry(geometry);
-
-            material.uniforms.resolution.value.set(scope.view.size[0], scope.view.size[1]);
-
-            scope.object3d = new THREE.Mesh(meshLine.geometry, material);
-            scope.scene.add(scope.object3d);
-            // const center = scope.options.lineString.getCenter();
-            // const v = scope.coordinateToVector3(center, altitude);
-            const coordinates = scope.options.lineString.getCoordinates();
-            const v = scope.coordinateToVector3(coordinates[0], altitude);
-            // scope.object3d.position.copy(v);
+                // const coordinates = scope.options.lineString.getCoordinates();
+                // const v = scope.coordinateToVector3(coordinates[0], altitude);
+                // scope.object3d.position.copy(v);
+            })
             context.resetWebGLState();
         },
 
-        getArcPoints:function(lineString, height) {
+        setaltitude: function (altitude) {
+            if (!this.object3ds.length) {
+                return
+            }
+            this.object3ds.forEach((item) => {
+                item.position.z = altitude;
+            })
+        },
+
+        getArcPoints: function (lineString, height) {
             const lnglats = [];
             if (Array.isArray(lineString)) {
                 lnglats.push(lineString[0], lineString[lineString.length - 1]);

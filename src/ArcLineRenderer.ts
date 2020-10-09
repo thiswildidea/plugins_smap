@@ -14,7 +14,7 @@ export default class ArcLineRenderer extends EventEmitter {
         this.init(view);
     }
     public add(arcLineOptions: IArcLineOptions) {
-        load(["82B44794-5CE0-A64A-9047F07CAF08BD2C/08F60FEF-C6FF-A788-344D-1755CB0E3870/ArcLineRenderer", "esri/views/3d/externalRenderers"])
+        load(["82B44794-5CE0-A64A-9047F07CAF08BD2C/08F60FEF-C6FF-A788-344D-1755CB0E3870/45F857C8-303E-9546-9A173A5DACF5B67D", "esri/views/3d/externalRenderers"])
             // tslint:disable-next-line:variable-name
             .then(([arcLineRenderer, externalRenderers]) => {
 
@@ -43,6 +43,13 @@ export default class ArcLineRenderer extends EventEmitter {
                     externalRenderers.remove(this.view, arcLineRendereritem[1]);
                 });
             });
+    }
+
+    public setaltitude(altitude: any) {
+        if (!this.arcLineRendererArray) { return; }
+        this.arcLineRendererArray.map((arcLineRendereritem) => {
+            arcLineRendereritem[1].setaltitude(altitude);
+        });
     }
     private async init(view: any) {
         this.view = view;

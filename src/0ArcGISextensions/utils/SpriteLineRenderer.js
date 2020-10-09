@@ -17,14 +17,15 @@ define([
 ) {
     var THREE = window.THREE;
     var SpriteLineRenderer = declare([], {
-        constructor: function (view, lineString, options) {
+        constructor: function (view, multiLineStrings, options) {
             this.view = view;
+            this.object3ds = [];
             const OPTIONS = {
                 altitude: 0,
                 speed: 0.1
             }
             this.options = this.extend({}, OPTIONS, options, {
-                lineString: lineString
+                multiLineStrings: multiLineStrings
             });
         },
 
@@ -81,29 +82,44 @@ define([
 
             scope.options.offset = material.uniforms.offset.value;
             scope.options.clock = new THREE.Clock();
-            const {
-                positions
-            } = scope.getLinePosition(scope.options.lineString);
-            const positions1 = scope._getLinePosition(scope.options.lineString).positions;
+            const offset = Infinity;
+            scope.options.multiLineStrings.slice(0, offset).map((multiLineString) => {
+                multiLineString._geometries.map((lineString) => {
+                    const {
+                        positions
+                    } = scope.getLinePosition(lineString);
+                    const positions1 = scope._getLinePosition(lineString).positions;
 
-            const geometry = new THREE.Geometry();
-            for (let i = 0; i < positions.length; i += 3) {
-                geometry.vertices.push(new THREE.Vector3(positions[i], positions[i + 1], positions[i + 2]));
-            }
-            const meshLine = new MeshLine();
-            meshLine.setGeometry(geometry);
-            material.uniforms.resolution.value.set(scope.view.size[0], scope.view.size[1]);
+                    const geometry = new THREE.Geometry();
+                    for (let i = 0; i < positions.length; i += 3) {
+                        geometry.vertices.push(new THREE.Vector3(positions[i], positions[i + 1], positions[i + 2]));
+                    }
+                    const meshLine = new MeshLine();
+                    meshLine.setGeometry(geometry);
+                    material.uniforms.resolution.value.set(scope.view.size[0], scope.view.size[1]);
 
-            scope.object3d = new THREE.Mesh(meshLine.geometry, material);
-            scope.scene.add(scope.object3d);
-            const { altitude } = scope.options;
-            const center = scope.options.lineString.getCenter();
-            const v = scope.coordinateToVector3(center, 0);
-            scope.object3d.position.copy(v);
-
+                    const object3d = new THREE.Mesh(meshLine.geometry, material);
+                    scope.scene.add(object3d);
+                    scope.object3ds.push(object3d);
+                    const {
+                        altitude
+                    } = scope.options;
+                    const center = lineString.getCenter();
+                    const v = scope.coordinateToVector3(center, altitude);
+                    object3d.position.copy(v);
+                })
+            })
             context.resetWebGLState();
         },
-
+        
+        setaltitude: function (altitude) {
+            if (!this.object3ds.length) {
+                return
+            }
+            this.object3ds.forEach((item) => {
+                item.position.z = altitude;
+            })
+        },
         getLinePosition: function (lineString, cenerter) {
             const positions = [];
             const positionsV = [];
@@ -116,7 +132,7 @@ define([
             } else {
                 if (Array.isArray(lineString)) lineString = new mapking.LineString(lineString);
                 if (!lineString || !(lineString instanceof mapking.LineString)) return;
-                const z = 0;
+                const z = this.options.altitude;
                 const coordinates = lineString.getCoordinates();
                 const centerPt = this.coordinateToVector3(cenerter || lineString.getCenter());
                 for (let i = 0, len = coordinates.length; i < len; i++) {
@@ -134,7 +150,7 @@ define([
                 positionsV: positionsV
             }
         },
-        _getLinePosition:function (lineString, layer) {
+        _getLinePosition: function (lineString, layer) {
             const positions = [];
             const positionsV = [];
             if (Array.isArray(lineString) && lineString[0] instanceof THREE.Vector3) {
@@ -146,7 +162,7 @@ define([
             } else {
                 if (Array.isArray(lineString)) lineString = new mapking.LineString(lineString);
                 if (!lineString || !(lineString instanceof mapking.LineString)) return;
-                const z = 0;
+                const z = this.options.altitude;
                 const coordinates = lineString.getCoordinates();
                 for (let i = 0, len = coordinates.length; i < len; i++) {
                     let coordinate = coordinates[i];
@@ -180,7 +196,6 @@ define([
                 transform.elements[13],
                 transform.elements[14]
             );
-            console.log(vector3)
             return vector3;
         },
         extend: function (dest) { // (Object[, Object, ...]) ->
