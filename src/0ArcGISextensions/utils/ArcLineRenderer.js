@@ -93,7 +93,7 @@ define([
                 const center = d.lineString.getCenter();
                 const coordinates = d.lineString.getCoordinates();
                 const v = scope.coordinateToVector3(coordinates[0], z);
-                object3d.position.copy(v);
+                // object3d.position.copy(v);
             })
             context.resetWebGLState();
         },

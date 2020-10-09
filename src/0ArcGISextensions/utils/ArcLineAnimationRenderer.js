@@ -98,7 +98,7 @@ define([
             // const v = scope.coordinateToVector3(center, altitude);
             const coordinates = scope.options.lineString.getCoordinates();
             const v = scope.coordinateToVector3(coordinates[0], altitude);
-            scope.object3d.position.copy(v);
+            // scope.object3d.position.copy(v);
             context.resetWebGLState();
         },
 
