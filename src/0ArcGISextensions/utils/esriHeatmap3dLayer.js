@@ -11,11 +11,11 @@ define([
   // Constants
   var THREE = window.THREE;
 
-  var Heatmap3dLayer = declare(null, {
+  var esriHeatmap3dLayer = declare(null, {
     constructor: function (view, options) {
       this.view = view,
-      this.datas = options.datas;
-      this.absoluteheight = options.absoluteheight||1
+        this.datas = options.datas;
+      this.absoluteheight = options.absoluteheight || 1
       this.width = options.width || 0;
       this.height = options.height || 0;
       this.indexwidth = options.indexwidth || 0;
@@ -23,6 +23,7 @@ define([
       this.select3D = options.select3D === undefined ? false : options.select3D;
       this.zdata = null;
       this.timedata = [];
+      this.wireframe= options.wireframe || true,
       this.xmin = options.xmin;
       this.ymin = options.ymin;
       this.xmax = options.xmax;
@@ -67,7 +68,8 @@ define([
 
 
       // 添加坐标轴辅助工具
-      const axesHelper = new THREE.AxesHelper(0);
+      const axesHelper = new THREE.AxesHelper(1);
+      axesHelper.position.copy(1000000, 100000, 100000);
       this.scene.add(axesHelper);
 
       // setup scene lighting
@@ -81,6 +83,7 @@ define([
       var ground = new THREE.Mesh(geometry, new THREE.MeshPhongMaterial({
         map: new THREE.CanvasTexture(canvas),
         // 透明度设置 0921
+        wireframe: this.wireframe,
         opacity: 0.5,
         transparent: true
       }))
@@ -160,18 +163,26 @@ define([
       var allnum = this.width * this.height * 3
       var arr = new Array(allnum);
       var begin = new Array(allnum);
+      var tempArray = [];
+      var tempZ;
 
       for (var i = 0; i < this.width * this.height; i++) {
         begin[i * 3] = this.xmin + (i % this.width) * ((this.xmax - this.xmin) / this.width);
         begin[i * 3 + 1] = this.ymax - (Math.floor(i / this.width)) * ((this.ymax - this.ymin) / this.height);
-
         if (this.select3D) {
-          begin[i * 3 + 2] = (data[Math.floor(i / this.width)][i % this.width]) * 500 + this.absoluteheight * (this.indexheight + 1);
+          // begin[i * 3 + 2] = (data[Math.floor(i / width)][i % width]) * 500000 + 10000 * (indexheight + 1) ;
+          // begin[i * 3 + 2] = ((data[Math.floor(i / width)][i % width]) * 500 + 10000 * (indexheight + 1));
+          tempZ = (((data[Math.floor(i / this.width)][i % this.width]) * 500 + 10000 * (this.indexheight + 1))) / 10;
+          // tempZ = (((data[Math.floor(i / width)][i % width]) * 500 + 10000 * (indexheight + 1)));
+          begin[i * 3 + 2] = tempZ - (1000 - 10);
+          tempArray.push(tempZ);
         } else {
-          begin[i * 3 + 2] = this.absoluteheight;
+          // begin[i * 3 + 2] = 10000 * (indexheight + 1);
+          begin[i * 3 + 2] = 100;
         }
         // begin[i*3+2]=250;
       }
+      tempArray.sort();
       externalRenderers.toRenderCoordinates(this.view, begin, 0, null, arr, 0, this.width * this.height);
       var ground_geometry = new THREE.PlaneGeometry(100, 100, this.width - 1, this.height - 1);
       var arrarr = [];
@@ -201,5 +212,5 @@ define([
 
     dispose: function (content) {}
   });
-  return Heatmap3dLayer
+    return esriHeatmap3dLayer
 });
