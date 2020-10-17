@@ -12,6 +12,7 @@ import DynamicSquareFence from './DynamicSquareFence';
 import EchartFlashPointLayer from './EchartFlashPointLayer';
 import ElectricShieldRenderer from './ElectricShieldRenderer';
 import EsriHeatMap3dLayer from './EsriHeatMap3dLayer';
+import EsriRainRenderer from './EsriRainRenderer';
 import FeaureOverlays from './FeaureOverlays';
 import FireRenderer from './FireRenderer';
 import FlashGifLayer from './FlashGifLayer';
@@ -38,6 +39,7 @@ export default {
   CloudRenderer,
   FireRenderer,
   Draw,
+  EsriRainRenderer,
   RipplewallRenderer,
   EsriHeatMap3dLayer,
   CurveLineRenderer,

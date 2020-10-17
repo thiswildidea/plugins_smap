@@ -178,7 +178,7 @@ define([
           tempArray.push(tempZ);
         } else {
           // begin[i * 3 + 2] = 10000 * (indexheight + 1);
-          begin[i * 3 + 2] = 100;
+          begin[i * 3 + 2] = 0;
         }
         // begin[i*3+2]=250;
       }
