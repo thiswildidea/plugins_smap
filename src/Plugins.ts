@@ -13,6 +13,7 @@ import EchartFlashPointLayer from './EchartFlashPointLayer';
 import ElectricShieldRenderer from './ElectricShieldRenderer';
 import EsriHeatMap3dLayer from './EsriHeatMap3dLayer';
 import EsriRainRenderer from './EsriRainRenderer';
+import EsriSnowRenderer from './EsriSnowRenderer';
 import FeaureOverlays from './FeaureOverlays';
 import FireRenderer from './FireRenderer';
 import FlashGifLayer from './FlashGifLayer';
@@ -40,6 +41,7 @@ export default {
   FireRenderer,
   Draw,
   EsriRainRenderer,
+  EsriSnowRenderer,
   RipplewallRenderer,
   EsriHeatMap3dLayer,
   CurveLineRenderer,

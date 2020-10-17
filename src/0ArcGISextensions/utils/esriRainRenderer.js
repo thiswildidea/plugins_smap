@@ -49,7 +49,7 @@ define([
     },
     createCanvas: function () {
       if (document.getElementById('rain')) {
-        this.destroy();
+        this.remove();
       }
       var rainDiv = document.createElement('div');
       this.canvas1 = document.createElement('canvas');
