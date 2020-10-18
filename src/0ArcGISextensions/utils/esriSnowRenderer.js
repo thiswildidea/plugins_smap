@@ -3903,13 +3903,16 @@ define([
       this.particles = [];
       this.particleImageSrc = options.particleImageSrc || './images/snowflake232.png';
       this.snowNum = options.snowNum || 1500;
+      this.timer = null;
     },
     add: function () {
-      if (document.getElementById('snowContainer')) {
+      const divs =this.view.container.querySelector("#snowContainer")
+		if(divs){
         this.remove();
       }
       var snowPanel = document.createElement('div');
       snowPanel.id = 'snowContainer';
+	  snowPanel.setAttribute('class', 'snowContainer')
       snowPanel.style = 'top: 0;left: 0;width: 100%;height: 100%;pointer-events: none;z-index: 120;position: absolute;background-color: #9d9d9d;background-color: rgba(0, 0, 0, 0.15);'
       this.camera = new THREE.PerspectiveCamera(
         75,
@@ -3942,10 +3945,15 @@ define([
       document.addEventListener('mousemove', lang.hitch(this, this.onDocumentMouseMove), false);
       document.addEventListener('touchstart', lang.hitch(this, this.onDocumentTouchStart), false);
       document.addEventListener('touchmove', lang.hitch(this, this.onDocumentTouchMove), false);
-      setInterval(lang.hitch(this, this.loop), 1000 / 40);
+      this.timer = setInterval(lang.hitch(this, this.loop), 1000 / 40);
     },
     remove: function () {
-      this.view.container.removeChild(document.getElementById('snowContainer'));
+		const divs =this.view.container.querySelector("#snowContainer")
+		if(divs){
+		   this.view.container.removeChild(divs);
+		}
+      clearInterval(this.timer);
+      this.timer = null;
     },
     onDocumentMouseMove: function (event) {
       this.mouseX = event.clientX - this.windowHalfX;
