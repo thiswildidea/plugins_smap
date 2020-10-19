@@ -15,7 +15,7 @@ export default class EsriSnowRenderer extends EventEmitter {
         this.init(view);
     }
     public add(esriRendererOptions: IEsriRainRendereriOptions) {
-        load(["82B44794-5CE0-A64A-9047F07CAF08BD2C/08F60FEF-C6FF-A788-344D-1755CB0E3870/esriSnowRenderer", "esri/views/3d/externalRenderers"])
+        load(["82B44794-5CE0-A64A-9047F07CAF08BD2C/08F60FEF-C6FF-A788-344D-1755CB0E3870/0CBBFBAF-B7E4-50A1-39B34C8C9A007129", "esri/views/3d/externalRenderers"])
             // tslint:disable-next-line:variable-name
             .then(([esriSnowLayer, externalRenderers]) => {
                 this.esriSnowRenderer = new esriSnowLayer(this.view, esriRendererOptions.options);

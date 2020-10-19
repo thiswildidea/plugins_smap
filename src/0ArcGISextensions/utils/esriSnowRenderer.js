@@ -3907,13 +3907,12 @@ define([
     },
     add: function () {
       const divs =this.view.container.querySelector("#snowContainer")
-		if(divs){
-        this.remove();
-      }
+		divs&&this.remove();
+      
       var snowPanel = document.createElement('div');
       snowPanel.id = 'snowContainer';
 	  snowPanel.setAttribute('class', 'snowContainer')
-      snowPanel.style = 'top: 0;left: 0;width: 100%;height: 100%;pointer-events: none;z-index: 120;position: absolute;background-color: #9d9d9d;background-color: rgba(0, 0, 0, 0.15);'
+      snowPanel.style = 'top:0px;left: 0;width: 100%;height: 100%;pointer-events: none;z-index: 120;position: absolute;background-color: #9d9d9d;background-color: rgba(0, 0, 0, 0.15);'
       this.camera = new THREE.PerspectiveCamera(
         75,
         this.view.width / this.view.height,
@@ -3949,9 +3948,8 @@ define([
     },
     remove: function () {
 		const divs =this.view.container.querySelector("#snowContainer")
-		if(divs){
-		   this.view.container.removeChild(divs);
-		}
+		divs&&this.view.container.removeChild(divs);
+		
       clearInterval(this.timer);
       this.timer = null;
     },

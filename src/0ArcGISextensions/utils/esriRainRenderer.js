@@ -43,18 +43,17 @@ define([
     },
     remove: function () {
 		const divs =this.view.container.querySelector("#rain")
-		if(divs){
-           this.view.container.removeChild(divs);
-		}
+		divs&&this.view.container.removeChild(divs);
+	
       cancelAnimationFrame(this.timer);
-      this.resizeEvent.remove();
+      this.resizeEvent&&this.resizeEvent.remove();
       this.resizeEvent=null;
     },
     createCanvas: function () {
 		
-      if (this.view.container.getElementsByClassName('rain')[0]) {
-        this.remove();
-      }
+      const divs =this.view.container.querySelector("#rain")
+		divs&& this.remove();
+      
       var rainDiv = document.createElement('div');
       this.canvas1 = document.createElement('canvas');
       this.canvas2 = document.createElement('canvas');
@@ -70,7 +69,7 @@ define([
       rainDiv.appendChild(this.canvas3);
       rainDiv.id = 'rain';
 	  rainDiv.setAttribute('class', 'rain')
-      rainDiv.style = 'pointer-events: none;position: absolute;z-index: 200;left: 0px;background-color: rgba(0, 0, 0, 0.125);';
+      rainDiv.style = 'pointer-events: none;position: absolute;z-index: 200;top:0px;left: 0px;background-color: rgba(0, 0, 0, 0.125);';
       rainDiv.style.width = this.view.width;
       rainDiv.style.height = this.view.height;
       this.view.container.appendChild(rainDiv);

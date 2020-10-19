@@ -5,8 +5,8 @@ define(['dojo/_base/declare', 'esri/geometry/Point', 'esri/geometry/SpatialRefer
     var r = k(null, {
         constructor: function (a, b) {
             this.view = a, this.datas = b.datas;
-            this.absoluteheight = b.absoluteheight || 1;
-             this.width = b.width || 0;
+            this.absoluteheight = b.absoluteheight || 1 
+            this.width = b.width || 0;
             this.height = b.height || 0;
             this.indexwidth = b.indexwidth || 0;
             this.indexheight = b.indexheight || 0;
@@ -59,8 +59,8 @@ define(['dojo/_base/declare', 'esri/geometry/Point', 'esri/geometry/SpatialRefer
                 wireframe: this.wireframe,
                 opacity: 0.5,
                 transparent: true
-            })) 
-            this.scene.add(g);
+            }))
+             this.scene.add(g);
             b.resetWebGLState()
         },
         render: function (a) {
@@ -131,7 +131,7 @@ define(['dojo/_base/declare', 'esri/geometry/Point', 'esri/geometry/SpatialRefer
                     d[i * 3 + 2] = f - (1000 - 10);
                     e.push(f)
                 } else {
-                    d[i * 3 + 2] = 100
+                    d[i * 3 + 2] = 0
                 }
             }
             e.sort();

@@ -14,7 +14,7 @@ export default class EsriHeatMap3dLayer extends EventEmitter {
         this.init(view);
     }
     public add(esriHeatMap3dLayerOptions: IEsriHeatMap3dLayerOptions) {
-        load(["82B44794-5CE0-A64A-9047F07CAF08BD2C/08F60FEF-C6FF-A788-344D-1755CB0E3870/esriHeatmap3dLayer", "esri/views/3d/externalRenderers"])
+        load(["82B44794-5CE0-A64A-9047F07CAF08BD2C/08F60FEF-C6FF-A788-344D-1755CB0E3870/7EDA07DC-CD90-EEBB-1E7A9898658F0046", "esri/views/3d/externalRenderers"])
             // tslint:disable-next-line:variable-name
             .then(([esriHeatmap3dLayer, externalRenderers]) => {
                 this.esriheatMap3dLayerRenderer = new esriHeatmap3dLayer(this.view,
