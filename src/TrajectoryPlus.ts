@@ -63,6 +63,7 @@ export default class TrajectoryPlus extends EventEmitter {
                             this.createAnimateRoute(location, prevLocation, playbackoption.trailsymbol);
                         }
                     }
+                    if (playbackoption.viewroate) {
                     this.view.goTo({
                         center: location,
                         tilt: 70,
@@ -80,8 +81,10 @@ export default class TrajectoryPlus extends EventEmitter {
                             console.error(error);
                         }
                     });
+                    }
                     prevLocation = location.clone();
                     if (trajectorycount === playbackoption.coords.length) {
+                        if (!playbackoption.mobieiconvisbile) {mobileLayer.visible = false; }
                         clearInterval(this.mapRoamplayinternal);
                     }
                 }, timespan);

@@ -14,6 +14,7 @@ import ElectricShieldRenderer from './ElectricShieldRenderer';
 import EsriHeatMap3dLayer from './EsriHeatMap3dLayer';
 import EsriRainRenderer from './EsriRainRenderer';
 import EsriSnowRenderer from './EsriSnowRenderer';
+import EsriWeatherEffectsRenderer from './EsriWeatherEffectsRenderer';
 import FeaureOverlays from './FeaureOverlays';
 import FireRenderer from './FireRenderer';
 import FlashGifLayer from './FlashGifLayer';
@@ -27,6 +28,7 @@ import MaskBoundary from './MaskBoundary';
 import Measurement from './Measurement';
 import MeshLine from './MeshLine';
 import MigrationMap from './MigrationMap';
+import ModelLightRenderer from './ModelLightRenderer';
 import { load } from './modules';
 import RipplewallRenderer from './RipplewallRenderer';
 import SpriteLineRenderer from './SpriteLineRenderer';
@@ -49,6 +51,8 @@ export default {
   ElectricShieldRenderer,
   DynamicPolygon,
   GraphicOverlays,
+  ModelLightRenderer,
+  EsriWeatherEffectsRenderer,
   FeaureOverlays,
   EchartFlashPointLayer,
   FlashPoint3DLayer,

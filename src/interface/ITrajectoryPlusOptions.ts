@@ -6,4 +6,6 @@ export default interface ITrajectoryPlusOptions {
     trailsymbol?: any;
     duration?: number;
     speedFactor?: number;
+    mobieiconvisbile?: boolean;
+    viewroate?: boolean;
 }

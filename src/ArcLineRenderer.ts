@@ -27,7 +27,7 @@ export default class ArcLineRenderer extends EventEmitter {
                 // this.arcLineRendererArray.push([new Guid().uuid, arcLine]);
                 // externalRenderers.add(this.view, arcLine);
                 // });
-                const arcLine = new arcLineRenderer(this.view, arcLineOptions.lineStrings, arcLineOptions.options);
+                const arcLine = new arcLineRenderer(arcLineOptions.lineStrings, arcLineOptions.options);
                 this.arcLineRendererArray.push([new Guid().uuid, arcLine]);
                 externalRenderers.add(this.view, arcLine);
             })
