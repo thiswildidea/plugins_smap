@@ -1,9 +1,10 @@
-define([
+define([  
   'dojo/_base/declare',
   'esri/geometry/Point',
   'esri/geometry/SpatialReference',
   'esri/views/3d/externalRenderers',
   'esri/geometry/support/webMercatorUtils',
+   
 ], function (declare, Point, SpatialReference, externalRenderers, webMercatorUtils) {
   // Enforce strict mode
   'use strict';

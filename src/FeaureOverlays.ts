@@ -485,7 +485,7 @@ export default class FeaureOverlays extends EventEmitter {
                     objectIdField: 'objectId',
                     geometryType: 'polygon',
                     renderer: symbolrenderer,
-                    // screenSizePerspectiveEnabled: this.view.type === '3d',
+                    screenSizePerspectiveEnabled: this.view.type === '3d',
                     maxScale: (overlayers as OverlayGroup).maxScale,
                     minScale: (overlayers as OverlayGroup).minScale,
                     popupEnabled: false,
@@ -509,7 +509,7 @@ export default class FeaureOverlays extends EventEmitter {
                             rs.push([item.X, item.Y, item.Z]);
                         });
                         const polygon = new ArcGISPolygon({
-                            hasZ: true,
+                            hasZ: this.view.type === '3d',
                             hasM: true,
                             rings: rs,
                             spatialReference: this.view.spatialReference
@@ -524,6 +524,12 @@ export default class FeaureOverlays extends EventEmitter {
                         (overelement as Polygon).uuid,
                             graphic]);
                     }
+                });
+                clientoperateLayer.applyEdits({
+                    updateFeatures: result
+                    // tslint:disable-next-line:no-empty
+                }).then((editsResult) => {
+
                 });
                 if ((overlayers as OverlayGroup).label.visible) {
                     let labelsymbol;
