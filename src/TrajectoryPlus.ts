@@ -5,6 +5,7 @@ import {
     load
 } from './modules';
 import Guid from './utils/Guid';
+import MapEvent from './utils/MapEvent';
 export default class TrajectoryPlus extends EventEmitter {
     public displayedLayerid: any = "";
     private view: any = null;
@@ -86,6 +87,7 @@ export default class TrajectoryPlus extends EventEmitter {
                     if (trajectorycount === playbackoption.coords.length) {
                         if (!playbackoption.mobieiconvisbile) {mobileLayer.visible = false; }
                         clearInterval(this.mapRoamplayinternal);
+                        this.emit(MapEvent.complete);
                     }
                 }, timespan);
             })

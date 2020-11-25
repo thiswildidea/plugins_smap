@@ -5,6 +5,7 @@ import {
     load
 } from './modules';
 import Guid from './utils/Guid';
+import MapEvent from './utils/MapEvent';
 export default class Trajectory extends EventEmitter {
     public displayedLayerid: any = "";
     private view: any = null;
@@ -43,6 +44,7 @@ export default class Trajectory extends EventEmitter {
                     ++trajectorycount;
                     if (trajectorycount === playbackoption.coords.length) {
                         clearInterval(this.routepalybackinternal);
+                        this.emit(MapEvent.complete);
                     }
                 }, 2500);
                 this.view.when(() => {

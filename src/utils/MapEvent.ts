@@ -19,6 +19,7 @@ export default class  MapEvent {
     public static pointerup = 'pointer-up';
     public static resize = 'pointer-up';
     public static popupvisible = 'popup-visible';
+    public static complete = 'complete';
     // tslint:disable-next-line:no-empty
     constructor() { }
 }
