@@ -25,9 +25,9 @@ export default class FeaureOverlays extends EventEmitter {
     }
     public async createFeatureGroup<T extends any[] = any[]>(overlayers: Overlayerbase | OverlayGroup): Promise<T> {
         // tslint:disable-next-line:variable-name
-        const [FeatureLayer, LabelClass, Graphic, Point, esriCircle,
+        const [FeatureLayer, FeatureLayerCluster, LabelClass, Graphic, Point, esriCircle,
             // tslint:disable-next-line:variable-name
-            PictureMarkerSymbol, ArcGISPolyline, ArcGISPolygon] = await load(['esri/layers/FeatureLayer', 'esri/layers/support/LabelClass', 'esri/Graphic', 'esri/geometry/Point',
+            PictureMarkerSymbol, ArcGISPolyline, ArcGISPolygon] = await load(['esri/layers/FeatureLayer', 'esri/layers/esriClusterLayer','esri/layers/support/LabelClass', 'esri/Graphic', 'esri/geometry/Point',
                 'esri/geometry/Circle', 'esri/symbols/PictureMarkerSymbol', "esri/geometry/Polyline", "esri/geometry/Polygon"
             ]);
         const boundaryResultLayer = this.view.map.findLayerById(this.displayedLayerid);
@@ -99,23 +99,73 @@ export default class FeaureOverlays extends EventEmitter {
                 } else {
                     symbolrenderer = (overlayers as OverlayGroup).renderer;
                 }
-                const clientoperateLayer = new FeatureLayer({
-                    id: this.displayedLayerid,
-                    title: "Overlayer-marker-" + this.displayedLayerid,
-                    visible: (overlayers as OverlayGroup).visible,
-                    objectIdField: 'objectId',
-                    geometryType: 'point',
-                    renderer: symbolrenderer,
-                    screenSizePerspectiveEnabled: this.view.type === '3d',
-                    popupEnabled: false,
-                    popupTemplate: false,
-                    maxScale: (overlayers as OverlayGroup).maxScale,
-                    minScale: (overlayers as OverlayGroup).minScale,
-                    // elevationInfo: (overlayers as OverlayGroup).elevationInfo,
-                    fields: datafiled,
-                    source: [],
-                    spatialReference: this.view.spatialReference
-                });
+                let clientoperateLayer;
+                if ((overlayers as OverlayGroup).frreduction &&
+                    (overlayers as OverlayGroup).frreduction.type === 'selection') {
+                    if ((overlayers as OverlayGroup).frreduction.clustertype === 'Mutiple') {
+                        clientoperateLayer = new FeatureLayerCluster({
+                            id: this.displayedLayerid,
+                            title: "Overlayer-marker-" + this.displayedLayerid,
+                            visible: (overlayers as OverlayGroup).visible,
+                            objectIdField: 'OBJECTID',
+                            geometryType: 'point',
+                            renderer: symbolrenderer,
+                            screenSizePerspectiveEnabled: false,
+                            popupEnabled: false,
+                            popupTemplate: false,
+                            isCluster: true,
+                            criticalZoom: (overlayers as OverlayGroup).frreduction.criticalZoom,
+                            clusterType: (overlayers as OverlayGroup).frreduction.clustertype,
+                            clusterLabelPosition: (overlayers as OverlayGroup).frreduction.clusterLabelPosition,
+                            clusterLabelSym: (overlayers as OverlayGroup).frreduction.clusterLabelSym,
+                            // elevationInfo: (overlayers as OverlayGroup).elevationInfo,
+                            maxScale: (overlayers as OverlayGroup).maxScale,
+                            minScale: (overlayers as OverlayGroup).minScale,
+                            fields: datafiled,
+                            source: [],
+                            spatialReference: this.view.spatialReference
+                        });
+                    } else {
+                        clientoperateLayer = new FeatureLayerCluster({
+                            id: this.displayedLayerid,
+                            title: "Overlayer-marker-" + this.displayedLayerid,
+                            visible: (overlayers as OverlayGroup).visible,
+                            objectIdField: 'OBJECTID',
+                            geometryType: 'point',
+                            renderer: symbolrenderer,
+                            screenSizePerspectiveEnabled: false,
+                            popupEnabled: false,
+                            popupTemplate: false,
+                            isCluster: true,
+                            criticalZoom: (overlayers as OverlayGroup).frreduction.criticalZoom,
+                            clusterImgSrc: (overlayers as OverlayGroup).frreduction.clusterImgSrc,
+                            // elevationInfo: (overlayers as OverlayGroup).elevationInfo,
+                            maxScale: (overlayers as OverlayGroup).maxScale,
+                            minScale: (overlayers as OverlayGroup).minScale,
+                            fields: datafiled,
+                            source: [],
+                            spatialReference: this.view.spatialReference
+                        });
+                    }
+                } else {
+                    clientoperateLayer = new FeatureLayer({
+                        id: this.displayedLayerid,
+                        title: "Overlayer-marker-" + this.displayedLayerid,
+                        visible: (overlayers as OverlayGroup).visible,
+                        objectIdField: 'objectId',
+                        geometryType: 'point',
+                        renderer: symbolrenderer,
+                        screenSizePerspectiveEnabled: this.view.type === '3d',
+                        popupEnabled: false,
+                        popupTemplate: false,
+                        maxScale: (overlayers as OverlayGroup).maxScale,
+                        minScale: (overlayers as OverlayGroup).minScale,
+                        // elevationInfo: (overlayers as OverlayGroup).elevationInfo,
+                        fields: datafiled,
+                        source: [],
+                        spatialReference: this.view.spatialReference
+                    });
+                }
                 if ((overlayers as OverlayGroup).elevationInfo) {
                     if (this.view.type === '3d') {
                         clientoperateLayer.elevationInfo = (overlayers as OverlayGroup).elevationInfo;
@@ -123,9 +173,9 @@ export default class FeaureOverlays extends EventEmitter {
                 }
                 if ((overlayers as OverlayGroup).frreduction) {
                     if (this.view.type === '3d') {
-                        clientoperateLayer.featureReduction = {
-                            type: (overlayers as OverlayGroup).frreduction.type
-                        };
+                        // clientoperateLayer.featureReduction = {
+                        //     type: (overlayers as OverlayGroup).frreduction.type
+                        // };
                     } else {
                         clientoperateLayer.featureReduction =
                             (overlayers as OverlayGroup).frreduction.clusterConfig;
